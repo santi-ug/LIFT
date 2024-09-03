@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, Text, StyleSheet } from "react-native";
 
 type CustomButtonProps = {
 	text: string;
@@ -6,5 +6,22 @@ type CustomButtonProps = {
 };
 
 export default function CustomButton({ text, customFun }: CustomButtonProps) {
-	return <Pressable onPress={customFun}>{text}</Pressable>;
+	return ( 
+		<Pressable onPress={customFun} style={styles.button}>
+			<Text style={styles.buttonText}>{text}</Text>
+		</Pressable>
+	);
 }
+
+const styles = StyleSheet.create({
+	button: {
+	  backgroundColor: '#ff8c52',
+	  padding: 10,
+	  borderRadius: 5,
+	  alignItems: 'center',
+	},
+	buttonText: {
+	  color: 'white',
+	  fontWeight: 'bold',
+	},
+  });
