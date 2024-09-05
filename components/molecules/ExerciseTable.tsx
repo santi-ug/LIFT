@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import ExerciseItem from '../atoms/ExerciseItem';
 
 type ExerciseTableProps = {
@@ -10,7 +10,7 @@ type ExerciseTableProps = {
 export default function ExerciseTable({ sectionTitle, exercises }: ExerciseTableProps) {
   return (
     <View style={styles.container}>
-        <text>{sectionTitle}</text>
+        <Text>{sectionTitle}</Text>
         {exercises.map((item, index) => (
             <ExerciseItem 
                 key={index}

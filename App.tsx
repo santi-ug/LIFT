@@ -1,16 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Main from "./components/screens/Main";
 
 export default function App() {
 	const insets = useSafeAreaInsets();
 	return (
-		<View style={{}}>
-			<Main />
-			<StatusBar style='auto' />
-		</View>
+		<SafeAreaProvider style={{ paddingBottom: insets.bottom, paddingTop: insets.top }}>
+			<View style={{}}>
+				<Main />
+				<StatusBar style='auto' />
+			</View>
+		</SafeAreaProvider>
 	);
 }
 

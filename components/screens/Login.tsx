@@ -11,7 +11,7 @@ export default function Login() {
 				// backgroundColor: "black",
 			}}
 		>
-			<Text style={{ color: "white" }}>Anything</Text>
+			<Text style={{ color: "white" }}>Here is login</Text>
 		</View>
 	);
 }

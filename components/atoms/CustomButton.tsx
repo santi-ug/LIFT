@@ -15,13 +15,17 @@ export default function CustomButton({ text, customFun }: CustomButtonProps) {
 
 const styles = StyleSheet.create({
 	button: {
-	  backgroundColor: '#ff8c52',
+	  backgroundColor: 'black',
 	  padding: 10,
+	  height: 50,
 	  borderRadius: 5,
 	  alignItems: 'center',
+	  justifyContent: 'center',
 	},
+
 	buttonText: {
 	  color: 'white',
 	  fontWeight: 'bold',
+	  fontSize: 16,  
 	},
   });
