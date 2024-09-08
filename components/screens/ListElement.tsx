@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native'
 import ExerciseTable from '../molecules/ExerciseTable'
 
 import SearchInput from '../organisms/SearchInput'
@@ -30,12 +30,12 @@ export default function ListElement() {
   return (
     <View style={{ height: '100%' }}>
       <SearchInput />
-      <View>
+      <ScrollView>
         <ExerciseTable
           sectionTitle="Juegos disponibles" 
           exercises={exercises}
         ></ExerciseTable>
-      </View>
+      </ScrollView>
     </View>
   )
 }

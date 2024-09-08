@@ -7,30 +7,10 @@ import Main from "./components/screens/Main";
 export default function App() {
 	const insets = useSafeAreaInsets();
 	return (
-		<SafeAreaProvider style={{ paddingBottom: insets.bottom, paddingTop: insets.top }}>
-			<View style={{}}>
-				<Main />
-				<StatusBar style='auto' />
-			</View>
-		</SafeAreaProvider>
+		<View >
+			<Main />
+			<StatusBar style='auto' />
+		</View>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	button: {
-		padding: 20,
-		borderRadius: 10,
-		backgroundColor: "black",
-		color: "white",
-	},
-	text: {
-		color: "white",
-		fontSize: 20,
-	},
-});
