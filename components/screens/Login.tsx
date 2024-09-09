@@ -56,7 +56,7 @@ export default function Login() {
 
 			<LinkButton
 				text="Login" 
-				href="/index"
+				href="/profile"
 				styleLink={{ padding: 16, color: "white", fontSize: 15, height: 55,}}
   				styleButton={{ width: '91%', borderRadius: 30, marginTop: 30, backgroundColor: "#5F48D9"}} 
 			/>

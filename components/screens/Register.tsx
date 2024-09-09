@@ -1,11 +1,9 @@
 import { EmailIcon, PasswordIcon, PasswordVisibleIcon, PasswordNoVisibleIcon, AppleIcon, UserIcon } from "../atoms/icons";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
-import DividerWithText from "../atoms/DividerWithText";
 import LinkButton from "../molecules/LinkButton";
 import TextLink from "../molecules/TextLink";
 import { useState } from "react";
-import Link from "../atoms/Link";
 
 export default function Register() {
 	const insets = useSafeAreaInsets();
@@ -20,7 +18,7 @@ export default function Register() {
 			
 			<Text style={styles.title}>Sign up</Text>
 
-      <View style={styles.inputContainer}>
+      		<View style={styles.inputContainer}>
 				<EmailIcon/>
 				<TextInput 
 					style={styles.input}
