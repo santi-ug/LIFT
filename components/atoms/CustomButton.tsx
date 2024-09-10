@@ -1,14 +1,16 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet, TextStyle} from "react-native";
 
 type CustomButtonProps = {
 	text: string;
+	styleText?: TextStyle; 
+  	styleButton?: TextStyle;
 	customFun: () => void;
 };
 
-export default function CustomButton({ text, customFun }: CustomButtonProps) {
+export default function CustomButton({ text, styleText, styleButton, customFun }: CustomButtonProps) {
 	return ( 
-		<Pressable onPress={customFun} style={styles.button}>
-			<Text style={styles.buttonText}>{text}</Text>
+		<Pressable onPress={customFun} style={[styles.button, styleButton]}>
+			<Text style={[styles.buttonText, styleText]}>{text}</Text>
 		</Pressable>
 	);
 }
@@ -28,4 +30,4 @@ const styles = StyleSheet.create({
 	  fontWeight: 'bold',
 	  fontSize: 16,  
 	},
-  });
+});

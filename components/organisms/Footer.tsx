@@ -1,53 +1,63 @@
-import { View, StyleSheet } from "react-native";
-import LinkButton from "../molecules/LinkButton";
-import { ExerciseIcon, UserIcon, NewWorkoutIcon } from "../atoms/icons"; 
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ExerciseIcon, ExerciseActiveIcon, UserIcon, UserActiveIcon, NewWorkoutIcon, NewWorkoutActiveIcon} from '../atoms/icons'; 
+import Exercises from "../screens/Exercises";  
+import NewWorkout from '../screens/NewWorkout';  
+import Profile from '../screens/Profile';  
+import { Pressable, Text, StyleSheet, TextStyle} from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
+
+const Tab = createBottomTabNavigator();
 
 export default function Footer() {
-  
-    return (
+  return (
     
-        <View style={styles.footer}>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
 
-            <LinkButton 
-                text="Exercises" 
-                href="/exercises" 
-                icon={<ExerciseIcon />} 
-                styleButton={{flexDirection: 'column', marginLeft: 30, }}
-                styleLink={{color: 'white', marginTop: 3, fontSize: 12,}} 
-            />
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#171328',
+          padding: 4,
+          height:65,
+          paddingBottom:10
+        },
 
-            <LinkButton 
-                text="New Workout" 
-                href="/new-workout" 
-                icon={<NewWorkoutIcon />} 
-                styleButton={{flexDirection: 'column',}}
-                styleLink={styles.link}
-            />
+        tabBarIcon: ({ focused }) => {
+          let icon;
+          switch (route.name) {
+            case 'Exercises':
+              icon = focused ? <ExerciseActiveIcon /> : <ExerciseIcon />;
+              break;
+            case 'New Workout':
+              icon = focused ? <NewWorkoutActiveIcon /> : <NewWorkoutIcon />;
+              break;
+            case 'Profile':
+              icon = focused ? <UserActiveIcon /> : <UserIcon />;
+              break;
+            default:
+              icon = null;
+          }
+          return icon;
+        },
 
-            <LinkButton 
-                text="Profile" 
-                href="/profile" 
-                icon={<UserIcon />} 
-                styleButton={{flexDirection: 'column', marginRight:30}}
-                styleLink={styles.link}
-            />
+        tabBarLabel: ({ focused }) => {
+          const labelColor = focused ? '#5F48D9' : '#FFFFFF'; 
+          return (
+            <Text style={{ color: labelColor, fontSize: 12 }}>
+              {route.name}
+            </Text>
+          );
+        },
 
-        </View>
-    );
+      })}
+
+    >
+
+      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Exercises" component={Exercises} />
+      <Tab.Screen name="New Workout" component={NewWorkout} />
+
+    </Tab.Navigator>
+  );
 }
-
-const styles = StyleSheet.create({
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: 20,
-        backgroundColor: '#171328',
-    },
-
-    link: {
-        color: 'white',
-        marginTop: 6,
-        fontSize: 12,
-        marginLeft:-5
-    },
-});

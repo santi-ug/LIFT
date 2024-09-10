@@ -15,7 +15,7 @@ export const UserIcon = () => (
 )
 
 export const UserActiveIcon = () => (
-    <FontAwesome name="user-o" size={20} color="#171328" />
+    <FontAwesome name="user-o" size={20} color="#5F48D9" />
 )
 
 export const EmailIcon = () => (
@@ -43,7 +43,7 @@ export const ExerciseIcon = () => (
 )
 
 export const ExerciseActiveIcon = () => (
-    <Ionicons name="barbell-outline" size={28} color="#171328" />
+    <Ionicons name="barbell-outline" size={28} color="#5F48D9" />
 )
 
 export const NewWorkoutIcon = () => (
@@ -51,5 +51,5 @@ export const NewWorkoutIcon = () => (
 )
 
 export const NewWorkoutActiveIcon = () => (
-    <MaterialIcons name="add-circle-outline" size={24} color="#171328" />
+    <MaterialIcons name="add-circle-outline" size={24} color="#5F48D9" />
 )

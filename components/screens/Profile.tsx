@@ -1,23 +1,30 @@
-import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, Text, View} from "react-native";
-import Footer from "../organisms/Footer";
+import { EmailIcon, PasswordIcon, PasswordVisibleIcon, PasswordNoVisibleIcon, AppleIcon, UserIcon } from "../atoms/icons";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
+import React from 'react';
 
+// Profile.tsx
 export default function Profile() {
-	const insets = useSafeAreaInsets();
-
 	return (
 		<View style={styles.container}>
-            <Footer/>
+			<Text style={styles.title}>Profile</Text>
 		</View>
 	);
 }
-
+  
 const styles = StyleSheet.create({
+	title: {
+		fontSize: 45,
+		fontWeight: 'bold',
+		color: 'white',
+		marginBottom: 20,
+		marginLeft: 9
+	},
 
 	container: {
 		backgroundColor: "#171328",
 		padding: 10,
-		paddingTop: 430,
-		paddingBottom: 80
-	}, 
-})
+		paddingTop: 100
+	},
+});
+  
+
