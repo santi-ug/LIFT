@@ -2,11 +2,8 @@ import { Redirect, Tabs } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 import {
-	ExerciseActiveIcon,
 	ExerciseIcon,
-	NewWorkoutActiveIcon,
 	NewWorkoutIcon,
-	UserActiveIcon,
 	UserIcon,
 } from "../../components/atoms/icons";
 
@@ -74,7 +71,6 @@ const TabsLayout = () => {
 						tabBarIcon: ({ color, focused }) => (
 							<TabIcon
 								icon={NewWorkoutIcon}
-								iconProps={color}
 								color={color}
 								name={"New Workout"}
 								focused={focused}
@@ -90,7 +86,6 @@ const TabsLayout = () => {
 						tabBarIcon: ({ color, focused }) => (
 							<TabIcon
 								icon={UserIcon}
-								iconProps={color}
 								color={color}
 								name={"Profile"}
 								focused={focused}

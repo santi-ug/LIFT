@@ -27,6 +27,9 @@ module.exports = {
 				isemibold: ["Inter-SemiBold", "sans-serif"],
 				ibold: ["Inter-Bold", "sans-serif"],
 			},
+			backgroundImage: {
+				main: "url('./assets/home.png')",
+			},
 		},
 	},
 	plugins: [],

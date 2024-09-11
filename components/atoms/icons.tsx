@@ -6,50 +6,38 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Octicons from "@expo/vector-icons/Octicons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
-export const LoginIcon = () => (
-	<AntDesign name='login' size={24} color='black' />
+export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
+	<AntDesign name='login' size={24} color={color} />
 );
 
 export const UserIcon: React.FC<{ color: string }> = ({ color }) => (
 	<FontAwesome name='user-o' size={20} color={color} />
 );
 
-export const UserActiveIcon = () => (
-	<FontAwesome name='user-o' size={20} color='#5F48D9' />
+export const EmailIcon: React.FC<{ color: string }> = ({ color }) => (
+	<Fontisto name='email' size={20} color={color} />
 );
 
-export const EmailIcon = () => (
-	<Fontisto name='email' size={20} color='white' />
+export const PasswordIcon: React.FC<{ color: string }> = ({ color }) => (
+	<SimpleLineIcons name='lock' size={20} color={color} />
 );
 
-export const PasswordIcon = () => (
-	<SimpleLineIcons name='lock' size={20} color='white' />
+export const PasswordVisibleIcon: React.FC<{ color: string }> = ({ color }) => (
+	<Octicons name='eye' size={18} color={color} />
 );
 
-export const PasswordVisibleIcon = () => (
-	<Octicons name='eye' size={18} color='white' />
-);
+export const PasswordNoVisibleIcon: React.FC<{ color: string }> = ({
+	color,
+}) => <Octicons name='eye-closed' size={18} color={color} />;
 
-export const PasswordNoVisibleIcon = () => (
-	<Octicons name='eye-closed' size={18} color='white' />
-);
-
-export const AppleIcon = () => (
-	<MaterialIcons name='apple' size={35} color='black' />
+export const AppleIcon: React.FC<{ color: string }> = ({ color }) => (
+	<MaterialIcons name='apple' size={35} color={color} />
 );
 
 export const ExerciseIcon: React.FC<{ color: string }> = ({ color }) => (
 	<Ionicons name='barbell-outline' size={28} color={color} />
 );
 
-export const ExerciseActiveIcon = () => (
-	<Ionicons name='barbell-outline' size={28} color='#5F48D9' />
-);
-
 export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 	<MaterialIcons name='add-circle-outline' size={24} color={color} />
-);
-
-export const NewWorkoutActiveIcon = () => (
-	<MaterialIcons name='add-circle-outline' size={24} color='#5F48D9' />
 );

@@ -1,33 +1,38 @@
-import { Pressable, Text, StyleSheet, TextStyle} from "react-native";
+import React from "react";
+import {
+	ActivityIndicator,
+	Text,
+	TouchableOpacity,
+	ViewStyle,
+} from "react-native";
 
-type CustomButtonProps = {
-	text: string;
-	styleText?: TextStyle; 
-  	styleButton?: TextStyle;
-	customFun: () => void;
-};
-
-export default function CustomButton({ text, styleText, styleButton, customFun }: CustomButtonProps) {
-	return ( 
-		<Pressable onPress={customFun} style={[styles.button, styleButton]}>
-			<Text style={[styles.buttonText, styleText]}>{text}</Text>
-		</Pressable>
-	);
+interface CustomButtonProps {
+	title: string;
+	handlePress: () => void;
+	containerStyles?: string; // Optional container styles
+	textStyles?: string; // Optional text styles
+	isLoading?: boolean; // Loading state is optional
 }
 
-const styles = StyleSheet.create({
-	button: {
-	  backgroundColor: 'black',
-	  padding: 10,
-	  height: 50,
-	  borderRadius: 5,
-	  alignItems: 'center',
-	  justifyContent: 'center',
-	},
+const CustomButton: React.FC<CustomButtonProps> = ({
+	title,
+	handlePress,
+	containerStyles,
+	textStyles,
+	isLoading = false, // Default to false if not provided
+}) => {
+	return (
+		<TouchableOpacity
+			onPress={handlePress}
+			activeOpacity={0.7}
+			className={`bg-primary rounded-full min-h-[50px] justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""}`}
+			disabled={isLoading}
+		>
+			<Text className={`text-white font-isemibold text-xs ${textStyles}`}>
+				{title}
+			</Text>
+		</TouchableOpacity>
+	);
+};
 
-	buttonText: {
-	  color: 'white',
-	  fontWeight: 'bold',
-	  fontSize: 16,  
-	},
-});
+export default CustomButton;
