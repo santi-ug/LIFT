@@ -1,5 +1,5 @@
 import ListElement from "../../components/screens/ListElement";
 
-export default function listItems() {
+export default function exercises() {
 	return <ListElement />;
 }

@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const Search = () => {
+const AuthLayout = () => {
 	return (
 		<View>
-			<Text>Search</Text>
+			<Text>AuthLayout</Text>
 		</View>
 	);
 };
 
-export default Search;
+export default AuthLayout;

@@ -9,8 +9,8 @@ export default function App() {
 		<View className='flex-1 items-center justify-center bg-white'>
 			<Text className='text-3xl font-ibold'>LIFT.</Text>
 			<StatusBar style='auto' />
-			<Link href='/login' style={{ color: "black" }}>
-				Go to Login
+			<Link href='/newworkout' style={{ color: "black" }}>
+				Go to new workout
 			</Link>
 		</View>
 	);
