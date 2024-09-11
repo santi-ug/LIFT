@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, ScrollView, Text, View } from "react-native";
 
-import { Redirect, router } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Main from "../components/screens/Main";
 
@@ -30,7 +30,10 @@ export default function App() {
 						{/* alrdy account link */}
 						<Text className='text-white text-xs mt-4'>
 							Already have an account?
-							<Text className='text-primary font-ibold'> Log in</Text>
+							<Link href='/login' className='text-primary font-ibold'>
+								{" "}
+								Log in
+							</Link>
 						</Text>
 					</View>
 				</ScrollView>
