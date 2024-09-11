@@ -1,22 +1,40 @@
-import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, StyleSheet } from "react-native";
-import { Slot } from "expo-router";
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+	const [fontsLoaded, error] = useFonts({
+		"Ìnter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
+		"Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
+		"Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
+		"Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
+	});
 
-  const insets = useSafeAreaInsets();
+	useEffect(() => {
+		if (error) throw error;
 
-  return (
-    <SafeAreaProvider>
-      <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-        <Slot />
-      </View>
-    </SafeAreaProvider>
-  );
+		if (fontsLoaded) SplashScreen.hideAsync();
+
+		if (!fontsLoaded && !error) return;
+	}, [fontsLoaded, error]);
+
+	return (
+		<>
+			<Stack>
+				<Stack.Screen name='index' options={{ headerShown: false }} />
+				<View>
+					<Text>Index</Text>
+				</View>
+			</Stack>
+		</>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,  
-  },
+	container: {
+		flex: 1,
+	},
 });
