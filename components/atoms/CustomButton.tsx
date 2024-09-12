@@ -3,11 +3,13 @@ import {
 	ActivityIndicator,
 	Text,
 	TouchableOpacity,
+	View,
 	ViewStyle,
 } from "react-native";
 
 interface CustomButtonProps {
 	title: string;
+	icon?: React.ElementType;
 	handlePress: () => void;
 	containerStyles?: string; // Optional container styles
 	textStyles?: string; // Optional text styles
@@ -16,6 +18,7 @@ interface CustomButtonProps {
 
 const CustomButton: React.FC<CustomButtonProps> = ({
 	title,
+	icon: IconComponent,
 	handlePress,
 	containerStyles,
 	textStyles,
@@ -28,9 +31,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 			className={`bg-primary rounded-full min-h-[50px] justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""}`}
 			disabled={isLoading}
 		>
-			<Text className={`text-white font-isemibold text-xs ${textStyles}`}>
-				{title}
-			</Text>
+			<View className='flex-row items-center justify-center gap-x-8'>
+				{IconComponent && <IconComponent />}
+				<Text className={`text-white font-isemibold text-sm ${textStyles}`}>
+					{title}
+				</Text>
+			</View>
 		</TouchableOpacity>
 	);
 };

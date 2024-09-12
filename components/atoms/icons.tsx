@@ -5,6 +5,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Octicons from "@expo/vector-icons/Octicons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { Image } from "react-native";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />
@@ -30,8 +31,8 @@ export const PasswordNoVisibleIcon: React.FC<{ color: string }> = ({
 	color,
 }) => <Octicons name='eye-closed' size={18} color={color} />;
 
-export const AppleIcon: React.FC<{ color: string }> = ({ color }) => (
-	<MaterialIcons name='apple' size={35} color={color} />
+export const AppleIcon = () => (
+	<MaterialIcons name='apple' size={35} color='black' />
 );
 
 export const ExerciseIcon: React.FC<{ color: string }> = ({ color }) => (
@@ -41,3 +42,11 @@ export const ExerciseIcon: React.FC<{ color: string }> = ({ color }) => (
 export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 	<MaterialIcons name='add-circle-outline' size={24} color={color} />
 );
+
+// import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
+
+// export const GoogleIcon = () => {
+// 	return (
+// 		<SvgGoogleIcon width={24} height={24} /> // Use the SVG component with proper width and height
+// 	);
+// };

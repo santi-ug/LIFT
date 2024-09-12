@@ -3,7 +3,6 @@ import { Image, ScrollView, Text, View } from "react-native";
 
 import { Link, Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Main from "../components/screens/Main";
 
 import home from "../assets/images/home.png";
 import CustomButton from "../components/atoms/CustomButton";
@@ -28,24 +27,21 @@ export default function App() {
 							containerStyles='w-full mt-16'
 						/>
 						{/* alrdy account link */}
-						<Text className='text-white text-xs mt-4'>
-							Already have an account?
+						<View className='justify-center pt-5 flex-row gap-2'>
+							<Text className='text-white '>Already have an account?</Text>
 							<Link href='/login' className='text-primary font-ibold'>
-								{" "}
 								Log in
 							</Link>
-						</Text>
+						</View>
+
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT */}
+						<Link href='/newworkout' className='text-primary font-ibold mt-5'>
+							NEW WORKOUT [TEMP]
+						</Link>
 					</View>
 				</ScrollView>
 				<StatusBar style='light' />
 			</SafeAreaView>
 		</>
-
-		// <View className='flex-1 items-center justify-center bg-white'>
-		// 	<Text className='text-3xl font-ibold'>LIFT.</Text>
-		// 	<Link href='/newworkout' style={{ color: "black" }}>
-		// 		Go to new workout
-		// 	</Link>
-		// </View>
 	);
 }
