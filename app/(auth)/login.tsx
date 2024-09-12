@@ -10,7 +10,6 @@ import {
 	// GoogleIcon,
 	PasswordIcon,
 } from "../../components/atoms/icons";
-import Login from "../../components/screens/Login";
 
 export default function login() {
 	const [form, setForm] = useState({

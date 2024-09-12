@@ -11,7 +11,6 @@ import {
 	PasswordIcon,
 	UserIcon,
 } from "../../components/atoms/icons";
-import Login from "../../components/screens/Login";
 
 export default function register() {
 	const [form, setForm] = useState({
