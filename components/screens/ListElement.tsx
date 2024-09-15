@@ -1,47 +1,35 @@
-import { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native'
-import ExerciseTable from '../molecules/ExerciseTable'
-
-import SearchInput from '../organisms/SearchInput'
-
-import { getInfoGames } from '../../lib/metacritic'
-import { Game } from '../../types/exercise'
+import { getInfoExercises } from '../../lib/metacritic';
+import { View, Text, ScrollView } from 'react-native';
+import ExerciseTable from '../molecules/ExerciseTable';
+import SearchInput from '../organisms/SearchInput';
+import { Exercise } from '../../types/Exercise';
+import { useEffect, useState } from 'react';
 
 export default function ListElement() {
-
-  const [games, setGames] = useState<Game[]>([])
+  const [lExercises, setExercises] = useState<Exercise[]>([]);
 
   useEffect(() => {
-    getInfoGames()
-    .then((data: Game[]) => {
-      setGames(data)
-    })
-  }, [])
+    getInfoExercises().then((data: Exercise[]) => {
+      setExercises(data);
+    });
+  }, []);
 
-  // Convertir la lista de juegos en ejercicios
-  const exercises = games.map(game => {
-     return {
-      exercise: game.title,           
-      series: new Date(game.releaseDate).getFullYear(),       
-      repetitions: game.score, 
-    };
-  });
+  // Convertir la lista de ejercicios
+  const listExercises = lExercises.map(exercise => ({
+    name: exercise.name,
+    gifUrl: exercise.gifUrl,
+    target: exercise.target,
+  }));
 
   return (
-    <View style={{ height: '100%' }}>
+    <View className="flex-1 bg-background">
       <SearchInput />
       <ScrollView>
         <ExerciseTable
-          sectionTitle="Juegos disponibles" 
-          exercises={exercises}
-        ></ExerciseTable>
+          sectionTitle="Ejercicios Disponibles"
+          exercises={listExercises}
+        />
       </ScrollView>
     </View>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    backgroundColor: 'black'
-  }
-})

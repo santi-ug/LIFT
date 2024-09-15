@@ -1,30 +1,31 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import ExerciseItem from '../atoms/ExerciseItem';
+import { View, Text } from 'react-native';
+import ExerciseItem from './ExerciseItem';
 
 type ExerciseTableProps = {
   sectionTitle: string;
-  exercises: { exercise: string; series: number; repetitions: number }[];
+  exercises: { 
+    name: string;
+    gifUrl: string;
+    target: string; 
+  }[];
 };
 
 export default function ExerciseTable({ sectionTitle, exercises }: ExerciseTableProps) {
   return (
-    <View style={styles.container}>
-        <Text>{sectionTitle}</Text>
-        {exercises.map((item, index) => (
-            <ExerciseItem 
-                key={index}
-                exercise={item.exercise}
-                series={item.series}
-                repetitions={item.repetitions}
-            />
-        ))}
+
+    <View className="mb-5">
+      
+      <Text className="text-xl font-bold mb-4">{sectionTitle}</Text>
+      {exercises.map((item, index) => (
+        <ExerciseItem 
+          key={index}
+          name={item.name}
+          gifUrl={item.gifUrl}
+          target={item.target}
+        />
+      ))}
+
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
-});
