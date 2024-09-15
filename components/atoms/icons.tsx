@@ -1,10 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Fontisto from "@expo/vector-icons/Fontisto";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Octicons from "@expo/vector-icons/Octicons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Octicons from "@expo/vector-icons/Octicons";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import Feather from '@expo/vector-icons/Feather';
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
@@ -41,6 +42,10 @@ export const ExerciseIcon: React.FC<{ color: string }> = ({ color }) => (
 
 export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 	<MaterialIcons name='add-circle-outline' size={24} color={color} />
+);
+
+export const TrendLineIcon: React.FC<{ color: string }> = ({ color }) => (
+	<Feather name="trending-up" size={17} color="white"/>
 );
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
