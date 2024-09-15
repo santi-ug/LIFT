@@ -1,42 +1,17 @@
+import { View, TextInput } from 'react-native';
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native'
-import { Link } from 'expo-router';
-import { LoginIcon } from '../atoms/icons';
 
 export default function SearchInput() {
-
-  const [text, setText] = useState('')
+  const [text, setText] = useState('');
 
   return (
-    <View style={styles.header}>
-      {/*<ConfigIcon />*/}
-      <Link href='/login'>
-        <LoginIcon />
-      </Link>
+    <View className="flex-row justify-evenly items-center h-1/10 bg-black">
       <TextInput
-        style={styles.input}
+        className="h-10 my-3 border px-4 w-9/12 rounded-full bg-white"
         onChangeText={setText}
+        value={text}
+        placeholder="Search"
       />
     </View>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    height: '10%',
-    backgroundColor: 'black'
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '70%',
-    borderRadius: 50,
-    backgroundColor: 'white'
-  },
-});

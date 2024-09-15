@@ -1,4 +1,4 @@
-import { View, Text, Image, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import ExerciseItem from '../molecules/ExerciseItem';
 import { getInfoExercises } from '../../lib/rapidapi';
 import SearchInput from '../organisms/SearchInput';
@@ -34,13 +34,29 @@ export default function ListElement() {
     fetchExercises();
   }, [currentPage]);
 
-  const renderItem = ({ item }: { item: Exercise }) => (
+  const groupedExercises = exercises.reduce((acc, exercise) => {
+    const firstLetter = exercise.name[0].toUpperCase();
+    if (!acc[firstLetter]) {
+      acc[firstLetter] = [];
+    }
+    acc[firstLetter].push(exercise);
+    return acc;
+  }, {} as { [key: string]: Exercise[] });
+
+  const renderItem = ({ item, index }: { item: Exercise, index: number }) => (
     <ExerciseItem 
-      key={item.id}
+      key={index}
       name={item.name}
       gifUrl={item.gifUrl}
       bodyPart={item.bodyPart}
     />
+  );
+
+  const renderSection = ({ sectionKey, data }: { sectionKey: string, data: Exercise[] }) => (
+    <View key={sectionKey}>
+      <Text className='text-lg text-white font-imedium ml-6 mt-4 mb-2'>{sectionKey}</Text>
+      {data.map((exercise, index) => renderItem({ item: exercise, index }))}
+    </View>
   );
 
   const renderLoader = () => {
@@ -61,9 +77,9 @@ export default function ListElement() {
     <View className="flex-1 bg-background">
       <SearchInput />
       <FlatList
-        data={exercises}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        data={Object.keys(groupedExercises)}
+        renderItem={({ item }) => renderSection({ sectionKey: item, data: groupedExercises[item] })}
+        keyExtractor={item => item}
         ListFooterComponent={renderLoader}
         onEndReached={loadMoreItems}
         onEndReachedThreshold={0.5}
