@@ -12,7 +12,9 @@ export default function App() {
 		<>
 			<Image source={home} className='w-full h-full bg-background ' />
 			<SafeAreaView className='w-full h-full absolute'>
+
 				<ScrollView contentContainerStyle={{ height: "100%" }}>
+
 					<View className='w-full justify-center items-center min-h-[125vh] px-8'>
 						<Text className='text-8xl font-ibold text-white items-start'>
 							LIFT.
@@ -30,17 +32,20 @@ export default function App() {
 						<View className='justify-center pt-5 flex-row gap-2'>
 							<Text className='text-white '>Already have an account?</Text>
 							<Link href='/login' className='text-primary font-ibold'>
-								Log in
+								Login
 							</Link>
 						</View>
 
-						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT */}
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT 
 						<Link href='/newworkout' className='text-primary font-ibold mt-5'>
 							NEW WORKOUT [TEMP]
 						</Link>
+						*/}
 					</View>
+
 				</ScrollView>
 				<StatusBar style='light' />
+				
 			</SafeAreaView>
 		</>
 	);

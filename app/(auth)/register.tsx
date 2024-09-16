@@ -1,9 +1,9 @@
-import { Link } from "expo-router";
-import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../../components/atoms/CustomButton";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, Text, View, Alert } from "react-native";
 import FormField from "../../components/atoms/FormField";
+import { Link, router } from "expo-router";
+import { useState } from "react";
 import {
 	AppleIcon,
 	EmailIcon,
@@ -13,19 +13,42 @@ import {
 } from "../../components/atoms/icons";
 
 export default function register() {
+	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [form, setForm] = useState({
 		email: "",
 		username: "",
 		password: "",
 	});
-	const [isSubmiting, setIsSubmiting] = useState(false);
 
-	const submit = () => {};
+	const submit = () => {
+		const { email, username, password } = form;
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+		if (!emailRegex.test(email)){
+			Alert.alert("Error", "Please enter a valid email.");
+			return;
+		}
+
+		if (password.length < 8) {
+			Alert.alert("Error", "Password must be at least 8 characters long.");
+			return;
+		}
+
+		if (username.length < 4){
+			Alert.alert("Error", "Username must be at least 4 characters long.");
+			return;
+		}
+
+		setIsSubmitting(true);
+		router.push("/profile")
+	};
 
 	return (
 		<>
 			<SafeAreaView className='bg-background h-full'>
 				<ScrollView>
+
 					<View className='w-full justify-center min-h-[90vh] px-8 my-6'>
 						<Text className='text-4xl text-white font-ibold'>
 							Sign up with LIFT.
@@ -74,7 +97,7 @@ export default function register() {
 							title='Continue'
 							handlePress={submit}
 							containerStyles='mt-6'
-							isLoading={isSubmiting}
+							isLoading={isSubmitting}
 						/>
 
 						<View className='w-full justify-center items-center mt-7 flex-row'>
@@ -89,7 +112,7 @@ export default function register() {
 							handlePress={submit}
 							containerStyles='mt-6 !bg-white'
 							textStyles='!text-black'
-							isLoading={isSubmiting}
+							isLoading={isSubmittingApple}
 						/>
 
 						{/* NO GOOGLE ICON YET SO NOT BEING USED */}
@@ -109,6 +132,7 @@ export default function register() {
 							</Link>
 						</View>
 					</View>
+
 				</ScrollView>
 			</SafeAreaView>
 			{/* <Login /> */}
