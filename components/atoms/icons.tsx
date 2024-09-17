@@ -60,6 +60,14 @@ export const ArrowRightIcon = () => (
 	<AntDesign name="arrowright" size={20} color="white" />
 );
 
+export const CalendarIcon = () => (
+	<AntDesign name="calendar" size={20} color="white" />
+);
+
+export const PeopleIcon = () => (
+	<MaterialIcons name="emoji-people" size={20} color="white" />
+);
+
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 
 // export const GoogleIcon = () => {
