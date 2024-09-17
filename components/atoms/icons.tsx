@@ -44,8 +44,20 @@ export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 	<MaterialIcons name='add-circle-outline' size={24} color={color} />
 );
 
-export const TrendLineIcon: React.FC<{ color: string }> = ({ color }) => (
+export const TrendLineIcon = () => (
 	<Feather name="trending-up" size={17} color="white"/>
+);
+
+export const GearIcon = () => (
+	<Octicons name="gear" size={20} color="white" />
+);
+
+export const ShareIcon = () => (
+	<Feather name="share" size={20} color="white" />
+);
+
+export const ArrowRightIcon = () => (
+	<AntDesign name="arrowright" size={20} color="white" />
 );
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
