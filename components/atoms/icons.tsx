@@ -5,6 +5,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Octicons from "@expo/vector-icons/Octicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from '@expo/vector-icons/Feather';
+import Entypo from '@expo/vector-icons/Entypo';
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
 
@@ -66,6 +67,18 @@ export const CalendarIcon = () => (
 
 export const PeopleIcon = () => (
 	<MaterialIcons name="emoji-people" size={20} color="white" />
+);
+
+export const FilterIcon = () => (
+	<Ionicons name="filter" size={20} color="#A0AEC0" />
+);
+
+export const ThreeDotsVerticarIcon = () => (
+	<Entypo name="dots-three-vertical" size={20} color="#A0AEC0" />
+);
+
+export const MagnifyingGlassIcon = () => (
+	<Entypo name="magnifying-glass" size={20} color="#A0AEC0" />
 );
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component

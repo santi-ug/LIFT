@@ -29,7 +29,7 @@ export default function login() {
 		}
 
 		if (password.length < 8) {
-			Alert.alert("Error", "Password must be at least 6 characters long.");
+			Alert.alert("Error", "Password must be at least 8 characters long.");
 			return;
 		}
 

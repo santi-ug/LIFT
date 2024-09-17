@@ -54,7 +54,7 @@ export default function ListElement() {
 
   const renderSection = ({ sectionKey, data }: { sectionKey: string, data: Exercise[] }) => (
     <View key={sectionKey}>
-      <Text className='text-lg text-white font-imedium ml-6 mt-4 mb-2'>{sectionKey}</Text>
+      <Text className='text-base text-white font-imedium ml-6 mt-4 mb-2'>{sectionKey}</Text>
       {data.map((exercise, index) => renderItem({ item: exercise, index }))}
     </View>
   );

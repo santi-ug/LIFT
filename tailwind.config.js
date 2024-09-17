@@ -10,6 +10,7 @@ module.exports = {
 					light: "#C0ABFF",
 					dark: "#5F48D9",
 				},
+				search: '#A0AEC0',
 				background: "#171328",
 				black: {
 					DEFAULT: "#000",

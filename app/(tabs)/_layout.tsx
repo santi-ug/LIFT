@@ -21,7 +21,7 @@ const TabIcon: React.FC<TabIconProps> = ({
 	focused,
 }) => {
 	return (
-		<View className='items-center justify-center gap-2'>
+		<View className='items-center justify-center gap-2 py-1'>
 			<IconComponent color={color} />
 			<Text
 				className={`${focused ? "font-isemibold" : "font-iregular"} text-xs`}
@@ -42,8 +42,9 @@ const TabsLayout = () => {
 					tabBarActiveTintColor: "#5F48D9",
 					tabBarInactiveTintColor: "#E5E4ED",
 					tabBarStyle: {
+						height: 60,
 						backgroundColor: "#171328",
-						borderTopWidth: 1,
+						borderTopWidth: 2,
 						borderTopColor: "#151124",
 					},
 				}}
