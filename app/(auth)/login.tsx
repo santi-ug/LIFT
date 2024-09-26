@@ -2,6 +2,7 @@ import CustomButton from "../../components/atoms/CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
 import FormField from "../../components/atoms/FormField";
+import { loginUser } from "../../lib/api_backend";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
@@ -19,7 +20,7 @@ export default function login() {
 		password: "",
 	});
 
-	const submit = () => {
+	const submit = async () => {
 		const { email, password } = form;
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -34,7 +35,21 @@ export default function login() {
 		}
 
 		setIsSubmitting(true);
-		router.push("/profile")
+		
+		try {
+			const response = await loginUser({ email, password }); 
+			if (response.success) {
+				Alert.alert("Success", "Login successful!");
+				router.push("/profile"); 
+			} else {
+				Alert.alert("Error", response.message); 
+			}
+		} catch (error) {
+			Alert.alert("Error", "An error occurred during login.");
+			console.error(error); 
+		} finally {
+			setIsSubmitting(false); 
+		}
 	};
 
 	return (

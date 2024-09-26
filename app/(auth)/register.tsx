@@ -2,6 +2,7 @@ import CustomButton from "../../components/atoms/CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
 import FormField from "../../components/atoms/FormField";
+import { registerUser } from "../../lib/api_backend";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
@@ -16,13 +17,14 @@ export default function register() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [form, setForm] = useState({
+		name: "",
 		email: "",
-		username: "",
 		password: "",
+		confirmPassword: "",
 	});
 
-	const submit = () => {
-		const { email, username, password } = form;
+	const submit = async () => {
+		const { email, name, password, confirmPassword } = form;
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 		if (!emailRegex.test(email)){
@@ -35,13 +37,32 @@ export default function register() {
 			return;
 		}
 
-		if (username.length < 4){
+		if (password !== confirmPassword) {
+			Alert.alert("Error", "Passwords do not match.");
+			return;
+		}
+
+		if (name.length < 4){
 			Alert.alert("Error", "Username must be at least 4 characters long.");
 			return;
 		}
 
 		setIsSubmitting(true);
-		router.push("/profile")
+		
+		try {
+			const response = await registerUser({ email, name, password }); 
+			if (response.success) {
+				Alert.alert("Success", "Registration successful!");
+				router.push("/profile"); 
+			} else {
+				Alert.alert("Error", response.message); 
+			}
+		} catch (error) {
+			Alert.alert("Error", "An error occurred during registration.");
+			console.error(error); 
+		} finally {
+			setIsSubmitting(false); 
+		}
 	};
 
 	return (
@@ -67,8 +88,8 @@ export default function register() {
 							icon={UserIcon}
 							title='Username'
 							placeholder='Username'
-							value={form.username}
-							handleChangeText={(e) => setForm({ ...form, username: e })}
+							value={form.name}
+							handleChangeText={(e) => setForm({ ...form, name: e })}
 							otherStyles='mt-7'
 						/>
 						<FormField
@@ -78,6 +99,14 @@ export default function register() {
 							value={form.password}
 							handleChangeText={(e) => setForm({ ...form, password: e })}
 							otherStyles='mt-7'
+						/>
+						<FormField
+							icon={PasswordIcon}
+							title="Password"
+							placeholder="Confirm Password"
+							value={form.confirmPassword}
+							handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
+							otherStyles="mt-7"
 						/>
 
 						<View className='justify-center pt-4 flex-row gap-2 my-2'>
