@@ -1,6 +1,6 @@
 import { UserData, ApiResponse } from '../types/Api'
 
-const API = `http://192.168.1.143:5000/api/v1`;
+const API = `http://192.168.43.62:5000/api/v1`;
 
 export const registerUser = async (userData: UserData): Promise<ApiResponse> => {
     console.log(JSON.stringify(userData));
