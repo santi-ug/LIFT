@@ -1,42 +1,25 @@
+import { View, TextInput, Text } from 'react-native';
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native'
-import { Link } from 'expo-router';
-import { LoginIcon } from '../atoms/icons';
+import { FilterIcon, MagnifyingGlassIcon, ThreeDotsVerticarIcon } from '../atoms/icons';
 
 export default function SearchInput() {
-
-  const [text, setText] = useState('')
+  const [text, setText] = useState('');
 
   return (
-    <View style={styles.header}>
-      {/*<ConfigIcon />*/}
-      <Link href='/login'>
-        <LoginIcon />
-      </Link>
-      <TextInput
-        style={styles.input}
-        onChangeText={setText}
-      />
+    <View>
+      <View className="flex-row justify-evenly items-center h-1/10 bg-background">
+        <TextInput
+          className="h-10 my-3 border-search text-search border-2 px-4 w-9/12 rounded-full bg-background"
+          onChangeText={setText}
+          value={text}
+          placeholder="Search"
+          placeholderTextColor="#A0AEC0" 
+        />
+        <MagnifyingGlassIcon/>
+        <FilterIcon/> 
+        <ThreeDotsVerticarIcon/>
+      </View>
+      <Text className='font-isemibold text-2xl text-white py-3 pl-3'>Exercises</Text>
     </View>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    height: '10%',
-    backgroundColor: 'black'
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '70%',
-    borderRadius: 50,
-    backgroundColor: 'white'
-  },
-});

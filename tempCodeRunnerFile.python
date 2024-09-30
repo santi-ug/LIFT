@@ -1,0 +1,46 @@
+# Define the regions and their neighbors
+regions = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['Q', 'SA', 'V'],
+    'V': ['SA', 'NSW'],
+    'T': []  # Tasmania has no neighbors
+}
+
+# Colors available: 4 colors (R = Red, G = Green, B = Blue, Y = Yellow)
+colors = ['R', 'G', 'B', 'Y']
+
+# Helper function to check if current color assignment is valid
+def is_valid(region, color, assignment):
+    for neighbor in regions[region]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+# Backtracking function to solve the coloring problem and count solutions
+def count_solutions(assignment, regions):
+    # If all regions are assigned a color, count this as a solution
+    if len(assignment) == len(regions):
+        return 1
+    
+    # Get an uncolored region
+    for region in regions:
+        if region not in assignment:
+            break
+    
+    # Try each color for the region and count valid solutions
+    total_solutions = 0
+    for color in colors:
+        if is_valid(region, color, assignment):
+            assignment[region] = color
+            total_solutions += count_solutions(assignment, regions)
+            del assignment[region]  # Backtrack
+    
+    return total_solutions
+
+# Initialize assignment and call the counting function with 4 colors
+assignment = {}
+total_solutions = count_solutions(assignment, regions)
+print("Total solutions with 4 colors:", total_solutions)
