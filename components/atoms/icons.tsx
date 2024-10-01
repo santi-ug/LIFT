@@ -92,7 +92,13 @@ export const TrashIcon = () => (
 	<FontAwesome name="trash-o" size={20} color="#5F48D9" />
 );
 
+export const LogOutIcon = () => (
+	<AntDesign name="logout" size={20} color="#5F48D9" />
+);
 
+export const DeleteAccountIcon = () => (
+	<AntDesign name="deleteuser" size={20} color="#5F48D9" />
+);
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

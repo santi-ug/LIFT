@@ -1,21 +1,29 @@
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
-import { View } from "react-native";
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import {
 	ShareIcon,
 	GearIcon,
+	LogOutIcon,
+	DeleteAccountIcon,
 } from "../components/atoms/icons";
+import { Modal } from "react-native";
+import CustomModal from "../components/organisms/CustomModel";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+	const [isModalVisible, setModalVisible] = useState(false);
 	const [fontsLoaded, error] = useFonts({
 		"Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
 		"Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
 		"Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
 		"Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
 	});
+
+	const LogOut = () => {};
+	const deleteAccount = () => {};
 
 	useEffect(() => {
 		if (error) throw error;
@@ -39,15 +47,35 @@ export default function Layout() {
 						headerRight: () => (
 							<View className="flex-row mr-2">
 								<ShareIcon />
-								<View className="ml-4">
+								<TouchableOpacity className="ml-4"
+									onPress={() => setModalVisible(true)}
+								>
 									<GearIcon />
-								</View>
+								</TouchableOpacity>
 							</View>
 						),
 					}} />
 
 				{/* <Stack.Screen name='/search/[query]' options={{ headerShown: false }} /> */}
 			</Stack>
+
+			<CustomModal
+				isVisible={isModalVisible}
+				onClose={() => setModalVisible(false)}
+				title="Account"
+				buttons={[
+				{
+					text: 'Log out',
+					icon: <LogOutIcon />,
+					onPress: LogOut,
+				},
+				{
+					text: 'Delete',
+					icon: <DeleteAccountIcon />,
+					onPress: deleteAccount,
+				},
+				]}
+			/>
 		</>
 	);
 }

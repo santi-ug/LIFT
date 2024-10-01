@@ -1,5 +1,7 @@
 import { CalendarIcon, CameraIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, ThreeDotsVerticarIcon, TrashIcon, TrendLineIcon, UserIcon } from '../../components/atoms/icons';
-import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import CustomDataTable from '../../components/molecules/CustomDataTable';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import CustomModal from '../../components/organisms/CustomModel';
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
 import Dropdown from '../../components/atoms/Dropdown';
@@ -8,23 +10,22 @@ import React, { useEffect, useState } from 'react';
 import { infoUser } from '../../lib/api_backend';
 import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
-import { DataTable } from 'react-native-paper';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [image, setImage] = useState(user);
     const [isModalVisible, setModalVisible] = useState(false);
-    const [userData, setUserData] = useState<UserData | null>(null); 
+    const [userData, setUserData] = useState<UserData | undefined>(); 
     const [error, setError] = useState<string | null>(null); 
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const user = await infoUser();
-                setUserData(user); // Guardamos los datos del usuario en el estado
+                setUserData(user);
             } catch (err: any) {
-                setError(err.message); // Guardamos el error si ocurre
+                setError(err.message);
                 console.error("Error fetching user data:", err);
             }
         };
@@ -103,55 +104,28 @@ export default function Profile() {
 
 				</View>
 
-
-                <Modal
-                    visible={isModalVisible}
-                    transparent={true}
-                    animationType="slide"
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View className='flex-1 p-9 justify-center bg-black-50'
-                    >
-                        <View className='bg-white py-4 justify-center items-center rounded-2xl'>
-                            <Text className='text-xl text-black font-ibold'>
-                                Profile Photo
-                            </Text>
-
-                            <View className='flex flex-row justify-between w-auto my-5 mx-2'>
-                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
-                                    onPress={takePhoto}
-                                >
-                                    <View className='pt-2 items-center'>
-                                        <CameraIcon/>
-                                        <Text className='text-base text-black font-imedium py-2'>Camera</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                
-                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
-                                    onPress={pickImage}
-                                >
-                                    <View className='pt-2 items-center'>
-                                        <GalleryIcon/>
-                                        <Text className='text-base text-black font-imedium py-2'>Gallery</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
-                                    onPress={RemovePhoto}
-                                >
-                                    <View className='pt-2 items-center'>
-                                        <TrashIcon/>
-                                        <Text className='text-base text-black font-imedium py-2'>Remove</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-
-                            <TouchableOpacity onPress={() => setModalVisible(false)} >
-                                <Text className='text-lg text-red-600 font-isemibold'>Cancel</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+                <CustomModal
+                    isVisible={isModalVisible}
+                    onClose={() => setModalVisible(false)}
+                    title="Profile Photo"
+                    buttons={[
+                      {
+                        text: 'Camera',
+                        icon: <CameraIcon />,
+                        onPress: takePhoto,
+                      },
+                      {
+                        text: 'Gallery',
+                        icon: <GalleryIcon />,
+                        onPress: pickImage,
+                      },
+                      {
+                        text: 'Remove',
+                        icon: <TrashIcon />,
+                        onPress: RemovePhoto,
+                      },
+                    ]}
+                />
 
 				<View className="flex-1 pt-9"> 
 					
@@ -164,35 +138,12 @@ export default function Profile() {
                         )
                     }
 
-					<DataTable className="w-full"> 
-						<DataTable.Header className="border-y-0 h-11"> 
-							<DataTable.Title >
-								<Text className="text-gray-500 text-sm font-iregular capitalize">Workouts</Text>
-							</DataTable.Title> 
-
-							<DataTable.Title >
-								<Text className="text-gray-500 text-sm font-iregular capitalize">Followers</Text>
-							</DataTable.Title> 
-
-							<DataTable.Title >
-								<Text className="text-gray-500 text-sm font-iregular capitalize">Following</Text>
-							</DataTable.Title> 
-						</DataTable.Header>  
-
-						<DataTable.Row className="border-y-0"> 
-							<DataTable.Cell className="h-4">
-								<Text className="text-white text-sm font-isemibold capitalize">223</Text>
-							</DataTable.Cell> 
-
-							<DataTable.Cell className="h-4">
-								<Text className="text-white text-sm font-isemibold capitalize">2</Text>
-							</DataTable.Cell> 
-
-							<DataTable.Cell className="h-4">
-								<Text className="text-white text-sm font-isemibold capitalize">2</Text>
-							</DataTable.Cell> 
-						</DataTable.Row> 
-					</DataTable> 
+					<CustomDataTable
+                        headers={['Workouts', 'Followers', 'Following']}
+                        data={[
+                            ['223', '2', '2'], 
+                        ]}
+                    />
                 </View>
             </View>
 
