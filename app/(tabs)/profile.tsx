@@ -1,7 +1,8 @@
-import { CalendarIcon, NewWorkoutIcon, PeopleIcon, TrendLineIcon } from '../../components/atoms/icons';
+import { CalendarIcon, CameraIcon, FilterIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, ThreeDotsVerticarIcon, TrashIcon, TrendLineIcon, UserIcon } from '../../components/atoms/icons';
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
 import { DataTable } from 'react-native-paper';
 import React, { useState } from 'react';
@@ -10,6 +11,55 @@ import Dropdown from '../../components/atoms/Dropdown';
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [image, setImage] = useState(user);
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const pickImage = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert("Permission to access media library is required!");
+            return;
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage({ uri: result.assets[0].uri });
+        }
+
+        setModalVisible(false);
+    };
+
+    const takePhoto = async () => {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert("Permission to access camera is required!");
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets.length > 0) {
+            setImage({ uri: result.assets[0].uri });
+        }
+
+        setModalVisible(false);
+    };
+
+    const RemovePhoto = () => {
+        setImage(user);
+        setModalVisible(false);
+    };
 
     const handleValueChange = (value: string) => {
         setSelectedOption(value);
@@ -22,16 +72,72 @@ export default function Profile() {
 			<View className="relative flex-row items-center">
 			
 				<View className="w-24 h-24 rounded-full overflow-hidden ml-4 mt-0">
-					<Image 
-						source={user}
-						className="w-full h-full" 
-					/>
+                    <Image
+                        source={image}
+                        className="w-full h-full"
+                    />
+
+                    <TouchableOpacity className='p-1 rounded-2xl bg-white absolute bottom-2 right-1'
+                        onPress={() => setModalVisible(true)}
+                    >
+                        <CameraIcon/>
+                    </TouchableOpacity>
+
 				</View>
+
+
+                <Modal
+                    visible={isModalVisible}
+                    transparent={true}
+                    animationType="slide"
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View className='flex-1 p-9 justify-center bg-black-50'
+                    >
+                        <View className='bg-white py-4 justify-center items-center rounded-2xl'>
+                            <Text className='text-xl text-black font-ibold'>
+                                Profile Photo
+                            </Text>
+
+                            <View className='flex flex-row justify-between w-auto my-5 mx-2'>
+                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
+                                    onPress={takePhoto}
+                                >
+                                    <View className='pt-2 items-center'>
+                                        <CameraIcon/>
+                                        <Text className='text-base text-black font-imedium py-2'>Camera</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                
+                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
+                                    onPress={pickImage}
+                                >
+                                    <View className='pt-2 items-center'>
+                                        <GalleryIcon/>
+                                        <Text className='text-base text-black font-imedium py-2'>Gallery</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity className='flex-1 pv-10 justify-center items-center bg-gray-100 mx-2 p-2 rounded-xl'
+                                    onPress={RemovePhoto}
+                                >
+                                    <View className='pt-2 items-center'>
+                                        <TrashIcon/>
+                                        <Text className='text-base text-black font-imedium py-2'>Remove</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+
+                            <TouchableOpacity onPress={() => setModalVisible(false)} >
+                                <Text className='text-lg text-red-600 font-isemibold'>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
 				<View className="flex-1 pt-9"> 
 					<Text className="text-white font-isemibold text-base capitalize pb-3 pl-4">Susana</Text>
 				
-
 					<DataTable className="w-full"> 
 						<DataTable.Header className="border-y-0 h-11"> 
 							<DataTable.Title >

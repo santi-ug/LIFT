@@ -1,13 +1,11 @@
 import { ApiResponse, UserData } from "../types/Api";
 
-const API = `http://192.168.56.1:5000/api/v1`;
-
 export const registerUser = async (
 	userData: UserData
 ): Promise<ApiResponse> => {
 	console.log(JSON.stringify(userData));
 	try {
-		const response = await fetch(`${API}/users/register`, {
+		const response = await fetch(`${process.env.API_URL}/users/register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -17,13 +15,16 @@ export const registerUser = async (
 		});
 
 		const data: ApiResponse = await response.json();
-		if (response.ok) {
+
+		if (data.errors && Array.isArray(data.errors)) {
+			const errorMessages = data.errors.map((error: any) => error.msg).join("\n");
+			console.error("Errors in registration:", errorMessages);
+			return { success: false, message: errorMessages };
+		}else{
 			console.log("Registration successful:", data);
 			return data;
-		} else {
-			console.error("Error in registration:", data);
-			return data;
 		}
+	
 	} catch (error: any) {
 		console.error("Network error:", error);
 		throw new Error(error.message);
@@ -32,7 +33,7 @@ export const registerUser = async (
 
 export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 	try {
-		const response = await fetch(`${API}/users/login`, {
+		const response = await fetch(`${process.env.API_URL}/users/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -41,11 +42,13 @@ export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 		});
 
 		const data: ApiResponse = await response.json();
-		if (response.ok) {
+
+		if (data.errors && Array.isArray(data.errors)) {
+			const errorMessages = data.errors.map((error: any) => error.msg).join("\n");
+			console.error("Errors in login:", errorMessages);
+			return { success: false, message: errorMessages };
+		}else{
 			console.log("Login successful:", data);
-			return data;
-		} else {
-			console.error("Error in login:", data);
 			return data;
 		}
 	} catch (error: any) {

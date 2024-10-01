@@ -6,8 +6,7 @@ import Octicons from "@expo/vector-icons/Octicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
-import { Ionicons } from "@expo/vector-icons";
-import { Image } from "react-native";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />
@@ -80,6 +79,20 @@ export const ThreeDotsVerticarIcon = () => (
 export const MagnifyingGlassIcon = () => (
 	<Entypo name="magnifying-glass" size={20} color="#A0AEC0" />
 );
+
+export const CameraIcon = () => (
+	<Feather name="camera" size={20} color="#5F48D9" />
+);
+
+export const GalleryIcon = () => (
+	<Feather name="image" size={20} color="#5F48D9" />
+);
+
+export const TrashIcon = () => (
+	<FontAwesome name="trash-o" size={20} color="#5F48D9" />
+);
+
+
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

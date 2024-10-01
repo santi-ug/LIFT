@@ -55,7 +55,8 @@ export default function register() {
 				Alert.alert("Success", "Registration successful!");
 				router.push("/profile"); 
 			} else {
-				Alert.alert("Error", response.message); 
+				const errorMessage = response.message || "Unknown error occurred";
+      			Alert.alert("Error", errorMessage); 
 			}
 		} catch (error) {
 			Alert.alert("Error", "An error occurred during registration.");

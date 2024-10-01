@@ -7,5 +7,6 @@ export interface UserData {
 export interface ApiResponse {
     success: boolean;
     message: string;
+    errors?: { location: string; msg: string; path: string; type: string; value: string }[];
 }
   
