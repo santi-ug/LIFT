@@ -1,18 +1,36 @@
-import { CalendarIcon, CameraIcon, FilterIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, ThreeDotsVerticarIcon, TrashIcon, TrendLineIcon, UserIcon } from '../../components/atoms/icons';
+import { CalendarIcon, CameraIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, ThreeDotsVerticarIcon, TrashIcon, TrendLineIcon, UserIcon } from '../../components/atoms/icons';
+import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
-import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import Dropdown from '../../components/atoms/Dropdown';
+import { ApiResponse, UserData } from "../../types/Api";
+import React, { useEffect, useState } from 'react';
+import { infoUser } from '../../lib/api_backend';
 import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
 import { DataTable } from 'react-native-paper';
-import React, { useState } from 'react';
-import Dropdown from '../../components/atoms/Dropdown';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [image, setImage] = useState(user);
     const [isModalVisible, setModalVisible] = useState(false);
+    const [userData, setUserData] = useState<UserData | null>(null); 
+    const [error, setError] = useState<string | null>(null); 
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const user = await infoUser();
+                setUserData(user); // Guardamos los datos del usuario en el estado
+            } catch (err: any) {
+                setError(err.message); // Guardamos el error si ocurre
+                console.error("Error fetching user data:", err);
+            }
+        };
+
+        fetchUserData();
+    }, []); 
 
     const pickImage = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -136,8 +154,16 @@ export default function Profile() {
                 </Modal>
 
 				<View className="flex-1 pt-9"> 
-					<Text className="text-white font-isemibold text-base capitalize pb-3 pl-4">Susana</Text>
-				
+					
+                    {error ? (
+                            <Text className="text-red-500">{error}</Text>
+                        ) : (
+                            userData && (
+                                <Text className="text-white font-isemibold text-base capitalize pb-3 pl-4">{userData.name || 'Nombre no disponible'}</Text>
+                            )
+                        )
+                    }
+
 					<DataTable className="w-full"> 
 						<DataTable.Header className="border-y-0 h-11"> 
 							<DataTable.Title >
