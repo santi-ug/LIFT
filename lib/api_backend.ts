@@ -24,8 +24,10 @@ export const registerUser = async (
 			console.error("Errors in registration:", errorMessages);
 			return { success: false, message: errorMessages };
 		}else{
-			console.log("Registration successful:", data);
-			return data;
+            const token = data.token || ""; 
+            await SecureStore.setItemAsync("authToken", token);
+            console.log("Registration successful and token saved:", data);
+            return data;
 		}
 	
 	} catch (error: any) {
@@ -51,7 +53,7 @@ export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 			console.error("Errors in login:", errorMessages);
 			return { success: false, message: errorMessages };
 		}else{
-			const token = data.token || ""; 
+            const token = data.token || ""; 
             await SecureStore.setItemAsync("authToken", token);
             console.log("Login successful and token saved:", data);
             return data;
@@ -65,6 +67,7 @@ export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 export const infoUser = async (): Promise<UserData | undefined> => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
+        console.log("token", token);
 
         if (!token) {
             console.error("No token found, user is not authenticated");
@@ -95,45 +98,49 @@ export const infoUser = async (): Promise<UserData | undefined> => {
     }
 };
 
-export const updateImage = async (imageFile: { uri: string; name: string; type: string }): Promise<UserData | undefined> => {
+export const updateImage = async (imageFile: { uri: string; name: string}): Promise<UserData | undefined> => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
-        
-        const file = await fetch(imageFile.uri);
-        const blob = await file.blob();
 
-        const formData = new FormData();
-        formData.append('avatar', blob, imageFile.name);
-        
         if (!token) {
             console.error("No token found, user is not authenticated");
             throw new Error("No token found, user is not authenticated");
         }
 
+        const res = await fetch(imageFile.uri);
+        const blob = await res.blob();
+
+        const formData = new FormData();
+        formData.append('avatar', blob, imageFile.name);
+
+        console.log("FormData:", formData);
+
         const response = await fetch(`${process.env.API_URL}/users/me`, {
-            method: "PUT",
+            method: 'PUT',
+            body: formData,
             headers: {
                 "Authorization": `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-            },
-            body: formData,
+                "Content-Type": "multipart/form-data"
+            }
         });
 
-        const data: ApiResponse = await response.json();
+        console.log("Response Status:", response.status);
+        console.log("Response Headers:", response.headers);
 
-        if (response.ok) {
-            console.log("User info retrieved successfully", data);
-            if (!data.user) {
-                throw new Error("User data not found in response");
-            }
-
-            return data.user;
-        } else {
-            console.error("Error updating image:", data);
-            throw new Error(data.message || "Failed to update image");
+        if (!response.ok) {
+            console.error("Error in response", await response.text());
+            throw new Error("Failed to upload image");
         }
+
+        const data = await response.json(); // Cambia `res` a `response`
+        console.log("Image upload successful:", data);
+        return data.user;
+
     } catch (error: any) {
         console.error("Network error:", error.message || error);
+        console.error("Error stack:", error.stack);
+        console.error("Error name:", error.name);
+        console.error("Error code:", error.code);
         throw new Error(error.message || "Network error occurred");
     }
 };

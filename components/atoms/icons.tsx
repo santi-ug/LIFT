@@ -1,12 +1,14 @@
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Foundation from '@expo/vector-icons/Foundation';
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Octicons from "@expo/vector-icons/Octicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
+
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />
@@ -99,6 +101,19 @@ export const LogOutIcon = () => (
 export const DeleteAccountIcon = () => (
 	<AntDesign name="deleteuser" size={20} color="#5F48D9" />
 );
+
+export const EditIcon = () => (
+	<AntDesign name="edit" size={20} color="#5F48D9" />
+);
+
+export const AddIcon = () => (
+	<Ionicons name="add" size={20} color="white" />
+);
+
+export const ClipboardIcon = () => (
+	<Foundation name="clipboard-notes" size={20} color="#A0AEC0" />
+);
+
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

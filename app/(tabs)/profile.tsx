@@ -63,21 +63,21 @@ export default function Profile() {
         });
       
         if (!result.canceled) {
-          const imageUri = result.assets[0].uri;
-          console.log("Image URI:", imageUri);
-      
-          const imageFile = {
-            uri: imageUri,
-            name: result.assets[0].fileName || 'avatar.jpg',
-            type: result.assets[0].type || 'image/jpeg',
-          };
-      
-          try {
-            await updateImage(imageFile);
-          } catch (err: any) {
-            console.error("Error uploading image:", err);
-            setError(err.message);
-          }
+            const imageUri = result.assets[0].uri;
+            console.log("Image URI Profile:", imageUri);
+
+            const imageFile = {
+                uri: imageUri,
+                name: result.assets[0].fileName || 'avatar.jpg',
+            };
+
+            console.log("ImageFile Profile:", imageFile);
+
+            try {
+                await updateImage(imageFile);
+            } catch (err: any) {
+                console.error("Error uploading image:", err);
+            }
         }
       
         setModalVisible(false);

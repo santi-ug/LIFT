@@ -8,6 +8,7 @@ import {
 	GearIcon,
 	LogOutIcon,
 	DeleteAccountIcon,
+	EditIcon,
 } from "../components/atoms/icons";
 import { logout } from "../lib/api_backend";
 
@@ -80,6 +81,11 @@ export default function Layout() {
 				{
 					text: 'Delete',
 					icon: <DeleteAccountIcon />,
+					onPress: deleteAccount,
+				},
+				{
+					text: 'Edit',
+					icon: <EditIcon />,
 					onPress: deleteAccount,
 				},
 				]}

@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import ExerciseItem from '../molecules/ExerciseItem';
 import { getInfoExercises } from '../../lib/rapidapi';
 import SearchInput from '../organisms/SearchInput';
-import { Exercise } from '../../types/Exercise';
+import { Exercise } from '../../types/exercise';
 import { useEffect, useState } from 'react';
 
 export default function ListElement() {

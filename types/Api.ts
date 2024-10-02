@@ -2,7 +2,7 @@ export interface UserData {
     name?: string;
     email: string;
     password: string;
-    avatar: Blob | null; 
+    avatar?: Blob | null; 
 }
 
 export interface ApiResponse {
