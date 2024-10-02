@@ -1,7 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 import { ApiResponse, UserData } from "../types/Api";
 
-console.log("hola", process.env.API_URL);
+console.log("Hola2", `${process.env.API_URL}/users/me`)
+
 export const registerUser = async (
 	userData: UserData
 ): Promise<ApiResponse> => {
@@ -91,5 +92,75 @@ export const infoUser = async (): Promise<UserData | undefined> => {
     } catch (error: any) {
         console.error("Network error:", error.message);
         throw new Error(error.message);
+    }
+};
+
+export const updateImage = async (imageFile: { uri: string; name: string; type: string }): Promise<UserData | undefined> => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+        
+        const file = await fetch(imageFile.uri);
+        const blob = await file.blob();
+
+        const formData = new FormData();
+        formData.append('avatar', blob, imageFile.name);
+        
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
+
+        const response = await fetch(`${process.env.API_URL}/users/me`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+            },
+            body: formData,
+        });
+
+        const data: ApiResponse = await response.json();
+
+        if (response.ok) {
+            console.log("User info retrieved successfully", data);
+            if (!data.user) {
+                throw new Error("User data not found in response");
+            }
+
+            return data.user;
+        } else {
+            console.error("Error updating image:", data);
+            throw new Error(data.message || "Failed to update image");
+        }
+    } catch (error: any) {
+        console.error("Network error:", error.message || error);
+        throw new Error(error.message || "Network error occurred");
+    }
+};
+
+export const logout = async () => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+
+        const response = await fetch(`${process.env.API_URL}/users/logout`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        await SecureStore.deleteItemAsync("authToken");
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("api", data);
+        } else {
+            const errorData = await response.text();
+            console.error("Error al cerrar sesión", errorData);
+        }
+
+    } catch (error) {
+        console.error(error);
     }
 };

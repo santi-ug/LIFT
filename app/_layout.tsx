@@ -1,15 +1,15 @@
-import { SplashScreen, Stack } from "expo-router";
-import { useFonts } from "expo-font";
+import CustomModal from "../components/organisms/CustomModel";
+import { TouchableOpacity, View } from "react-native";
+import { router, SplashScreen, Stack, useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useFonts } from "expo-font";
 import {
 	ShareIcon,
 	GearIcon,
 	LogOutIcon,
 	DeleteAccountIcon,
 } from "../components/atoms/icons";
-import { Modal } from "react-native";
-import CustomModal from "../components/organisms/CustomModel";
+import { logout } from "../lib/api_backend";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +22,15 @@ export default function Layout() {
 		"Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
 	});
 
-	const LogOut = () => {};
+	const router = useRouter();
+
+	const LogOut = async () => {
+		await logout();
+
+		setModalVisible(false);
+		router.push("/");
+	};
+
 	const deleteAccount = () => {};
 
 	useEffect(() => {

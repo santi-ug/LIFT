@@ -7,9 +7,10 @@ import ProgressBar from "../../components/atoms/ProgressBar";
 import Dropdown from '../../components/atoms/Dropdown';
 import { ApiResponse, UserData } from "../../types/Api";
 import React, { useEffect, useState } from 'react';
-import { infoUser } from '../../lib/api_backend';
+import { infoUser, updateImage } from '../../lib/api_backend';
 import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
+import { Buffer } from 'buffer';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,34 +25,61 @@ export default function Profile() {
             try {
                 const user = await infoUser();
                 setUserData(user);
+        
+                if (user?.avatar != null) {
+                    const avatarData = (user.avatar as any).data;
+                    const base64 = await convertBufferArrayToBase64(avatarData);
+                    console.log(base64);
+                    setImage(base64); 
+                }
             } catch (err: any) {
                 setError(err.message);
                 console.error("Error fetching user data:", err);
             }
         };
-
+      
         fetchUserData();
-    }, []); 
+    }, []);
+
+    const convertBufferArrayToBase64 = (bufferArray: any[]): Promise<string> => {
+        const buffer = Buffer.from(bufferArray);
+        const base64 = buffer.toString('base64');
+        return Promise.resolve(base64);
+    };
 
     const pickImage = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+      
         if (permissionResult.granted === false) {
-            alert("Permission to access media library is required!");
-            return;
+          alert("Permission to access media library is required!");
+          return;
         }
-
+      
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
         });
-
+      
         if (!result.canceled) {
-            setImage({ uri: result.assets[0].uri });
+          const imageUri = result.assets[0].uri;
+          console.log("Image URI:", imageUri);
+      
+          const imageFile = {
+            uri: imageUri,
+            name: result.assets[0].fileName || 'avatar.jpg',
+            type: result.assets[0].type || 'image/jpeg',
+          };
+      
+          try {
+            await updateImage(imageFile);
+          } catch (err: any) {
+            console.error("Error uploading image:", err);
+            setError(err.message);
+          }
         }
-
+      
         setModalVisible(false);
     };
 
@@ -91,10 +119,18 @@ export default function Profile() {
 			<View className="relative flex-row items-center">
 			
 				<View className="w-24 h-24 rounded-full overflow-hidden ml-4 mt-0">
-                    <Image
-                        source={image}
-                        className="w-full h-full"
-                    />
+                    {userData?.avatar  != null? (
+                            <Image
+                                source={{ uri: `data:image/jpeg;base64,${image}` }} 
+                                className="w-full h-full"
+                            />
+                        ): (
+                            <Image
+                                source={user} 
+                                className="w-full h-full"
+                            />
+                        )
+                    }
 
                     <TouchableOpacity className='p-1 rounded-2xl bg-white absolute bottom-2 right-1'
                         onPress={() => setModalVisible(true)}
@@ -130,7 +166,7 @@ export default function Profile() {
 				<View className="flex-1 pt-9"> 
 					
                     {error ? (
-                            <Text className="text-red-500">{error}</Text>
+                            <Text className="text-red-500 text-base capitalize pb-3 pl-4">Cargando...</Text>
                         ) : (
                             userData && (
                                 <Text className="text-white font-isemibold text-base capitalize pb-3 pl-4">{userData.name || 'Nombre no disponible'}</Text>
