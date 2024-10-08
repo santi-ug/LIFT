@@ -9,6 +9,8 @@ import {
 	LogOutIcon,
 	DeleteAccountIcon,
 	EditIcon,
+	CheckIcon,
+	CancelIcon,
 } from "../components/atoms/icons";
 import { logout } from "../lib/api_backend";
 
@@ -33,6 +35,12 @@ export default function Layout() {
 	};
 
 	const deleteAccount = () => {};
+	
+	const updateAccount = () => {
+		
+		setModalVisible(false);
+		router.push("/editProfile")
+	};
 
 	useEffect(() => {
 		if (error) throw error;
@@ -47,6 +55,22 @@ export default function Layout() {
 			<Stack>
 				<Stack.Screen name='index' options={{ headerShown: false }} />
 				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
+				<Stack.Screen name='editProfile' options={{
+						headerTitle: "Edit Profile",
+						headerStyle: { backgroundColor: '#171328'},
+						headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
+						headerTintColor: '#fff',
+						headerBackVisible: false, // Eliminar la flecha de retroceso
+						headerLeft: () => (
+							<View className="flex-row mr-2">
+								<TouchableOpacity className="ml-4"
+									onPress={() => router.push("/profile")}
+								>
+									<CancelIcon />
+								</TouchableOpacity>
+							</View>
+						),
+					}} />
 				<Stack.Screen name='(tabs)' options={{
 						headerTitle: "Edit Profile",
 						headerStyle: { backgroundColor: '#171328'},
@@ -86,7 +110,7 @@ export default function Layout() {
 				{
 					text: 'Edit',
 					icon: <EditIcon />,
-					onPress: deleteAccount,
+					onPress: updateAccount,
 				},
 				]}
 			/>

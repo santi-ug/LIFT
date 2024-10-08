@@ -114,6 +114,13 @@ export const ClipboardIcon = () => (
 	<Foundation name="clipboard-notes" size={20} color="#A0AEC0" />
 );
 
+export const CheckIcon = () => (
+	<Feather name="check" size={20} color="white" />	
+);
+
+export const CancelIcon = () => (
+	<Feather name="x" size={20} color="white" />
+);
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

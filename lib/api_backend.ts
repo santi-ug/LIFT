@@ -115,7 +115,7 @@ export const updateImage = async (imageFile: { uri: string; name: string}): Prom
 
         console.log("FormData:", formData);
 
-        const response = await fetch(`${process.env.API_URL}/users/me`, {
+        const response = await fetch(`${process.env.API_URL}/users/myImage`, {
             method: 'PUT',
             body: formData,
             headers: {
@@ -170,4 +170,43 @@ export const logout = async () => {
     } catch (error) {
         console.error(error);
     }
+};
+
+export const update = async (
+	userData: UserData
+): Promise<ApiResponse> => {
+    console.log(JSON.stringify(userData));
+	try {
+        const token = await SecureStore.getItemAsync("authToken");
+
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
+
+		const response = await fetch(`${process.env.API_URL}/users/me`, {
+			method: 'PUT',
+			headers: {
+                "Authorization": `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+
+			body: JSON.stringify(userData),
+		});
+
+		const data: ApiResponse = await response.json();
+
+		if (data.errors && Array.isArray(data.errors)) {
+			const errorMessages = data.errors.map((error: any) => error.msg).join("\n");
+			console.error("Errors in update:", errorMessages);
+			return { success: false, message: errorMessages };
+		}else{
+            console.log("Update successful and token saved:", data);
+            return data;
+		}
+	
+	} catch (error: any) {
+		console.error("Network error:", error);
+		throw new Error(error.message);
+	}
 };
