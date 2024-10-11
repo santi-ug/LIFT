@@ -29,7 +29,6 @@ export default function Profile() {
                 if (user?.avatar != null) {
                     const avatarData = (user.avatar as any).data;
                     const base64 = await convertBufferArrayToBase64(avatarData);
-                    console.log(base64);
                     setImage(base64); 
                 }
             } catch (err: any) {
@@ -62,26 +61,26 @@ export default function Profile() {
           quality: 1,
         });
       
-        if (!result.canceled) {
-            const imageUri = result.assets[0].uri;
-            console.log("Image URI Profile:", imageUri);
-
-            const imageFile = {
-                uri: imageUri,
-                name: result.assets[0].fileName || 'avatar.jpg',
-            };
-
-            console.log("ImageFile Profile:", imageFile);
-
-            try {
-                await updateImage(imageFile);
-            } catch (err: any) {
-                console.error("Error uploading image:", err);
-            }
+        if (!result.canceled && result.assets.length > 0) {
+            setImage(result.assets[0].uri);
+            saveImage();
         }
       
         setModalVisible(false);
     };
+
+    const saveImage = async () => {
+        if (!Image) {
+            alert('Necesita subir imagen primero')
+            return
+        }
+
+        try {
+            await updateImage(image);
+        } catch (err: any) {
+            console.error("Error uploading image:", err);
+        }
+    }
 
     const takePhoto = async () => {
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -96,8 +95,10 @@ export default function Profile() {
             quality: 1,
         });
 
-        if (!result.canceled && result.assets.length > 0) {
-            setImage({ uri: result.assets[0].uri });
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+            saveImage();
+            console.log(image);
         }
 
         setModalVisible(false);

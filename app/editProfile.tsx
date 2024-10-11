@@ -1,7 +1,10 @@
-import CustomButton from "../components/atoms/CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
+import CustomButton from "../components/atoms/CustomButton";
+import { registerScheme } from "./schemes/registerScheme";
 import FormField from "../components/atoms/FormField";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { update } from "../lib/api_backend";
 import { UserData } from "../types/Api";
 import { router } from "expo-router";
@@ -13,45 +16,31 @@ import {
 } from "../components/atoms/icons";
 
 export default function editProfile() {
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [form, setForm] = useState({
-		name: "",
-		email: "",
-		password: "",
-		confirmPassword: "",
+	const { 
+		control, 
+		handleSubmit, 
+		formState: { errors, isSubmitting } 
+	} = useForm({
+		resolver: zodResolver(registerScheme),
 	});
 
-	const submit = async () => {
-		const { email, name, password, confirmPassword } = form;
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-		if (email && !emailRegex.test(email)){
-			Alert.alert("Error", "Please enter a valid email.");
-			return;
+	const onError = (errors: any) => {
+		if (Object.keys(errors).length > 0) {
+			Object.values(errors).forEach((error) => {
+				if (error && typeof error === "object" && "message" in error) {
+					Alert.alert("Error", error.message as string);
+				}
+			});
 		}
+	};
 
-		if (password && password.length < 8) {
-			Alert.alert("Error", "Password must be at least 8 characters long.");
-			return;
-		}
-
-		if (password && password !== confirmPassword) {
-			Alert.alert("Error", "Passwords do not match.");
-			return;
-		}
-
-		if (name && name.length < 4){
-			Alert.alert("Error", "Username must be at least 4 characters long.");
-			return;
-		}
+	const onSubmit = async (data: any) => {
 
         const updatedData: UserData = {};
 
-        if (email) updatedData.email = email; // Agrega email solo si está definido
-        if (name) updatedData.name = name; // Agrega nombre solo si está definido
-        if (password) updatedData.password = password; // Agrega password solo si está definido
-
-		setIsSubmitting(true);
+        if (data.email) updatedData.email = data.email; 
+        if (data.name) updatedData.name = data.name; 
+        if (data.password) updatedData.password = data.password; 
 		
 		try {
 			const response = await update(updatedData); 
@@ -65,9 +54,7 @@ export default function editProfile() {
 		} catch (error) {
 			Alert.alert("Error", "An error occurred while updating the profile.");
 			console.error(error); 
-		} finally {
-			setIsSubmitting(false); 
-		}
+		} 
 	};
 
 	return (
@@ -77,52 +64,78 @@ export default function editProfile() {
 
 					<View className='w-full justify-center min-h-[90vh] px-8 pb-20'>
                         
-                            <Text className='text-4xl text-white font-ibold'>
-                                Edit profile in LIFT.
-                            </Text>
+						<Text className='text-4xl text-white font-ibold'>
+							Edit profile in LIFT.
+						</Text>
 
-                            <FormField
-                                icon={EmailIcon}
-                                title='Email'
-                                placeholder='Email'
-                                value={form.email}
-                                handleChangeText={(e) => setForm({ ...form, email: e })}
-                                otherStyles='mt-7'
-                                keyboardType='email-address'
-                            />
-                            <FormField
-                                icon={UserIcon}
-                                title='Username'
-                                placeholder='Username'
-                                value={form.name}
-                                handleChangeText={(e) => setForm({ ...form, name: e })}
-                                otherStyles='mt-7'
-                            />
-                            <FormField
-                                icon={PasswordIcon}
-                                title='Password'
-                                placeholder='Password'
-                                value={form.password}
-                                handleChangeText={(e) => setForm({ ...form, password: e })}
-                                otherStyles='mt-7'
-                            />
-                            <FormField
-                                icon={PasswordIcon}
-                                title="Password"
-                                placeholder="Confirm Password"
-                                value={form.confirmPassword}
-                                handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
-                                otherStyles="mt-7"
-                            />
+						<Controller
+							control={control}
+							name="email"
+							render={({ field: { onChange, value } }) => (
+								<FormField
+									icon={EmailIcon}
+									title="Email"
+									placeholder="Email"
+									value={value}
+									handleChangeText={onChange}
+									otherStyles="mt-7"
+									keyboardType="email-address"
+								/>
+							)}
+						/>
 
-                            <View className="my-4">
-                                <CustomButton
-                                    title='Continue'
-                                    handlePress={submit}
-                                    containerStyles='mt-6'
-                                    isLoading={isSubmitting}
-                                />
-                            </View>
+						<Controller
+							control={control}
+							name="name"
+							render={({ field: { onChange, value } }) => (
+								<FormField
+									icon={UserIcon}
+									title="Username"
+									placeholder="Username"
+									value={value}
+									handleChangeText={onChange}
+									otherStyles="mt-7"
+								/>
+							)}
+						/>
+
+						<Controller
+							control={control}
+							name="password"
+							render={({ field: { onChange, value } }) => (
+								<FormField
+									icon={PasswordIcon}
+									title="Password"
+									placeholder="Password"
+									value={value}
+									handleChangeText={onChange}
+									otherStyles="mt-7"
+								/>
+							)}
+						/>
+						<Controller
+							control={control}
+							name="confirmPassword"
+							render={({ field: { onChange, value } }) => (
+								<FormField
+									icon={PasswordIcon}
+									title="Password"
+									placeholder="Confirm Password"
+									value={value}
+									handleChangeText={onChange}
+									otherStyles="mt-7"
+								/>
+							)}
+						/>
+
+						<View className="my-4">
+							<CustomButton
+								title='Continue'
+								handlePress={handleSubmit(onSubmit, onError)} 
+								containerStyles='mt-6'
+								isLoading={isSubmitting}
+							/>
+						</View>
                         
 					</View>
 

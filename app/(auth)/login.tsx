@@ -2,6 +2,8 @@ import CustomButton from "../../components/atoms/CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert, KeyboardAvoidingView } from "react-native";
 import FormField from "../../components/atoms/FormField";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../lib/api_backend";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -11,33 +13,38 @@ import {
 	// GoogleIcon,
 	PasswordIcon,
 } from "../../components/atoms/icons";
+import { loginScheme } from "../schemes/loginScheme";
 
 export default function login() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [form, setForm] = useState({
-		email: "",
-		password: "",
+	const { 
+		control, 
+		handleSubmit, 
+		formState: { errors, isSubmitting } 
+	} = useForm({
+		resolver: zodResolver(loginScheme),
 	});
 
-	const submit = async () => {
-		const { email, password } = form;
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const submitApple = async () => {};
 
-		if (!emailRegex.test(email)){
-			Alert.alert("Error", "Please enter a valid email.");
-			return;
+	const onError = (errors: any) => {
+		if (Object.keys(errors).length > 0) {
+			Object.values(errors).forEach((error) => {
+				if (error && typeof error === "object" && "message" in error) {
+					Alert.alert("Error", error.message as string);
+				}
+			});
 		}
+	};
 
-		if (password.length < 8) {
-			Alert.alert("Error", "Password must be at least 8 characters long.");
-			return;
-		}
+	const onSubmit = async (data: any) => {
 
-		setIsSubmitting(true);
-		
 		try {
-			const response = await loginUser({ email, password }); 
+			const response = await loginUser({
+				email: data.email,
+				password: data.password,
+			});
+
 			if (response.success) {
 				Alert.alert("Success", "Login successful!");
 				router.push("/profile"); 
@@ -47,8 +54,6 @@ export default function login() {
 		} catch (error) {
 			Alert.alert("Error", "An error occurred during login.");
 			console.error(error); 
-		} finally {
-			setIsSubmitting(false); 
 		}
 	};
 
@@ -63,22 +68,35 @@ export default function login() {
 								Login to LIFT.
 							</Text>
 
-							<FormField
-								icon={EmailIcon}
-								title='Email'
-								placeholder='Email'
-								value={form.email}
-								handleChangeText={(e) => setForm({ ...form, email: e })}
-								otherStyles='mt-7'
-								keyboardType='email-address'
+							<Controller
+								control={control}
+								name="email"
+								render={({ field: { onChange, value } }) => (
+									<FormField
+										icon={EmailIcon}
+										title="Email"
+										placeholder="Email"
+										value={value}
+										handleChangeText={onChange}
+										otherStyles="mt-7"
+										keyboardType="email-address"
+									/>
+								)}
 							/>
-							<FormField
-								icon={PasswordIcon}
-								title='Password'
-								placeholder='Password'
-								value={form.password}
-								handleChangeText={(e) => setForm({ ...form, password: e })}
-								otherStyles='mt-7'
+
+							<Controller
+								control={control}
+								name="password"
+								render={({ field: { onChange, value } }) => (
+									<FormField
+										icon={PasswordIcon}
+										title="Password"
+										placeholder="Password"
+										value={value}
+										handleChangeText={onChange}
+										otherStyles="mt-7"
+									/>
+								)}
 							/>
 
 							<View className='justify-end pt-4 flex-row gap-2'>
@@ -91,9 +109,10 @@ export default function login() {
 							</View>
 
 							<CustomButton
-								title='Login'
-								handlePress={submit}
-								containerStyles='mt-6'
+								title="Continue"
+								handlePress={handleSubmit(onSubmit, onError)} 
+								onSubmit={onSubmit}
+								containerStyles="mt-6"
 								isLoading={isSubmitting}
 							/>
 
@@ -106,7 +125,7 @@ export default function login() {
 							<CustomButton
 								title='Login with Apple ID'
 								icon={AppleIcon}
-								handlePress={submit}
+								handlePress={submitApple}
 								containerStyles='mt-6 !bg-white'
 								textStyles='!text-black'
 								isLoading={isSubmittingApple}

@@ -1,12 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 import { ApiResponse, UserData } from "../types/Api";
 
-console.log("Hola2", `${process.env.API_URL}/users/me`)
+console.log("Hola23", `${process.env.API_URL}/users/me`)
 
 export const registerUser = async (
 	userData: UserData
 ): Promise<ApiResponse> => {
-	console.log(JSON.stringify(userData));
+	console.log("yo", JSON.stringify(userData));
 	try {
 		const response = await fetch(`${process.env.API_URL}/users/register`, {
 			method: "POST",
@@ -98,7 +98,7 @@ export const infoUser = async (): Promise<UserData | undefined> => {
     }
 };
 
-export const updateImage = async (imageFile: { uri: string; name: string}): Promise<UserData | undefined> => {
+export const updateImage = async (imageUri: string): Promise<UserData | undefined> => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
 
@@ -107,13 +107,13 @@ export const updateImage = async (imageFile: { uri: string; name: string}): Prom
             throw new Error("No token found, user is not authenticated");
         }
 
-        const res = await fetch(imageFile.uri);
+        const res = await fetch(imageUri);
         const blob = await res.blob();
 
         const formData = new FormData();
-        formData.append('avatar', blob, imageFile.name);
+        formData.append('avatar', blob, 'avatar.jpg');
 
-        console.log("FormData:", formData);
+        console.log("FormData created:", formData);
 
         const response = await fetch(`${process.env.API_URL}/users/myImage`, {
             method: 'PUT',
@@ -132,7 +132,7 @@ export const updateImage = async (imageFile: { uri: string; name: string}): Prom
             throw new Error("Failed to upload image");
         }
 
-        const data = await response.json(); // Cambia `res` a `response`
+        const data = await response.json();
         console.log("Image upload successful:", data);
         return data.user;
 
