@@ -1,3 +1,4 @@
+import React from 'react';
 import ListElement from "../../components/screens/ListElement";
 
 export default function Exercises() {

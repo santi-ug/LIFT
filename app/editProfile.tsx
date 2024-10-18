@@ -1,3 +1,4 @@
+import React from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
 import CustomButton from "../components/atoms/CustomButton";
