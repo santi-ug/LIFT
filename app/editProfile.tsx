@@ -7,15 +7,18 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { update } from "../lib/api_backend";
 import { UserData } from "../types/Api";
-import { router } from "expo-router";
-import { useState } from "react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../types/Rutas";
+import { useNavigation } from "@react-navigation/native"; 
 import {
 	EmailIcon,
 	PasswordIcon,
 	UserIcon,
 } from "../components/atoms/icons";
 
-export default function editProfile() {
+export default function EditProfile() {
+	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
 	const { 
 		control, 
 		handleSubmit, 
@@ -46,7 +49,7 @@ export default function editProfile() {
 			const response = await update(updatedData); 
 			if (response.success) {
 				Alert.alert("Success", "Profile updated successfully!");
-                router.push("/profile");
+                navigation.navigate("(tabs)"); 
 			} else {
 				const errorMessage = response.message || "Unknown error occurred";
       			Alert.alert("Error", errorMessage); 
@@ -58,7 +61,7 @@ export default function editProfile() {
 	};
 
 	return (
-		<>
+		<View>
 			<SafeAreaView className='bg-background h-full'>
 				<ScrollView>
 
@@ -141,6 +144,6 @@ export default function editProfile() {
 
 				</ScrollView>
 			</SafeAreaView>
-		</>
+		</View>
 	);
 }

@@ -1,11 +1,15 @@
-import { Redirect, Tabs } from "expo-router";
 import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
 import {
 	ExerciseIcon,
 	NewWorkoutIcon,
 	UserIcon,
 } from "../../components/atoms/icons";
+
+import Profile from "./profile"
+import Exercises from "./exercises"; 
+import Newworkout from "./newworkout"; 
 
 interface TabIconProps {
 	icon: React.ElementType;
@@ -33,69 +37,69 @@ const TabIcon: React.FC<TabIconProps> = ({
 	);
 };
 
+const Tab = createBottomTabNavigator();
+
 const TabsLayout = () => {
 	return (
-		<>
-			<Tabs
-				screenOptions={{
-					tabBarShowLabel: false,
-					tabBarActiveTintColor: "#5F48D9",
-					tabBarInactiveTintColor: "#E5E4ED",
-					tabBarStyle: {
-						height: 60,
-						backgroundColor: "#171328",
-						borderTopWidth: 2,
-						borderTopColor: "#151124",
-					},
+		<Tab.Navigator
+			screenOptions={{
+				tabBarShowLabel: false,
+				tabBarActiveTintColor: "#5F48D9",
+				tabBarInactiveTintColor: "#E5E4ED",
+				tabBarStyle: {
+					height: 60,
+					backgroundColor: "#171328",
+					borderTopWidth: 2,
+					borderTopColor: "#151124",
+				},
+			}}
+		>
+			<Tab.Screen
+				name='Profile'
+				component={Profile} 
+				options={{
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={UserIcon}
+							color={color}
+							name={"Profile"}
+							focused={focused}
+						/>
+					),
 				}}
-			>
-				<Tabs.Screen
-					name='exercises'
-					options={{
-						title: "Exercises",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={ExerciseIcon}
-								color={color}
-								name={"Exercises"}
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name='newworkout'
-					options={{
-						title: "New Workout",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={NewWorkoutIcon}
-								color={color}
-								name={"New Workout"}
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name='profile'
-					options={{
-						title: "Profile",
-						headerShown: false,
-						tabBarIcon: ({ color, focused }) => (
-							<TabIcon
-								icon={UserIcon}
-								color={color}
-								name={"Profile"}
-								focused={focused}
-							/>
-						),
-					}}
-				/>
-			</Tabs>
-		</>
+			/>
+			<Tab.Screen
+				name='exercises'
+				component={Exercises} 
+				options={{
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={ExerciseIcon}
+							color={color}
+							name={"Exercises"}
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tab.Screen
+				name='newworkout'
+				component={Newworkout} 
+				options={{
+					headerShown: false,
+					tabBarIcon: ({ color, focused }) => (
+						<TabIcon
+							icon={NewWorkoutIcon}
+							color={color}
+							name={"New Workout"}
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+		</Tab.Navigator>
 	);
 };
 

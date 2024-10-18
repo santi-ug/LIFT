@@ -6,7 +6,10 @@ import FormField from "../../components/atoms/FormField";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "../../lib/api_backend";
-import { Link, router } from "expo-router";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../types/Rutas";
+import { useNavigation } from "@react-navigation/native";
+
 import { useState } from "react";
 import {
   AppleIcon,
@@ -16,6 +19,8 @@ import {
 } from "../../components/atoms/icons";
 
 export default function Register() {
+	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
 	const { 
 		control, 
@@ -48,7 +53,7 @@ export default function Register() {
 
 			if (response.success) {
 				Alert.alert("Success", "Registration successful!");
-				router.push("/profile");
+				navigation.navigate("(tabs)");
 			} else {
 				const errorMessage = response.message || "Unknown error occurred";
 				Alert.alert("Error", errorMessage);
@@ -60,6 +65,7 @@ export default function Register() {
 	};
 
   	return (
+		<View>
 		<SafeAreaView className='bg-background h-full'>
 			<ScrollView>
 
@@ -163,12 +169,16 @@ export default function Register() {
 
 					<View className='justify-center pt-7 flex-row gap-2'>
 						<Text className='text-white text-center'>Joined us before?</Text>
-						<Link href='/login' className='text-primary font-semibold'>
+						<Text
+							className='text-primary font-isemibold'
+							onPress={() => navigation.navigate("(auth)", { screen: "login" })}
+						>
 							Login
-						</Link>
+						</Text>
 					</View>
 				</View>
 			</ScrollView>
 		</SafeAreaView>
+		</View>
   	);
 }

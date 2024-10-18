@@ -1,15 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, ScrollView, Text, View } from "react-native";
 
-import { Link, Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StackNavigationProp } from "@react-navigation/stack"; 
+import { RootStackParamList } from "../types/Rutas";
+import { useNavigation } from "@react-navigation/native"; 
 
 import home from "../assets/images/home.png";
 import CustomButton from "../components/atoms/CustomButton";
 
 export default function App() {
+	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
 	return (
-		<>
+		<View>
 			<Image source={home} className='w-full h-full bg-background ' />
 			<SafeAreaView className='w-full h-full absolute'>
 
@@ -25,21 +29,27 @@ export default function App() {
 						{/* button */}
 						<CustomButton
 							title='GET STARTED'
-							handlePress={() => router.push("/register")}
+							handlePress={() => navigation.navigate("(auth)", { screen: "register" })}
 							containerStyles='w-full mt-16'
 						/>
 						{/* alrdy account link */}
 						<View className='justify-center pt-5 flex-row gap-2'>
 							<Text className='text-white '>Already have an account?</Text>
-							<Link href='/login' className='text-primary font-ibold'>
+							<Text
+								className='text-primary font-ibold'
+								onPress={() => navigation.navigate("(auth)", { screen: "login" })}
+							>
 								Login
-							</Link>
+							</Text>
 						</View>
 
 						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  */}
-						<Link href='/profile' className='text-primary font-ibold mt-5'>
+						<Text
+							className='text-primary font-ibold mt-5'
+							onPress={() => navigation.navigate("(tabs)")} 
+						>
 							NEW WORKOUT [TEMP]
-						</Link>
+						</Text>
 						
 					</View>
 
@@ -47,6 +57,6 @@ export default function App() {
 				<StatusBar style='light' />
 				
 			</SafeAreaView>
-		</>
+		</View>
 	);
 }

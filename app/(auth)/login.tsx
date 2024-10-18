@@ -5,7 +5,10 @@ import FormField from "../../components/atoms/FormField";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "../../lib/api_backend";
-import { Link, router } from "expo-router";
+import { StackNavigationProp } from "@react-navigation/stack"; 
+import { RootStackParamList } from "../../types/Rutas";
+import { useNavigation } from "@react-navigation/native"; 
+
 import { useState } from "react";
 import {
 	AppleIcon,
@@ -15,7 +18,9 @@ import {
 } from "../../components/atoms/icons";
 import { loginScheme } from "../schemes/loginScheme";
 
-export default function login() {
+export default function Login() {
+	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
 	const { 
 		control, 
@@ -47,7 +52,7 @@ export default function login() {
 
 			if (response.success) {
 				Alert.alert("Success", "Login successful!");
-				router.push("/profile"); 
+				navigation.navigate("(tabs)"); 
 			} else {
 				Alert.alert("Error", response.message); 
 			}
@@ -58,7 +63,7 @@ export default function login() {
 	};
 
 	return (
-		<>
+		<View>
 			<SafeAreaView className='bg-background h-full'>
 				<KeyboardAvoidingView behavior="padding"  keyboardVerticalOffset={20} style={{ flex: 1 }}>
 					<ScrollView>
@@ -100,12 +105,12 @@ export default function login() {
 							/>
 
 							<View className='justify-end pt-4 flex-row gap-2'>
-								<Link
-									href='/forgot-password'
+								<Text
 									className='text-primary text-sm font-isemibold'
+									onPress={() => navigation.navigate("(auth)", { screen: "login" })} 
 								>
 									Forgot password?
-								</Link>
+								</Text>
 							</View>
 
 							<CustomButton
@@ -143,9 +148,12 @@ export default function login() {
 
 							<View className=' justify-center pt-7 flex-row gap-2'>
 								<Text className='text-white text-center'>New to LIFT?</Text>
-								<Link href='/register' className='text-primary font-isemibold'>
+								<Text
+									className='text-primary font-isemibold'
+									onPress={() => navigation.navigate("(auth)", { screen: "register" })} 
+								>
 									Register
-								</Link>
+								</Text>
 							</View>
 						</View>
 
@@ -154,6 +162,6 @@ export default function login() {
 			</SafeAreaView>
 
 			{/* <Login /> */}
-		</>
+		</View>
 	);
 }

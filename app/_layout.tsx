@@ -1,7 +1,12 @@
+import React, { useEffect, useState } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StackNavigationProp } from "@react-navigation/stack"; // Importa StackNavigationProp
+import { RootStackParamList } from "../types/Rutas";
+import { useNavigation } from "@react-navigation/native"; // Importar useNavigation
+
+import * as SplashScreen from 'expo-splash-screen';
 import CustomModal from "../components/organisms/CustomModel";
 import { TouchableOpacity, View } from "react-native";
-import { router, SplashScreen, Stack, useNavigation, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import {
 	ShareIcon,
@@ -14,10 +19,19 @@ import {
 } from "../components/atoms/icons";
 import { logout } from "../lib/api_backend";
 
+import App from './index';
+import AuthLayout from './(auth)/_layout';
+import TabsLayout from './(tabs)/_layout';
+import EditProfile from './editProfile';
+
+const Stack = createStackNavigator();
+
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
-	const [isModalVisible, setModalVisible] = useState(false);
+	const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const [isModalVisible, setModalVisible] = useState(false);
 	const [fontsLoaded, error] = useFonts({
 		"Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
 		"Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
@@ -25,13 +39,11 @@ export default function Layout() {
 		"Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
 	});
 
-	const router = useRouter();
-
 	const LogOut = async () => {
 		await logout();
 
 		setModalVisible(false);
-		router.push("/");
+		navigation.navigate("index")
 	};
 
 	const deleteAccount = () => {};
@@ -39,81 +51,90 @@ export default function Layout() {
 	const updateAccount = () => {
 		
 		setModalVisible(false);
-		router.push("/editProfile")
+		navigation.navigate("editProfile")
 	};
 
-	useEffect(() => {
-		if (error) throw error;
+    return (
+        <>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="index"
+                    component={App}
+                    options={{ headerShown: false }}
+                />
 
-		if (fontsLoaded) SplashScreen.hideAsync();
+                <Stack.Screen
+                    name="(auth)"
+                    component={AuthLayout}
+                    options={{ headerShown: false }}
+                />
 
-		if (!fontsLoaded && !error) return;
-	}, [fontsLoaded, error]);
+                <Stack.Screen
+                    name="editProfile"
+                    component={EditProfile}
+                    options={{
+                        headerTitle: "Edit Profile",
+                        headerStyle: { backgroundColor: '#171328' },
+                        headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
+                        headerTintColor: '#fff',
+                        headerLeft: () => (
+                            <View style={{ flexDirection: 'row', marginRight: 8 }}>
+                                <TouchableOpacity
+                                    style={{ marginLeft: 16 }}
+                                    onPress={() => navigation.navigate("(tabs)")}
+                                >
+                                    <CancelIcon />
+                                </TouchableOpacity>
+                            </View>
+                        ),
+                    }}
+                />
 
-	return (
-		<>
-			<Stack>
-				<Stack.Screen name='index' options={{ headerShown: false }} />
-				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
-				<Stack.Screen name='editProfile' options={{
-						headerTitle: "Edit Profile",
-						headerStyle: { backgroundColor: '#171328'},
-						headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
-						headerTintColor: '#fff',
-						headerBackVisible: false, // Eliminar la flecha de retroceso
-						headerLeft: () => (
-							<View className="flex-row mr-2">
-								<TouchableOpacity className="ml-4"
-									onPress={() => router.push("/profile")}
-								>
-									<CancelIcon />
-								</TouchableOpacity>
-							</View>
-						),
-					}} />
-				<Stack.Screen name='(tabs)' options={{
-						headerTitle: "Edit Profile",
-						headerStyle: { backgroundColor: '#171328'},
-						headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
-						headerTintColor: '#fff',
-						headerBackVisible: false, // Eliminar la flecha de retroceso
-						headerRight: () => (
-							<View className="flex-row mr-2">
-								<ShareIcon />
-								<TouchableOpacity className="ml-4"
-									onPress={() => setModalVisible(true)}
-								>
-									<GearIcon />
-								</TouchableOpacity>
-							</View>
-						),
-					}} />
+                <Stack.Screen
+                    name="(tabs)"
+                    component={TabsLayout}
+                    options={{
+                        headerTitle: "Edit Profile",
+                        headerStyle: { backgroundColor: '#171328' },
+                        headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
+                        headerTintColor: '#fff',
+                        headerRight: () => (
+                            <View style={{ flexDirection: 'row', marginRight: 8 }}>
+                                <ShareIcon />
+                                <TouchableOpacity
+                                    style={{ marginLeft: 16 }}
+                                    onPress={() => setModalVisible(true)}
+                                >
+                                    <GearIcon />
+                                </TouchableOpacity>
+                            </View>
+                        ),
+                    }}
+                />
+            </Stack.Navigator>
 
-				{/* <Stack.Screen name='/search/[query]' options={{ headerShown: false }} /> */}
-			</Stack>
-
-			<CustomModal
-				isVisible={isModalVisible}
-				onClose={() => setModalVisible(false)}
-				title="Account"
-				buttons={[
-				{
-					text: 'Log out',
-					icon: <LogOutIcon />,
-					onPress: LogOut,
-				},
-				{
-					text: 'Delete',
-					icon: <DeleteAccountIcon />,
-					onPress: deleteAccount,
-				},
-				{
-					text: 'Edit',
-					icon: <EditIcon />,
-					onPress: updateAccount,
-				},
-				]}
-			/>
-		</>
-	);
+            <CustomModal
+                isVisible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                title="Account"
+                buttons={[
+                    {
+                        text: 'Log out',
+                        icon: <LogOutIcon />,
+                        onPress: LogOut,
+                    },
+                    {
+                        text: 'Delete',
+                        icon: <DeleteAccountIcon />,
+                        onPress: deleteAccount,
+                    },
+                    {
+                        text: 'Edit',
+                        icon: <EditIcon />,
+                        onPress: updateAccount,
+                    },
+                ]}
+            />
+        </>
+    );
 }
