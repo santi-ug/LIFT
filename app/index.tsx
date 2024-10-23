@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, ScrollView, Text, View } from "react-native";
 
-import { Link, Redirect, router } from "expo-router";
+import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import home from "../assets/images/home.png";
@@ -12,9 +12,7 @@ export default function App() {
 		<>
 			<Image source={home} className='w-full h-full bg-background ' />
 			<SafeAreaView className='w-full h-full absolute'>
-
 				<ScrollView contentContainerStyle={{ height: "100%" }}>
-
 					<View className='w-full justify-center items-center min-h-[125vh] px-8'>
 						<Text className='text-8xl font-ibold text-white items-start'>
 							LIFT.
@@ -36,16 +34,13 @@ export default function App() {
 							</Link>
 						</View>
 
-						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT
-						<Link href='/profile' className='text-primary font-ibold mt-5'>
-							NEW WORKOUT [TEMP]
-						</Link> */}
-						
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT */}
+						<Link href='/example' className='text-primary font-ibold mt-5'>
+							SQLITE EXAMPLE
+						</Link>
 					</View>
-
 				</ScrollView>
 				<StatusBar style='light' />
-				
 			</SafeAreaView>
 		</>
 	);

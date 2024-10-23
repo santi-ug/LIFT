@@ -1,13 +1,12 @@
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Octicons from "@expo/vector-icons/Octicons";
-import Fontisto from "@expo/vector-icons/Fontisto";
-import Feather from '@expo/vector-icons/Feather';
-import Entypo from '@expo/vector-icons/Entypo';
 import { Ionicons } from "@expo/vector-icons";
-import { Image } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Octicons from "@expo/vector-icons/Octicons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />
@@ -46,39 +45,35 @@ export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 export const TrendLineIcon = () => (
-	<Feather name="trending-up" size={17} color="white"/>
+	<Feather name='trending-up' size={17} color='white' />
 );
 
-export const GearIcon = () => (
-	<Octicons name="gear" size={20} color="white" />
-);
+export const GearIcon = () => <Octicons name='gear' size={20} color='white' />;
 
-export const ShareIcon = () => (
-	<Feather name="share" size={20} color="white" />
-);
+export const ShareIcon = () => <Feather name='share' size={20} color='white' />;
 
 export const ArrowRightIcon = () => (
-	<AntDesign name="arrowright" size={20} color="white" />
+	<AntDesign name='arrowright' size={20} color='white' />
 );
 
 export const CalendarIcon = () => (
-	<AntDesign name="calendar" size={20} color="white" />
+	<AntDesign name='calendar' size={20} color='white' />
 );
 
 export const PeopleIcon = () => (
-	<MaterialIcons name="emoji-people" size={20} color="white" />
+	<MaterialIcons name='emoji-people' size={20} color='white' />
 );
 
 export const FilterIcon = () => (
-	<Ionicons name="filter" size={20} color="#A0AEC0" />
+	<Ionicons name='filter' size={20} color='#A0AEC0' />
 );
 
 export const ThreeDotsVerticarIcon = () => (
-	<Entypo name="dots-three-vertical" size={20} color="#A0AEC0" />
+	<Entypo name='dots-three-vertical' size={20} color='#A0AEC0' />
 );
 
 export const MagnifyingGlassIcon = () => (
-	<Entypo name="magnifying-glass" size={20} color="#A0AEC0" />
+	<Entypo name='magnifying-glass' size={20} color='#A0AEC0' />
 );
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
