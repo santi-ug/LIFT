@@ -9,11 +9,7 @@ import {
 	View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-interface ToDoItem {
-	id: number;
-	value: string;
-}
+import { ToDoItem } from "../../types/todoitem";
 
 export default function TodoApp() {
 	const [todos, setTodos] = React.useState<ToDoItem[]>([]);
@@ -38,23 +34,20 @@ export default function TodoApp() {
 		setLoading(false);
 	}
 
-	// Add new todo to the database
 	async function addTodo() {
 		if (!newTodo.trim()) return;
-		const newTodoItem = { value: newTodo };
 
 		db.withTransactionAsync(async () => {
 			await db.runAsync(`INSERT INTO todoData (value) VALUES (?);`, [newTodo]);
-			await fetchTodos(); // Refresh the todo list
+			await fetchTodos();
 		});
 		setNewTodo("");
 	}
 
-	// Delete a todo from the database
 	async function deleteTodoItem(id: number) {
 		db.withTransactionAsync(async () => {
 			await db.runAsync(`DELETE FROM todoData WHERE id = ?;`, [id]);
-			await fetchTodos(); // Refresh the todo list
+			await fetchTodos();
 		});
 	}
 
