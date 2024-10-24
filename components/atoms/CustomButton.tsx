@@ -10,12 +10,12 @@ import { SubmitHandler, FieldValues, UseFormHandleSubmit } from "react-hook-form
 interface CustomButtonProps {
 	title: string;
 	icon?: React.ElementType;
-	handlePress: (e?: React.BaseSyntheticEvent) => void | Promise<void>;  // Acepta cualquier función
+	handlePress: (e?: React.BaseSyntheticEvent) => void | Promise<void>;  
 	onSubmit?: SubmitHandler<FieldValues>;  // Opcional si se usa con react-hook-form
 	iconColor?: string;
-	containerStyles?: string; // Optional container styles
-	textStyles?: string; // Optional text styles
-	isLoading?: boolean; // Loading state is optional
+	containerStyles?: string;
+	textStyles?: string; 
+	isLoading?: boolean; 
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -26,7 +26,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 	containerStyles,
 	textStyles,
 	iconColor,
-	isLoading = false, // Default to false if not provided
+	isLoading = false,
 }) => {
 	return (
 		<TouchableOpacity

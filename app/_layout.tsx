@@ -55,6 +55,7 @@ export default function Layout() {
 			<Stack>
 				<Stack.Screen name='index' options={{ headerShown: false }} />
 				<Stack.Screen name='(auth)' options={{ headerShown: false }} />
+
 				<Stack.Screen name='editProfile' options={{
 						headerTitle: "Edit Profile",
 						headerStyle: { backgroundColor: '#171328'},
@@ -71,12 +72,30 @@ export default function Layout() {
 							</View>
 						),
 					}} />
+
+                <Stack.Screen name='(exercise)' options={{
+						headerTitle: "Exercise Details",
+						headerStyle: { backgroundColor: '#171328'},
+						headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
+						headerTintColor: '#fff',
+						headerBackVisible: false, 
+						headerLeft: () => (
+							<View className="flex-row mr-2">
+								<TouchableOpacity
+									onPress={() => router.push("/exercises")}
+								>
+									<CancelIcon />
+								</TouchableOpacity>
+							</View>
+						),
+					}} />
+                    
 				<Stack.Screen name='(tabs)' options={{
 						headerTitle: "Edit Profile",
 						headerStyle: { backgroundColor: '#171328'},
 						headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
 						headerTintColor: '#fff',
-						headerBackVisible: false, // Eliminar la flecha de retroceso
+						headerBackVisible: false, 
 						headerRight: () => (
 							<View className="flex-row mr-2">
 								<ShareIcon />

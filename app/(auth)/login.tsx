@@ -15,7 +15,7 @@ import {
 } from "../../components/atoms/icons";
 import { loginScheme } from "../schemes/loginScheme";
 
-export default function login() {
+export default function Login() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
 	const { 
 		control, 

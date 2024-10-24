@@ -1,19 +1,13 @@
+import React from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
 
-const AuthLayout = () => {
+const ExerciseLayout = () => {
 	return (
 		<>
 			<Stack>
 				<Stack.Screen
-					name='login'
-					options={{
-						headerShown: false,
-					}}
-				/>
-				<Stack.Screen
-					name='register'
+					name='exerciseDetail'
 					options={{
 						headerShown: false,
 					}}
@@ -24,4 +18,4 @@ const AuthLayout = () => {
 	);
 };
 
-export default AuthLayout;
+export default ExerciseLayout;

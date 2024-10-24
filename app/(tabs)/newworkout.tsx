@@ -1,8 +1,6 @@
 import React from "react";
 import NewWorkout from "../../components/screens/NewWorkout";
 
-const newworkout = () => {
+export default  function Newworkout() {
 	return <NewWorkout/>
 };
-
-export default newworkout;
