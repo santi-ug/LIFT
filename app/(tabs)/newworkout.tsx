@@ -1,12 +1,6 @@
 import React from "react";
-import { Text, View } from "react-native";
+import NewWorkout from "../../components/screens/NewWorkout";
 
-const newworkout = () => {
-	return (
-		<View>
-			<Text>newworkout</Text>
-		</View>
-	);
+export default  function Newworkout() {
+	return <NewWorkout/>
 };
-
-export default newworkout;

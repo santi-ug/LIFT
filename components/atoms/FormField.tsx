@@ -36,6 +36,8 @@ const FormField: React.FC<FormFieldProps> = ({
 						value={value}
 						placeholder={placeholder}
 						placeholderTextColor='#E5E4ED'
+						autoCapitalize="none"
+        				maxLength={50}
 						onChangeText={handleChangeText}
 						secureTextEntry={title === "Password" && !showPassword}
 					/>

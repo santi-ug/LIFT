@@ -2,8 +2,9 @@ import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import ExerciseItem from '../molecules/ExerciseItem';
 import { getInfoExercises } from '../../lib/rapidapi';
 import SearchInput from '../organisms/SearchInput';
-import { Exercise } from '../../types/Exercise';
+import { Exercise } from '../../types/exercise';
 import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 
 export default function ListElement() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -49,6 +50,16 @@ export default function ListElement() {
       name={item.name}
       gifUrl={item.gifUrl}
       bodyPart={item.bodyPart}
+      onPress={() => router.push({
+        pathname: '/exerciseDetail',
+        params: { 
+          name: item.name,
+          gifUrl: item.gifUrl,
+          bodyPart: item.bodyPart,
+          instructions: item.instructions,
+          equipment: item.equipment
+        }
+      })}
     />
   );
 
