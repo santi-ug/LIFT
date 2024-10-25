@@ -1,6 +1,8 @@
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { FilterIcon, MagnifyingGlassIcon, ThreeDotsVerticarIcon } from '../atoms/icons';
+import { router } from 'expo-router';
+import ExerciseFilter from '../../app/(exercise)/exerciseFilter';
 
 export default function SearchInput() {
   const [text, setText] = useState('');
@@ -16,7 +18,13 @@ export default function SearchInput() {
           placeholderTextColor="#A0AEC0" 
         />
         <MagnifyingGlassIcon/>
-        <FilterIcon/> 
+
+        <TouchableOpacity
+          onPress={() => router.push("/exerciseFilter")} 
+        >
+          <FilterIcon/> 
+        </TouchableOpacity>
+
         <ThreeDotsVerticarIcon/>
       </View>
       <Text className='font-isemibold text-2xl text-white py-3 pl-3'>Exercises</Text>

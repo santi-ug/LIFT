@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
 
 interface DropdownProps {
@@ -7,23 +7,24 @@ interface DropdownProps {
     placeholder?: string; 
     value: string | null; 
     otherStyles?: string; 
+    setValue: (value: string | null) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
     options,
     placeholder,
     value,
+    setValue,
     otherStyles,
     ...props
 }) => {
-    const [selectedValue, setSelectedValue] = useState(null);
     return (
-        <View className={`space-y-2 ml-14 w-5/12 ${otherStyles}`}>
+        <View className={`space-y-2 ${otherStyles}`}>
             <View className='w-full'>
                 <RNPickerSelect
                     placeholder={{ label: placeholder, value: null }}
+                    onValueChange={(value) => setValue(value)}  
                     items={options}
-                    onValueChange={(value) => setSelectedValue(value)}
                     value={value}
                     style={{
                         inputIOS: { color: "#5F48D9" },

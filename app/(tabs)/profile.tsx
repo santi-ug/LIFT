@@ -2,10 +2,14 @@ import { CalendarIcon, NewWorkoutIcon, PeopleIcon, TrendLineIcon } from '../../c
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
 import { View, Text, Image } from 'react-native';
+import Dropdown from '../../components/molecules/Dropdown';
+import { ApiResponse, UserData } from "../../types/Api";
+import React, { useEffect, useState } from 'react';
+import { infoUser, updateImage } from '../../lib/api_backend';
+import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
 import { DataTable } from 'react-native-paper';
-import React, { useState } from 'react';
-import Dropdown from '../../components/atoms/Dropdown';
+
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,8 +79,10 @@ export default function Profile() {
 						{ label: "Option 2", value: "option2" },
 						{ label: "Option 3", value: "option3" }
 					]}
+                    otherStyles='w-5/12 ml-14'
 					placeholder="Select time"
 					value={selectedOption}
+                    setValue={setSelectedOption}
 				/>
 			</View>
 
