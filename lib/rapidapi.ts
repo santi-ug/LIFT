@@ -3,26 +3,78 @@ export async function getInfoExercises(limit: number, offset: number) {
   
   const headers = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-    'x-rapidapi-key': '0fcb129f17mshc7ab99c79ac8533p1b0e7bjsnbc6a86487664'
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
   };
 
-  const rawData = await fetch(EXERCISES_API, { headers });
-  const json = await rawData.json();
+  try{
+    const rawData = await fetch(EXERCISES_API, { headers });
+    const json = await rawData.json();
 
-  return json.map((exercise: any) => {
-    const { bodyPart, equipment, gifUrl, id, name, target, secondaryMuscles, instructions } = exercise;
+    if (!Array.isArray(json)) {
+      console.error("API response is not an array:", json);
+      return [];
+    }
 
-    return {
-      bodyPart,
-      equipment,
-      gifUrl,
-      id,
-      name,
-      target,
-      secondaryMuscles: secondaryMuscles || [],  
-      instructions: instructions || []  
-    };
-  });
+    return json.map((exercise: any) => {
+      const { bodyPart, equipment, gifUrl, id, name, target, secondaryMuscles, instructions } = exercise;
+
+      return {
+        bodyPart,
+        equipment,
+        gifUrl,
+        id,
+        name,
+        target,
+        secondaryMuscles: secondaryMuscles || [],  
+        instructions: instructions || []  
+      };
+    });
+
+  }catch (error) {
+    console.error("Error fetching exercises:", error);
+    return [];
+  }
+}
+
+export async function getInfoExercisesbyName(limit: number, offset: number, name: string) {
+  const encodedName = encodeURIComponent(name);
+  console.log("Encoded name:", encodedName); 
+
+  const EXERCISES_API = `https://exercisedb.p.rapidapi.com/exercises/name/${encodedName}?limit=${limit}&offset=${offset}`;
+
+  const headers = {
+    'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
+  };
+
+  try {
+    const rawData = await fetch(EXERCISES_API, { headers });
+    const json = await rawData.json();
+
+    if (!Array.isArray(json)) {
+      console.error("API response is not an array:", json);
+      return [];
+    }
+
+    return json.map((exercise: any) => {
+      const { bodyPart, equipment, gifUrl, id, name, target, secondaryMuscles, instructions } = exercise;
+
+      return {
+        bodyPart,
+        equipment,
+        gifUrl,
+        id,
+        name,
+        target,
+        secondaryMuscles: secondaryMuscles || [],
+        instructions: instructions || []
+      };
+    });
+
+  } catch (error) {
+    console.error("Error fetching exercises by name:", error);
+    return [];
+  }
 }
 
 export async function getInfoExercisesbyEquipment(equipment: String, limit: number, offset: number) {
@@ -30,7 +82,7 @@ export async function getInfoExercisesbyEquipment(equipment: String, limit: numb
   
   const headers = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-    'x-rapidapi-key': '0fcb129f17mshc7ab99c79ac8533p1b0e7bjsnbc6a86487664'
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
   };
 
   const rawData = await fetch(EXERCISES_API, { headers });
@@ -57,7 +109,7 @@ export async function getInfoExercisesbyBodyPart(bodyPart: String, limit: number
   
   const headers = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-    'x-rapidapi-key': '0fcb129f17mshc7ab99c79ac8533p1b0e7bjsnbc6a86487664'
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
   };
 
   const rawData = await fetch(EXERCISES_API, { headers });
@@ -84,7 +136,7 @@ export async function getListEquipment(): Promise<string[]> {
   
   const headers = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-    'x-rapidapi-key': '0fcb129f17mshc7ab99c79ac8533p1b0e7bjsnbc6a86487664'
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
   };
 
   try{
@@ -106,7 +158,7 @@ export async function getListBodyPart(): Promise<string[]> {
   
   const headers = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-    'x-rapidapi-key': '0fcb129f17mshc7ab99c79ac8533p1b0e7bjsnbc6a86487664'
+    'x-rapidapi-key': `${process.env.API_RAPIDAPI}`
   };
 
   try{

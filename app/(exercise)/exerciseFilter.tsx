@@ -2,22 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Dropdown from '../../components/molecules/Dropdown';
 import CustomButton from '../../components/atoms/CustomButton';
+import { useExerciseFilterStore } from '../storage/exerciseStorage';
 import SelectedFilters from '../../components/atoms/SelectedFilter'; 
 import { getListBodyPart, getListEquipment } from '../../lib/rapidapi';
+import { router } from 'expo-router';
 
 export default function ExerciseFilter() {
   const [equipmentList, setEquipmentList] = useState<string[]>([]);
   const [bodyPartList, setBodyPartList] = useState<string[]>([]);
   
-  const [selectedEquipments, setSelectedEquipments] = useState<string[]>([]);
-  const [selectedBodyParts, setSelectedBodyParts] = useState<string[]>([]);
+  const {
+    selectedEquipments,
+    selectedBodyParts,
+    addEquipment,
+    removeEquipment,
+    addBodyPart,
+    removeBodyPart,
+    clearFilters,
+  } = useExerciseFilterStore();
 
   useEffect(() => {
     const fetchData = async () => {
-        const equipment = await getListEquipment();
-        const bodyParts = await getListBodyPart();
-        setEquipmentList(equipment);
-        setBodyPartList(bodyParts);
+      const equipment = await getListEquipment();
+      const bodyParts = await getListBodyPart();
+      setEquipmentList(equipment);
+      setBodyPartList(bodyParts);
     };
         
     fetchData();
@@ -38,28 +47,19 @@ export default function ExerciseFilter() {
     }));
 
   const handleEquipmentSelect = (value: string | null) => {
-      if (value && !selectedEquipments.includes(value)) {
-          setSelectedEquipments((prev) => [...prev, value]);
-      }
-  };
-
-  const handleBodyPartSelect = (value: string | null) => {
-    if (value && !selectedBodyParts.includes(value)) {
-        setSelectedBodyParts((prev) => [...prev, value]);
+    if (value && !selectedEquipments.includes(value)) {
+      addEquipment(value);
     }
   };
-
+  
+  const handleBodyPartSelect = (value: string | null) => {
+    if (value && !selectedBodyParts.includes(value)) {
+      addBodyPart(value);
+    }
+  };
+  
   const handleFilterPress = () => {
-    setSelectedEquipments([]);
-    setSelectedBodyParts([]);
-  };
-
-  const handleRemoveEquipment = (filter: string) => {
-    setSelectedEquipments((prev) => prev.filter(e => e !== filter));
-  };
-
-  const handleRemoveBodyPart = (filter: string) => {
-    setSelectedBodyParts((prev) => prev.filter(bp => bp !== filter));
+    clearFilters();
   };
 
   return (
@@ -68,8 +68,8 @@ export default function ExerciseFilter() {
 
         <View className="rounded-md my-4">
           <Text className="text-white font-isemibold text-lg">Selected Filters:</Text>
-          <SelectedFilters filters={selectedEquipments} onRemove={handleRemoveEquipment} />
-          <SelectedFilters filters={selectedBodyParts} onRemove={handleRemoveBodyPart} />
+          <SelectedFilters filters={selectedEquipments} onRemove={removeEquipment} />
+          <SelectedFilters filters={selectedBodyParts} onRemove={removeBodyPart} />
         </View>
 
         <Text className="text-gray-400 font-isemibold pt-2 text-base">

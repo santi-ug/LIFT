@@ -13,7 +13,7 @@ import {
 	// GoogleIcon,
 	PasswordIcon,
 } from "../../components/atoms/icons";
-import { loginScheme } from "../schemes/loginScheme";
+import { loginScheme } from "../../schemes/loginScheme";
 
 export default function Login() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);

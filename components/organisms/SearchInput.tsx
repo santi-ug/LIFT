@@ -1,23 +1,37 @@
-import { View, TextInput, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
 import { FilterIcon, MagnifyingGlassIcon, ThreeDotsVerticarIcon } from '../atoms/icons';
+import { View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { useSearchStore } from '../../app/storage/searchStorage';
 import { router } from 'expo-router';
-import ExerciseFilter from '../../app/(exercise)/exerciseFilter';
+import { useEffect, useState } from 'react';
 
 export default function SearchInput() {
-  const [text, setText] = useState('');
+  const [localText, setLocalText] = useState('');
+  const { searchText, setSearchText } = useSearchStore();
+
+  const handleSearch = () => {
+    if (localText.trim() !== '') {
+      setSearchText(localText);
+      router.replace("/exercises");
+    } else {
+      setSearchText('');
+      Alert.alert("Please enter a search term");
+    }
+  };
 
   return (
     <View>
       <View className="flex-row justify-evenly items-center h-1/10 bg-background">
         <TextInput
           className="h-10 my-3 border-search text-search border-2 px-4 w-9/12 rounded-full bg-background"
-          onChangeText={setText}
-          value={text}
+          onChangeText={setLocalText}
+          value={localText}
           placeholder="Search"
           placeholderTextColor="#A0AEC0" 
         />
-        <MagnifyingGlassIcon/>
+        
+        <TouchableOpacity onPress={handleSearch}>
+          <MagnifyingGlassIcon />
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => router.push("/exerciseFilter")} 

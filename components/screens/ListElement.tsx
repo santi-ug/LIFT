@@ -1,29 +1,64 @@
+import { getInfoExercises, getInfoExercisesbyBodyPart, getInfoExercisesbyEquipment, getInfoExercisesbyName } from '../../lib/rapidapi'; 
 import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { Exercise, ListElementProps } from '../../types/exercise';
+import { useSearchStore } from '../../app/storage/searchStorage';
 import ExerciseItem from '../molecules/ExerciseItem';
-import { getInfoExercises } from '../../lib/rapidapi';
 import SearchInput from '../organisms/SearchInput';
-import { Exercise } from '../../types/exercise';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 
-export default function ListElement() {
+export default function ListElement({ selectedEquipments, selectedBodyParts }: ListElementProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const { searchText } = useSearchStore(); 
+
+  const getInfoExercises_ = async (
+    limit: number,
+    offset: number,
+    equipments?: string[],
+    bodyParts?: string[]   
+  ) => {
+    if (equipments && equipments.length > 0) {
+
+      const exercises = await Promise.all(
+        equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset))
+      );
+      return exercises.flat();
+
+    } else if (bodyParts && bodyParts.length > 0) {
+
+      const exercises = await Promise.all(
+        bodyParts.map((bodyPart) => getInfoExercisesbyBodyPart(bodyPart, limit, offset))
+      );
+      return exercises.flat();
+      
+    } else if (searchText && searchText.length > 0) {
+      return getInfoExercisesbyName(limit, offset, searchText); 
+    } else {
+      return getInfoExercises(limit, offset);
+    }
+  };
 
   const fetchExercises = async () => {
     setLoading(true);
+
     try {
       const limit = 10;
       const offset = (currentPage - 1) * limit;
-      const newExercises = await getInfoExercises(limit, offset);
+      const newExercises = await getInfoExercises_(limit, offset, selectedEquipments, selectedBodyParts);
 
       if (newExercises.length > 0) {
-        setExercises(prevExercises => [...prevExercises, ...newExercises]);
+        if (currentPage === 1) {
+          setExercises(newExercises);  
+        } else {
+          setExercises(prevExercises => [...prevExercises, ...newExercises]);  
+        }
       } else {
         setHasMore(false);
       }
+
     } catch (error) {
       console.error('Error fetching exercises:', error);
     } finally {
@@ -32,7 +67,14 @@ export default function ListElement() {
   };
 
   useEffect(() => {
+    setCurrentPage(1); 
     fetchExercises();
+  }, [searchText]);
+
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchExercises();
+    }
   }, [currentPage]);
 
   const groupedExercises = exercises.reduce((acc, exercise) => {

@@ -1,14 +1,13 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
 import CustomButton from "../components/atoms/CustomButton";
-import { registerScheme } from "./schemes/registerScheme";
+import { registerScheme } from "../schemes/registerScheme";
 import FormField from "../components/atoms/FormField";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { update } from "../lib/api_backend";
 import { UserData } from "../types/Api";
 import { router } from "expo-router";
-import { useState } from "react";
 import {
 	EmailIcon,
 	PasswordIcon,
