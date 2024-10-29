@@ -1,14 +1,14 @@
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import Foundation from '@expo/vector-icons/Foundation';
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Octicons from "@expo/vector-icons/Octicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
-
+import React from "react";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />

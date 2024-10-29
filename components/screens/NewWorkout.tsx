@@ -1,8 +1,6 @@
 import { AddIcon, ClipboardIcon, MagnifyingGlassIcon } from '../../components/atoms/icons';
-import CustomDataTable from '../../components/molecules/CustomDataTable';
-import CustomModal from '../../components/organisms/CustomModel';
 import CustomButton from "../../components/atoms/CustomButton";
-import { View, TextInput, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 
 export default function NewWorkout() {

@@ -3,6 +3,8 @@ import { z } from "zod";
 const specialCharacters = [' ', 'ñ', 'Ñ', '(', ')', '%', '&', '$', '#', '?', '¡', '¿', '=', '>', 
 							'<', '°', '|', '!', '¬', '^', ']', '[', '{', '}', '+', '~', '*', '/'];
 
+const specialCharactersPassword = [' ', 'ñ', 'Ñ', '(', ')', '>', '<', '°', '|', '!', '¬', '^', ']', '[', '{', '}',];		
+
 export const editUserScheme = z.object({
 	name: z.string()
             .min(4, {message: "Username must be at least 4 characters long"})
@@ -21,10 +23,9 @@ export const editUserScheme = z.object({
 				.min(8, {message: "Password must be at least 8 characters long"})
 			    .max(20)
 				.refine((password) => {
-					const hasSpace = password.includes(' ');
 					const hasSpecialChar = specialCharacters.filter(char => password.includes(char)).length;
 		
-					return !hasSpace && !password.includes('ñ') && !password.includes('Ñ') && hasSpecialChar <= 1;
+					return hasSpecialChar <= 1 && !specialCharactersPassword.some(char => password.includes(char));
 				}, { message: "Password cannot contain spaces, the letter 'ñ', and must contain at most one special character" })
                 .optional(),				
 

@@ -6,6 +6,7 @@ import ExerciseItem from '../molecules/ExerciseItem';
 import SearchInput from '../organisms/SearchInput';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import React from "react";
 
 export default function ListElement({ selectedEquipments, selectedBodyParts }: ListElementProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -20,7 +21,18 @@ export default function ListElement({ selectedEquipments, selectedBodyParts }: L
     equipments?: string[],
     bodyParts?: string[]   
   ) => {
-    if (equipments && equipments.length > 0) {
+    if (equipments && equipments.length > 0 && bodyParts && bodyParts.length > 0) {
+      const exercisesFromEquipments = await Promise.all(
+        equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset))
+      );
+    
+      const exercisesFromBodyParts = await Promise.all(
+        bodyParts.map((bodyPart) => getInfoExercisesbyBodyPart(bodyPart, limit, offset))
+      );
+    
+      return [...exercisesFromEquipments.flat(), ...exercisesFromBodyParts.flat()];
+    
+    } else if (equipments && equipments.length > 0) {
 
       const exercises = await Promise.all(
         equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset))

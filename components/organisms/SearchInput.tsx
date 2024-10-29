@@ -2,7 +2,7 @@ import { FilterIcon, MagnifyingGlassIcon, ThreeDotsVerticarIcon } from '../atoms
 import { View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { useSearchStore } from '../../app/storage/searchStorage';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import  React, { useEffect, useState } from 'react';
 
 export default function SearchInput() {
   const [localText, setLocalText] = useState('');
@@ -10,7 +10,7 @@ export default function SearchInput() {
 
   const handleSearch = () => {
     if (localText.trim() !== '') {
-      setSearchText(localText);
+      setSearchText(localText.toLowerCase());
       router.replace("/exercises");
     } else {
       setSearchText('');
