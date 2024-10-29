@@ -258,3 +258,30 @@ export const update = async (
 		throw new Error(error.message);
 	}
 };
+
+export const deleteUser = async () => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+
+        const response = await fetch(`${process.env.API_URL}/users/me`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        await SecureStore.deleteItemAsync("authToken");
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("api", data);
+        } else {
+            const errorData = await response.text();
+            console.error("Error al eliminar usuario", errorData);
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+};

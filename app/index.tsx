@@ -1,7 +1,8 @@
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { Image, ScrollView, Text, View } from "react-native";
 
-import { Link, Redirect, router } from "expo-router";
+import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import home from "../assets/images/home.png";
@@ -36,10 +37,11 @@ export default function App() {
 							</Link>
 						</View>
 
-						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  */}
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  
 						<Link href='/profile' className='text-primary font-ibold mt-5'>
 							NEW WORKOUT [TEMP]
 						</Link>
+						*/}
 						
 					</View>
 

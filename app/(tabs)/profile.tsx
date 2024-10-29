@@ -83,7 +83,7 @@ export default function Profile() {
             if (resizedUri) {
                 setImage(resizedUri);
                 await saveImage(); 
-                setImageUpdated(!imageUpdated);
+                setImageUpdated(true);
             } else {
                 alert("Error resizing image");
             }
@@ -93,6 +93,7 @@ export default function Profile() {
     };
     
     const takePhoto = async () => {
+        setImageUpdated(false);
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
         if (permissionResult.granted === false) {
             alert("Permission to access camera is required!");
@@ -112,7 +113,7 @@ export default function Profile() {
             if (resizedUri) {
                 setImage(resizedUri); 
                 await saveImage();
-                setImageUpdated(!imageUpdated);
+                setImageUpdated(true);
             } else {
                 alert("Error resizing image");
             }
@@ -139,7 +140,7 @@ export default function Profile() {
             const updatedUser = await removeImage();
             setImage(user);
             setUserData(updatedUser );
-            setImageUpdated(!imageUpdated);
+            setImageUpdated(true);
             setModalVisible(false);
         } catch (error) {
             console.error("Error removing photo:", error);

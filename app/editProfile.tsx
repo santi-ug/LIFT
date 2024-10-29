@@ -8,11 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { update } from "../lib/api_backend";
 import { UserData } from "../types/Api";
 import { router } from "expo-router";
+import React from "react";
 import {
 	EmailIcon,
 	PasswordIcon,
 	UserIcon,
 } from "../components/atoms/icons";
+import { editUserScheme } from "../schemes/editUserScheme";
 
 export default function editProfile() {
 	const { 
@@ -20,14 +22,14 @@ export default function editProfile() {
 		handleSubmit, 
 		formState: { errors, isSubmitting } 
 	} = useForm({
-		resolver: zodResolver(registerScheme),
+		resolver: zodResolver(editUserScheme),
 	});
 
 	const onError = (errors: any) => {
 		if (Object.keys(errors).length > 0) {
 			Object.values(errors).forEach((error) => {
 				if (error && typeof error === "object" && "message" in error) {
-					Alert.alert("Error", error.message as string);
+					Alert.alert("Error e", error.message as string);
 				}
 			});
 		}
