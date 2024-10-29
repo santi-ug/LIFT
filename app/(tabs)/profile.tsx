@@ -1,15 +1,17 @@
 import { CalendarIcon, CameraIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, TrashIcon, TrendLineIcon } from '../../components/atoms/icons';
+import { infoUser, removeImage, updateImage } from '../../lib/api_backend';
 import CustomDataTable from '../../components/molecules/CustomDataTable';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import CustomModal from '../../components/organisms/CustomModel';
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
 import Dropdown from '../../components/molecules/Dropdown';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { ApiResponse, UserData } from "../../types/Api";
 import React, { useEffect, useState } from 'react';
-import { infoUser, updateImage } from '../../lib/api_backend';
 import * as ImagePicker from 'expo-image-picker';
 import user from "../../assets/images/user.png";
+import { Buffer } from 'buffer';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,6 +20,7 @@ export default function Profile() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [userData, setUserData] = useState<UserData | undefined>(); 
     const [error, setError] = useState<string | null>(null); 
+    const [imageUpdated, setImageUpdated] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -28,7 +31,7 @@ export default function Profile() {
                 if (user?.avatar != null) {
                     const avatarData = (user.avatar as any).data;
                     const base64 = await convertBufferArrayToBase64(avatarData);
-                    setImage(base64); 
+                    setImage(base64);
                 }
             } catch (err: any) {
                 setError(err.message);
@@ -37,7 +40,7 @@ export default function Profile() {
         };
       
         fetchUserData();
-    }, []);
+    }, [imageUpdated]);
 
     const convertBufferArrayToBase64 = (bufferArray: any[]): Promise<string> => {
         const buffer = Buffer.from(bufferArray);
@@ -45,26 +48,76 @@ export default function Profile() {
         return Promise.resolve(base64);
     };
 
+    const resizeImage = async (uri: string): Promise<string | undefined> => {
+        try {
+            const result = await ImageManipulator.manipulateAsync(
+                uri,
+                [{ resize: { width: 800, height: 600 } }],
+                { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+            );
+            return result.uri;
+        } catch (err) {
+            console.error("Error resizing image:", err);
+            return undefined; 
+        }
+    };
+
     const pickImage = async () => {
+        setImageUpdated(false);
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
+    
         if (permissionResult.granted === false) {
-          alert("Permission to access media library is required!");
-          return;
+            alert("Permission to access media library is required!");
+            return;
         }
-      
+    
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
         });
-      
+    
         if (!result.canceled && result.assets.length > 0) {
-            setImage(result.assets[0].uri);
-            saveImage();
+            const resizedUri = await resizeImage(result.assets[0].uri);
+
+            if (resizedUri) {
+                setImage(resizedUri);
+                await saveImage(); 
+                setImageUpdated(!imageUpdated);
+            } else {
+                alert("Error resizing image");
+            }
         }
-      
+    
+        setModalVisible(false);
+    };
+    
+    const takePhoto = async () => {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert("Permission to access camera is required!");
+            return;
+        }
+    
+        const result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5,
+        });
+    
+        if (!result.canceled) {
+            const resizedUri = await resizeImage(result.assets[0].uri);
+            console.log("hola tu", resizedUri);
+
+            if (resizedUri) {
+                setImage(resizedUri); 
+                await saveImage();
+                setImageUpdated(!imageUpdated);
+            } else {
+                alert("Error resizing image");
+            }
+        }
+    
         setModalVisible(false);
     };
 
@@ -81,31 +134,17 @@ export default function Profile() {
         }
     }
 
-    const takePhoto = async () => {
-        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-        if (permissionResult.granted === false) {
-            alert("Permission to access camera is required!");
-            return;
+    const RemovePhoto = async () => {
+        try {
+            const updatedUser = await removeImage();
+            setImage(user);
+            setUserData(updatedUser );
+            setImageUpdated(!imageUpdated);
+            setModalVisible(false);
+        } catch (error) {
+            console.error("Error removing photo:", error);
+            alert("Error removing photo. Please try again.");
         }
-
-        const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            saveImage();
-            console.log(image);
-        }
-
-        setModalVisible(false);
-    };
-
-    const RemovePhoto = () => {
-        setImage(user);
-        setModalVisible(false);
     };
 
     const handleValueChange = (value: string) => {

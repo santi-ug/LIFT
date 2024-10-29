@@ -34,7 +34,10 @@ export default function Layout() {
 		router.push("/");
 	};
 
-	const deleteAccount = () => {};
+	const deleteAccount = () => {
+		setModalVisible(false);
+		
+	};
 	
 	const updateAccount = () => {
 		

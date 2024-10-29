@@ -1,3 +1,4 @@
+import mime from 'mime';
 import * as SecureStore from 'expo-secure-store';
 import { ApiResponse, UserData } from "../types/Api";
 
@@ -98,7 +99,7 @@ export const infoUser = async (): Promise<UserData | undefined> => {
     }
 };
 
-export const updateImage = async (imageUri: string): Promise<UserData | undefined> => {
+export const updateImage = async (imageUri: string | undefined): Promise<UserData | undefined> => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
 
@@ -107,21 +108,69 @@ export const updateImage = async (imageUri: string): Promise<UserData | undefine
             throw new Error("No token found, user is not authenticated");
         }
 
-        const res = await fetch(imageUri);
-        const blob = await res.blob();
+        if (imageUri && typeof imageUri === 'string') {
+            const fileType = mime.getType(imageUri) || 'application/octet-stream'; 
+            const fileName = imageUri.split('/').pop();  
 
-        const formData = new FormData();
-        formData.append('avatar', blob, 'avatar.jpg');
+            const formData = new FormData();
 
-        console.log("FormData created:", formData);
+            const res = await fetch(imageUri);
+
+            formData.append('avatar', {
+                uri: imageUri,
+                name: fileName || 'avatar.jpg', 
+                type: fileType,
+            } as any);
+
+            console.log("FormData created:", formData);
+
+            const response = await fetch(`${process.env.API_URL}/users/myImage`, {
+                method: 'PUT',
+                body: formData,
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            console.log("Response Status:", response.status);
+            console.log("Response Headers:", response.headers);
+
+            if (!response.ok) {
+                console.error("Error in response", await response.text());
+                throw new Error("Failed to upload image");
+            }
+
+            const data = await response.json();
+            console.log("Image upload successful:", data);
+            return data.user;
+        } else {
+            console.error("Invalid image URI provided:", imageUri);
+            throw new Error("Invalid image URI provided");
+        }
+
+    } catch (error: any) {
+        console.error("Network error:", error.message || error);
+        console.error("Error stack:", error.stack);
+        console.error("Error name:", error.name);
+        console.error("Error code:", error.code);
+        throw new Error(error.message || "Network error occurred");
+    }
+};
+
+export const removeImage = async (): Promise<UserData | undefined> => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
 
         const response = await fetch(`${process.env.API_URL}/users/myImage`, {
-            method: 'PUT',
-            body: formData,
+            method: 'DELETE', 
             headers: {
                 "Authorization": `Bearer ${token}`,
-                "Content-Type": "multipart/form-data"
-            }
+            },
         });
 
         console.log("Response Status:", response.status);
@@ -129,13 +178,12 @@ export const updateImage = async (imageUri: string): Promise<UserData | undefine
 
         if (!response.ok) {
             console.error("Error in response", await response.text());
-            throw new Error("Failed to upload image");
+            throw new Error("Failed to remove image");
         }
 
         const data = await response.json();
-        console.log("Image upload successful:", data);
-        return data.user;
-
+        console.log("Image removal successful:", data);
+        return data.user; 
     } catch (error: any) {
         console.error("Network error:", error.message || error);
         console.error("Error stack:", error.stack);
