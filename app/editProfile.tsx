@@ -4,18 +4,20 @@ import CustomButton from "../components/atoms/CustomButton";
 import FormField from "../components/atoms/FormField";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { update } from "../lib/api_backend";
+import { infoUser, update } from "../lib/api_backend";
 import { UserData } from "../types/Api";
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	EmailIcon,
 	PasswordIcon,
 	UserIcon,
 } from "../components/atoms/icons";
 import { editUserScheme } from "../schemes/editUserScheme";
+import { useUserStore } from "../storage/userStorage";
 
 export default function editProfile() {
+	const { userData } = useUserStore(); 
 	const { 
 		control, 
 		handleSubmit, 
@@ -64,7 +66,7 @@ export default function editProfile() {
 
 					<View className='w-full justify-center min-h-[90vh] px-8 pb-20'>
                         
-						<Text className='text-4xl text-white font-ibold'>
+						<Text className='text-4xl text-white font-bold'>
 							Edit profile in LIFT.
 						</Text>
 
@@ -75,7 +77,7 @@ export default function editProfile() {
 								<FormField
 									icon={EmailIcon}
 									title="Email"
-									placeholder="Email"
+									placeholder={userData?.email || "Email"}
 									value={value}
 									handleChangeText={onChange}
 									otherStyles="mt-7"
@@ -91,7 +93,7 @@ export default function editProfile() {
 								<FormField
 									icon={UserIcon}
 									title="Username"
-									placeholder="Username"
+									placeholder={userData?.name || "Username"}
 									value={value}
 									handleChangeText={onChange}
 									otherStyles="mt-7"

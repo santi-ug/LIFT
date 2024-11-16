@@ -21,10 +21,12 @@ const TabIcon: React.FC<TabIconProps> = ({
 	focused,
 }) => {
 	return (
-		<View className='items-center justify-center gap-2 py-1'>
+		<View 
+			className='items-center justify-center w-28 pt-3'
+		>
 			<IconComponent color={color} />
 			<Text
-				className={`${focused ? "font-isemibold" : "font-iregular"} text-xs`}
+				className={`${focused ? "font-semibold" : "font-normal"} text-xs`}
 				style={{ color: color }}
 			>
 				{name}

@@ -10,8 +10,8 @@ export default function ExerciseDetail() {
     <View className="flex-1 bg-background px-2">
       <ScrollView>
         <View className="py-2 items-center"> 
-          <Text className="text-white font-ibold text-lg capitalize pb-1 ">{name}</Text>
-          <Text className="text-gray-400 font-iregular capitalize">{bodyPart}</Text>
+          <Text className="text-white font-bold text-lg capitalize pb-1 ">{name}</Text>
+          <Text className="text-gray-400 font-normal capitalize">{bodyPart}</Text>
         </View>
 
         {validGifUrl && typeof validGifUrl === 'string' && (
@@ -21,8 +21,8 @@ export default function ExerciseDetail() {
         />
         )}
 
-        <Text className="text-gray-400 font-iregular capitalize pt-2">Equipment: {equipment}</Text>
-        <Text className="text-white font-isemibold text-lg capitalize pt-3">Instructions</Text>
+        <Text className="text-gray-400 font-normal capitalize pt-2">Equipment: {equipment}</Text>
+        <Text className="text-white font-semibold text-lg capitalize pt-3">Instructions</Text>
         <InstructionsList
           instructions={instructions}
         />

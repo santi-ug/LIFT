@@ -17,7 +17,7 @@ export default function CustomDataTable({ headers, data }: CustomDataTableProps)
         {headers.map((header, index) => (
 
           <DataTable.Title key={index}>
-            <Text className="text-gray-500 text-sm font-iregular capitalize">{header}</Text>
+            <Text className="text-gray-500 text-sm font-normal capitalize">{header}</Text>
           </DataTable.Title>
           
         ))}
@@ -31,7 +31,7 @@ export default function CustomDataTable({ headers, data }: CustomDataTableProps)
           {row.map((cell, cellIndex) => (
 
             <DataTable.Cell key={cellIndex} className="h-4">
-              <Text className="text-white text-sm font-isemibold capitalize">{cell}</Text>
+              <Text className="text-white text-sm font-semibold capitalize">{cell}</Text>
             </DataTable.Cell>
 
           ))}

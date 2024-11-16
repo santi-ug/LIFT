@@ -21,6 +21,7 @@ export type Exercise = {
 export interface ListElementProps {
     selectedEquipments: string[];
     selectedBodyParts: string[];
+    fromRoutine?: boolean;
 };
   
 export type ExerciseFilterStore = {

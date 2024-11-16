@@ -1,6 +1,6 @@
 import { FilterIcon, MagnifyingGlassIcon, ThreeDotsVerticarIcon } from '../atoms/icons';
 import { View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
-import { useSearchStore } from '../../app/storage/searchStorage';
+import { useSearchStore } from '../../storage/searchStorage';
 import { router } from 'expo-router';
 import  React, { useEffect, useState } from 'react';
 
@@ -41,7 +41,7 @@ export default function SearchInput() {
 
         <ThreeDotsVerticarIcon/>
       </View>
-      <Text className='font-isemibold text-2xl text-white py-3 pl-3'>Exercises</Text>
+      <Text className='font-semibold text-2xl text-white py-3 pl-3'>Exercises</Text>
     </View>
   );
 }

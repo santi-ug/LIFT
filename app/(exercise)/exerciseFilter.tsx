@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Dropdown from '../../components/molecules/Dropdown';
 import CustomButton from '../../components/atoms/CustomButton';
-import { useExerciseFilterStore } from '../storage/exerciseStorage';
+import { useExerciseFilterStore } from '../../storage/exerciseStorage';
 import SelectedFilters from '../../components/atoms/SelectedFilter'; 
 import { getListBodyPart, getListEquipment } from '../../lib/rapidapi';
 import { router } from 'expo-router';
@@ -67,12 +67,12 @@ export default function ExerciseFilter() {
       <ScrollView>
 
         <View className="rounded-md my-4">
-          <Text className="text-white font-isemibold text-lg">Selected Filters:</Text>
+          <Text className="text-white font-semibold text-lg">Selected Filters:</Text>
           <SelectedFilters filters={selectedEquipments} onRemove={removeEquipment} />
           <SelectedFilters filters={selectedBodyParts} onRemove={removeBodyPart} />
         </View>
 
-        <Text className="text-gray-400 font-isemibold pt-2 text-base">
+        <Text className="text-gray-400 font-semibold pt-2 text-base">
           Filter by equipment
         </Text>
 
@@ -83,7 +83,7 @@ export default function ExerciseFilter() {
           setValue={handleEquipmentSelect} 
         />
 
-        <Text className="text-gray-400 font-isemibold pt-2 text-base">
+        <Text className="text-gray-400 font-semibold pt-2 text-base">
           Filer by body part
         </Text>
 

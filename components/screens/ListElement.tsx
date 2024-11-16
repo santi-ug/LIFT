@@ -1,19 +1,21 @@
 import { getInfoExercises, getInfoExercisesbyBodyPart, getInfoExercisesbyEquipment, getInfoExercisesbyName } from '../../lib/rapidapi'; 
 import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import { Exercise, ListElementProps } from '../../types/exercise';
-import { useSearchStore } from '../../app/storage/searchStorage';
+import { useSearchStore } from '../../storage/searchStorage';
 import ExerciseItem from '../molecules/ExerciseItem';
 import SearchInput from '../organisms/SearchInput';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import React from "react";
+import { useSelectedExercisesStore } from '../../storage/selectedExerciseStorage';
 
-export default function ListElement({ selectedEquipments, selectedBodyParts }: ListElementProps) {
+export default function ListElement({ selectedEquipments, selectedBodyParts, fromRoutine }: ListElementProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const { searchText } = useSearchStore(); 
+  const { addExercise } = useSelectedExercisesStore();
 
   const getInfoExercises_ = async (
     limit: number,
@@ -104,22 +106,29 @@ export default function ListElement({ selectedEquipments, selectedBodyParts }: L
       name={item.name}
       gifUrl={item.gifUrl}
       bodyPart={item.bodyPart}
-      onPress={() => router.push({
-        pathname: '/exerciseDetail',
-        params: { 
-          name: item.name,
-          gifUrl: item.gifUrl,
-          bodyPart: item.bodyPart,
-          instructions: item.instructions,
-          equipment: item.equipment
+      onPress={() => {
+        if (fromRoutine) {
+          addExercise(item);
+          router.back(); 
+        } else {
+          router.push({
+            pathname: '/exerciseDetail',
+            params: {
+              name: item.name,
+              gifUrl: item.gifUrl,
+              bodyPart: item.bodyPart,
+              instructions: item.instructions,
+              equipment: item.equipment,
+            },
+          });
         }
-      })}
+      }}
     />
   );
 
   const renderSection = ({ sectionKey, data }: { sectionKey: string, data: Exercise[] }) => (
     <View key={sectionKey}>
-      <Text className='text-base text-white font-imedium ml-6 mt-4 mb-2'>{sectionKey}</Text>
+      <Text className='text-base text-white font-medium ml-6 mt-4 mb-2'>{sectionKey}</Text>
       {data.map((exercise, index) => renderItem({ item: exercise, index }))}
     </View>
   );

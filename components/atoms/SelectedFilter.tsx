@@ -15,7 +15,7 @@ const SelectedFilters: React.FC<SelectedFilterProps> = ({ filters, onRemove }) =
                     onPress={() => onRemove(filter)} 
                     className="py-2 px-4 my-2 mx-1 rounded-md items-center bg-gray-700"
                 >
-                    <Text className="text-white capitalize font-iregular text-sm">{filter}</Text>
+                    <Text className="text-white capitalize font-normal text-sm">{filter}</Text>
                 </TouchableOpacity>
             ))}
         </View>

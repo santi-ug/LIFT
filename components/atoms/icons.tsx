@@ -122,6 +122,10 @@ export const CancelIcon = () => (
 	<Feather name="x" size={20} color="white" />
 );
 
+export const SaveIcon = () => (
+	<Feather name="save" size={21} color="white" />
+);
+
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 
 // export const GoogleIcon = () => {

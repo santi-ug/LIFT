@@ -13,21 +13,24 @@ import * as ImagePicker from 'expo-image-picker';
 // @ts-ignore
 import user from "../../assets/user.png";
 import { Buffer } from 'buffer';
+import { useUserStore } from '../../storage/userStorage';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [image, setImage] = useState(user);
     const [isModalVisible, setModalVisible] = useState(false);
-    const [userData, setUserData] = useState<UserData | undefined>(); 
     const [error, setError] = useState<string | null>(null); 
     const [imageUpdated, setImageUpdated] = useState(false);
+
+    const { userData, setUserData } = useUserStore();
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const user = await infoUser();
-                setUserData(user);
+                if (user)
+                    setUserData(user);
         
                 if (user?.avatar != null) {
                     const avatarData = (user.avatar as any).data;
@@ -140,7 +143,8 @@ export default function Profile() {
         try {
             const updatedUser = await removeImage();
             setImage(user);
-            setUserData(updatedUser );
+            if (updatedUser)
+                setUserData(updatedUser);
             setImageUpdated(true);
             setModalVisible(false);
         } catch (error) {
@@ -210,7 +214,7 @@ export default function Profile() {
                             <Text className="text-red-500 text-base capitalize pb-3 pl-4">Cargando...</Text>
                         ) : (
                             userData && (
-                                <Text className="text-white font-isemibold text-base capitalize pb-3 pl-4">{userData.name || 'Nombre no disponible'}</Text>
+                                <Text className="text-white font-semibold text-base capitalize pb-3 pl-4">{userData.name || 'Nombre no disponible'}</Text>
                             )
                         )
                     }
@@ -227,8 +231,8 @@ export default function Profile() {
             <ProgressBar progress={25} />
 			
 			<View className="flex-row">
-				<Text className="text-white font-isemibold text-base mt-4 ml-4">0 hours</Text>
-				<Text className="text-gray-400 font-iregular text-base mt-4 ml-2">this week</Text>
+				<Text className="text-white font-semibold text-base mt-4 ml-4">0 hours</Text>
+				<Text className="text-gray-400 font-normal text-base mt-4 ml-2">this week</Text>
 				<Dropdown
 					options={[
 						{ label: "Option 1", value: "option1" },
@@ -262,7 +266,7 @@ export default function Profile() {
                 />
 			</View>
 
-            <Text className="text-gray-500 font-isemibold text-base mb-2 ml-4">Dashboard</Text>
+            <Text className="text-gray-500 font-semibold text-base mb-2 ml-4">Dashboard</Text>
 
             <View className="flex-row flex-wrap justify-between gap-4 my-4 mx-4">
                 <CustomButton

@@ -88,9 +88,13 @@ export default function Layout() {
                         </View>
                     ),
                 }} />
+
+                <Stack.Screen name='(workout)' options={{
+                    headerShown: false,
+                }} />
 				
                 <Stack.Screen name='(tabs)' options={{
-                    headerTitle: "Edit Profile",
+                    headerTitle: "LIFT",
                     headerStyle: { backgroundColor: '#171328' },
                     headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
                     headerTintColor: '#fff',

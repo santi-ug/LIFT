@@ -3,7 +3,7 @@ export async function getInfoExercises(limit: number, offset: number) {
     
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     try{
@@ -44,7 +44,7 @@ export async function getInfoExercises(limit: number, offset: number) {
   
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     try {
@@ -82,7 +82,7 @@ export async function getInfoExercises(limit: number, offset: number) {
     
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     const rawData = await fetch(EXERCISES_API, { headers });
@@ -109,7 +109,7 @@ export async function getInfoExercises(limit: number, offset: number) {
     
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     const rawData = await fetch(EXERCISES_API, { headers });
@@ -136,7 +136,7 @@ export async function getInfoExercises(limit: number, offset: number) {
     
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     try{
@@ -158,7 +158,7 @@ export async function getInfoExercises(limit: number, offset: number) {
     
     const headers = {
       'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
-      'x-rapidapi-key': `7b9fb09c1cmsha402736a25a4988p1ede46jsn4017361cf674`
+      'x-rapidapi-key': ``
     };
   
     try{

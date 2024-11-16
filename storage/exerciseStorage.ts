@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ExerciseFilterStore } from "../../types/exercise";
+import { ExerciseFilterStore } from "../types/exercise";
 
 export const useExerciseFilterStore = create<ExerciseFilterStore>((set) => ({
     selectedEquipments: [],
