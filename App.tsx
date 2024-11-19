@@ -38,11 +38,11 @@ export default function App() {
 							</Link>
 						</View>
 
-						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  */}
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  
 						<Link href='/profile' className='text-primary mt-5'>
 							NEW WORKOUT [TEMP]
 						</Link>
-						
+						*/}
 						
 					</View>
 
