@@ -1,12 +1,12 @@
 import React from "react";
 import { View } from "react-native";
-import RNPickerSelect from 'react-native-picker-select';
+import { Picker } from "@react-native-picker/picker";
 
 interface DropdownProps {
-    options: { label: string; value: string }[]; 
-    placeholder?: string; 
-    value: string | null; 
-    otherStyles?: string; 
+    options: { label: string; value: string }[];
+    placeholder?: string;
+    value: string | null;
+    otherStyles?: string;
     setValue: (value: string | null) => void;
 }
 
@@ -20,20 +20,17 @@ const Dropdown: React.FC<DropdownProps> = ({
 }) => {
     return (
         <View className={`space-y-2 ${otherStyles}`}>
-            <View className='w-full'>
-                <RNPickerSelect
-                    placeholder={{ label: placeholder, value: null }}
-                    onValueChange={(value) => setValue(value)}  
-                    items={options}
-                    value={value}
-                    style={{
-                        inputIOS: { color: "#5F48D9" },
-                        inputAndroid: { color: "#5F48D9" },
-                        placeholder: { color: "#5F48D9" },
-                    }}
-                    {...props}
-                />
-            </View>
+            <Picker
+                selectedValue={value}
+                onValueChange={(value) => setValue(value)}
+                style={{ color: "#5F48D9" }}
+                {...props}
+            >
+                {placeholder && <Picker.Item label={placeholder} value={null} />}
+                {options.map((option, index) => (
+                    <Picker.Item key={index} label={option.label} value={option.value} />
+                ))}
+            </Picker>
         </View>
     );
 };
