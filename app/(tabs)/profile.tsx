@@ -1,7 +1,7 @@
 import { CalendarIcon, CameraIcon, GalleryIcon, NewWorkoutIcon, PeopleIcon, TrashIcon, TrendLineIcon } from '../../components/atoms/icons';
 import { infoUser, removeImage, updateImage } from '../../lib/api_backend';
 import CustomDataTable from '../../components/molecules/CustomDataTable';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import CustomModal from '../../components/organisms/CustomModel';
 import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
@@ -83,7 +83,8 @@ export default function Profile() {
     
         if (!result.canceled && result.assets.length > 0) {
             const resizedUri = await resizeImage(result.assets[0].uri);
-
+            Alert.alert(`Hola ${resizedUri}`); 
+            
             if (resizedUri) {
                 setImage(resizedUri);
                 await saveImage(); 

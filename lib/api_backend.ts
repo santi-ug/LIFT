@@ -2,14 +2,14 @@ import mime from 'mime';
 import * as SecureStore from 'expo-secure-store';
 import { ApiResponse, UserData } from "../types/Api";
 
-console.log("Hola23", `https://virtual-pro-y.win/api/v1/users/me`)
+console.log("Hola23", `http://localhost:5000/api/v1/users/me`)
 
 export const registerUser = async (
 	userData: UserData
 ): Promise<ApiResponse> => {
 	console.log("yo", JSON.stringify(userData));
 	try {
-		const response = await fetch(`https://virtual-pro-y.win/api/v1/users/register`, {
+		const response = await fetch(`http://localhost:5000/api/v1/users/register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -39,7 +39,7 @@ export const registerUser = async (
 
 export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 	try {
-		const response = await fetch(`https://virtual-pro-y.win/api/v1/users/login`, {
+		const response = await fetch(`http://localhost:5000/api/v1/users/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -75,7 +75,7 @@ export const infoUser = async (): Promise<UserData | undefined> => {
             throw new Error("No token found, user is not authenticated");
         }
 
-        const response = await fetch(`https://virtual-pro-y.win/api/v1/users/me`, {
+        const response = await fetch(`http://localhost:5000/api/v1/users/me`, {
             method: "GET",
             headers: {
 				"Authorization": `Bearer ${token}`,
@@ -124,7 +124,7 @@ export const updateImage = async (imageUri: string | undefined): Promise<UserDat
 
             console.log("FormData created:", formData);
 
-            const response = await fetch(`https://virtual-pro-y.win/api/v1/users/myImage`, {
+            const response = await fetch(`http://localhost:5000/api/v1/users/myImage`, {
                 method: 'PUT',
                 body: formData,
                 headers: {
@@ -166,7 +166,7 @@ export const removeImage = async (): Promise<UserData | undefined> => {
             throw new Error("No token found, user is not authenticated");
         }
 
-        const response = await fetch(`https://virtual-pro-y.win/api/v1/users/myImage`, {
+        const response = await fetch(`http://localhost:5000/api/v1/users/myImage`, {
             method: 'DELETE', 
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -197,7 +197,7 @@ export const logout = async () => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
 
-        const response = await fetch(`https://virtual-pro-y.win/api/v1/users/logout`, {
+        const response = await fetch(`http://localhost:5000/api/v1/users/logout`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -232,7 +232,7 @@ export const update = async (
             throw new Error("No token found, user is not authenticated");
         }
 
-		const response = await fetch(`https://virtual-pro-y.win/api/v1/users/me`, {
+		const response = await fetch(`http://localhost:5000/api/v1/users/me`, {
 			method: 'PUT',
 			headers: {
                 "Authorization": `Bearer ${token}`,
@@ -263,7 +263,7 @@ export const deleteUser = async () => {
     try {
         const token = await SecureStore.getItemAsync("authToken");
 
-        const response = await fetch(`https://virtual-pro-y.win/api/v1/users/me`, {
+        const response = await fetch(`http://localhost:5000/api/v1/users/me`, {
             method: 'DELETE',
             headers: {
                 "Authorization": `Bearer ${token}`,
