@@ -14,10 +14,21 @@ export interface ApiResponse {
 }
 
 export interface BiometricHistoryData {
+    id?: number;
     weight: number;
     height: number;
     bmi: number;
     fat_percentage: number;
-    date: Date;
+    date: string;
+    user_id?: number;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface ApiResponseBiometricHistory {
+    success: boolean;
+    message?: string;
+    data?: BiometricHistoryData[];
+    errors?: { location: string; msg: string; path: string; type: string; value: string }[];
 }
   

@@ -1,6 +1,6 @@
 import mime from 'mime';
 import * as SecureStore from 'expo-secure-store';
-import { ApiResponse, BiometricHistoryData, UserData } from "../types/Api";
+import { ApiResponse, ApiResponseBiometricHistory, BiometricHistoryData, UserData } from "../types/Api";
 
 console.log("Hola23", `http://192.168.1.143:5000/api/v1/users/me`)
 
@@ -323,4 +323,35 @@ export const registerBiometricHistory = async (
 		console.error("Network error:", error);
 		throw new Error(error.message);
 	}
+};
+
+export const getAllBiometricHistory = async (): Promise<BiometricHistoryData[]> => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+        console.log("token", token);
+
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
+
+        const response = await fetch(`http://192.168.1.143:5000/api/v1/biometrichistories`, {
+            method: "GET",
+            headers: {
+				"Authorization": `Bearer ${token}`,
+            },
+        });
+
+        //console.log("data", response.json());
+        const data: ApiResponseBiometricHistory = await response.json();
+
+        if (!response.ok || !data.success || !data.data) {
+            throw new Error(data.message || "Failed to fetch biometric histories");
+        }
+
+        return data.data;
+    } catch (error: any) {
+        console.error("Network error:", error.message);
+        throw new Error(error.message);
+    }
 };

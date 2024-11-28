@@ -56,6 +56,7 @@ export default function Layout() {
                 <Stack.Screen name='(auth)' options={{ headerShown: false }} />
 
                 <Stack.Screen name='(user)' options={{
+                    headerTitle: "LIFT",
                     headerStyle: { backgroundColor: '#171328' },
                     headerTitleStyle: { fontSize: 18, color: "#5F48D9" },
                     headerTintColor: '#fff',

@@ -273,7 +273,7 @@ export default function Profile() {
                 <CustomButton
                     title='Measures'
 					icon={TrendLineIcon}
-                    handlePress={submit}
+                    handlePress={() => router.push("/measures")}
                     containerStyles='w-5/12 bg-gray-700 mb-5 rounded-xl'
                     isLoading={isSubmitting}
                 />
