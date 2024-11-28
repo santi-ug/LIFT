@@ -1,20 +1,20 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, Alert } from "react-native";
-import CustomButton from "../components/atoms/CustomButton";
-import FormField from "../components/atoms/FormField";
+import CustomButton from "../../components/atoms/CustomButton";
+import { editUserScheme } from "../../schemes/editUserScheme";
+import { useUserStore } from "../../storage/userStorage";
+import FormField from "../../components/atoms/FormField";
+import { infoUser, update } from "../../lib/api_backend";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { infoUser, update } from "../lib/api_backend";
-import { UserData } from "../types/Api";
+import { UserData } from "../../types/Api";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
 	EmailIcon,
 	PasswordIcon,
 	UserIcon,
-} from "../components/atoms/icons";
-import { editUserScheme } from "../schemes/editUserScheme";
-import { useUserStore } from "../storage/userStorage";
+} from "../../components/atoms/icons";
 
 export default function editProfile() {
 	const { userData } = useUserStore(); 

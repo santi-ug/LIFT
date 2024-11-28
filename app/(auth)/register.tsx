@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "../../lib/api_backend";
 import { Link, router } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   AppleIcon,
   EmailIcon,

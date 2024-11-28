@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from 'react-native';
 import FormField from '../../components/atoms/FormField';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import CustomButton from '../../components/atoms/CustomButton';
 import { router } from 'expo-router';
 import { useSelectedExercisesStore } from '../../storage/selectedExerciseStorage';

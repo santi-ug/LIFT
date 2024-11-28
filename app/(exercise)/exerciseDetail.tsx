@@ -1,5 +1,6 @@
 import { View, Text, Image, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import React from "react";
 import InstructionsList from '../../components/atoms/InstructionsItems';
 
 export default function ExerciseDetail() {

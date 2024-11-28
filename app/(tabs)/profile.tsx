@@ -7,13 +7,13 @@ import CustomButton from "../../components/atoms/CustomButton";
 import ProgressBar from "../../components/atoms/ProgressBar";
 import Dropdown from '../../components/molecules/Dropdown';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { ApiResponse, UserData } from "../../types/Api";
 import React, { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 // @ts-ignore
 import user from "../../assets/user.png";
 import { Buffer } from 'buffer';
 import { useUserStore } from '../../storage/userStorage';
+import { router } from 'expo-router';
 
 export default function Profile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -271,34 +271,37 @@ export default function Profile() {
 
             <View className="flex-row flex-wrap justify-between gap-4 my-4 mx-4">
                 <CustomButton
-                    title='Statistics'
+                    title='Measures'
 					icon={TrendLineIcon}
                     handlePress={submit}
                     containerStyles='w-5/12 bg-gray-700 mb-5 rounded-xl'
                     isLoading={isSubmitting}
                 />
-                <CustomButton
+
+               {/* <CustomButton
                     title='Exercises'
 					icon={NewWorkoutIcon}
                     handlePress={submit}
                     containerStyles='w-5/12 bg-gray-700 mb-5 rounded-xl'
                     isLoading={isSubmitting}
 					iconColor="#fff" 
-                />
+                />*/}
+
                 <CustomButton
-                    title='Measures'
+                    title='Biometric history'
 					icon={PeopleIcon}
-                    handlePress={submit}
-                    containerStyles='w-5/12 bg-gray-700 rounded-xl'
+                    handlePress={() => router.push("/biometricHistory")}
+                    containerStyles='w-5/12 bg-gray-700 mb-5 rounded-xl'
                     isLoading={isSubmitting}
                 />
-                <CustomButton
+
+                {/*<CustomButton
                     title='Calendar'
 					icon={CalendarIcon}
                     handlePress={submit}
                     containerStyles='w-5/12 bg-gray-700 rounded-xl'
                     isLoading={isSubmitting}
-                />
+                />*/}
             </View>
         </View>
     );

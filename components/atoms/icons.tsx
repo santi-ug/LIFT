@@ -1,3 +1,4 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -125,6 +126,22 @@ export const CancelIcon = () => (
 export const SaveIcon = () => (
 	<Feather name="save" size={21} color="white" />
 );
+
+export const WeightIcon = () => (
+	<MaterialIcons name="monitor-weight" size={20} color="white"/>
+);
+
+export const HeightIcon = () => (
+	<MaterialCommunityIcons name="human-male-height" size={20} color="white" />
+);
+
+export const BodyIcon = () => (
+	<Ionicons name="body" size={20} color="white" />
+)
+
+export const PercentIcon = () => (
+	<MaterialCommunityIcons name="percent-outline" size={20} color="white" />
+)
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 
