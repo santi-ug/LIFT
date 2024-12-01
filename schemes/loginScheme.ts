@@ -6,7 +6,7 @@ export const loginScheme = z.object({
 	email: z
 		.string()
 		.email({message: "Please enter a valid email"})
-        .max(20)
+        .max(40)
 		.min(1, {message: "Email is required"}),
 		
 	password: z.string()

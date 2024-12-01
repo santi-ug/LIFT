@@ -83,11 +83,11 @@ export default function Profile() {
     
         if (!result.canceled && result.assets.length > 0) {
             const resizedUri = await resizeImage(result.assets[0].uri);
-            Alert.alert(`Hola ${resizedUri}`); 
+            console.log("Resized URI:", resizedUri);
             
             if (resizedUri) {
-                setImage(resizedUri);
-                await saveImage(); 
+                console.log("Image before saving:", resizedUri);
+                await saveImage(resizedUri);
                 setImageUpdated(true);
             } else {
                 alert("Error resizing image");
@@ -116,8 +116,8 @@ export default function Profile() {
             console.log("hola tu", resizedUri);
 
             if (resizedUri) {
-                setImage(resizedUri); 
-                await saveImage();
+                console.log("Image resized to:", resizedUri); 
+                await saveImage(resizedUri); 
                 setImageUpdated(true);
             } else {
                 alert("Error resizing image");
@@ -127,14 +127,15 @@ export default function Profile() {
         setModalVisible(false);
     };
 
-    const saveImage = async () => {
-        if (!Image) {
+    const saveImage = async (imageUri: string) => {
+        console.log("Saving image:", imageUri); 
+        if (!imageUri) {
             alert('Necesita subir imagen primero')
             return
         }
 
         try {
-            await updateImage(image);
+            await updateImage(imageUri);
         } catch (err: any) {
             console.error("Error uploading image:", err);
         }

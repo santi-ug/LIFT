@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-const specialCharacters = [' ', 'ñ', 'Ñ', '(', ')', '%', '&', '$', '#', '?', '¡', '¿', '=', '>', 
-							'<', '°', '|', '!', '¬', '^', ']', '[', '{', '}', '+', '~', '*', '/'];
+const specialCharacters = [' ', 'ñ', 'Ñ', '(', ')', '?', '¡', '¿', '=', '>', 
+							'<', '°', '|', '¬', '^', ']', '[', '{', '}', '+', '~', '*', '/'];
 
-const specialCharactersPassword = [' ', 'ñ', 'Ñ', '(', ')', '>', '<', '°', '|', '!', '¬', '^', ']', '[', '{', '}',];		
+const allowedSpecialCharacters = ['@', '.', '-', '_', '!', '#', '$', '%', '&'];
 
 export const editUserScheme = z.object({
 	name: z.string()
@@ -16,18 +16,21 @@ export const editUserScheme = z.object({
 		
 	email: z.string()
 			.email({message: "Please enter a valid email"})
-			.max(20)
+			.max(40)
             .optional(),
 
 	password: z.string()
 				.min(8, {message: "Password must be at least 8 characters long"})
-			    .max(20)
+				.max(20)
 				.refine((password) => {
-					const hasSpecialChar = specialCharacters.filter(char => password.includes(char)).length;
-		
-					return hasSpecialChar <= 1 && !specialCharactersPassword.some(char => password.includes(char));
-				}, { message: "Password cannot contain spaces, the letter 'ñ', and must contain at most one special character" })
-                .optional(),				
+					const hasNumber = /\d/.test(password); 
+					const hasLetter = /[a-zA-Z]/.test(password); 
+					const hasSpecialChar = allowedSpecialCharacters.some(char => password.includes(char)); 
+					const hasInvalidChar = specialCharacters.some(char => password.includes(char)); 
+
+					return hasNumber && hasLetter && hasSpecialChar && !hasInvalidChar;
+				}, { message: "Password must contain at least one letter, one number, and one special character from the allowed list (@, ., -, _, !, #, $, %, &)" })
+				.optional(),				
 
 	confirmPassword: z.string()
                         .min(8, {message: "Confirm password is required"})

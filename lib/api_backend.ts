@@ -100,6 +100,7 @@ export const infoUser = async (): Promise<UserData | undefined> => {
 };
 
 export const updateImage = async (imageUri: string | undefined): Promise<UserData | undefined> => {
+    console.log("jo", imageUri);
     try {
         const token = await SecureStore.getItemAsync("authToken");
 

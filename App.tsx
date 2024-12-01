@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
 import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { usePushNotifications } from "./usePushNotifications";
-import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
+import { Link, router } from "expo-router";
 
 // @ts-ignore
 import home from "./assets/home.png";
@@ -52,10 +53,18 @@ export default function App() {
 
 		const unsubscribe = messaging().onMessage(async (remoteMessage:any) => {
 			Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+			Alert.alert(JSON.stringify(notification));
 		});
 	  
 		return unsubscribe;  
 	}, []);
+
+	const copyToClipboard = () => {
+		if (expoPushToken?.data) {
+			Clipboard.setString(expoPushToken.data); // Copia el token al portapapeles
+			Alert.alert('Token Copied', 'The token has been copied to your clipboard.');
+		}
+	};
 
 	return (
 		<>
@@ -72,8 +81,12 @@ export default function App() {
 							Track workouts effortlessly, {"\n"} achieve progress with purpose.
 						</Text>
 
-						{/* Mostrar el token de notificación */}
-						<Text> Token: {expoPushToken?.data || ""} </Text>
+						<Text 
+							onPress={copyToClipboard} // Permite copiar el texto al presionar
+							style={{ color: 'white', textDecorationLine: 'underline', marginTop: 10 }}
+						>
+							Token: {expoPushToken?.data || ""}
+						</Text>
 
 						{/* button */}
 						<CustomButton
@@ -93,8 +106,7 @@ export default function App() {
 						<Link href='/profile' className='text-primary mt-5'>
 							NEW WORKOUT [TEMP]
 						</Link>
-						
-						
+
 					</View>
 
 				</ScrollView>
