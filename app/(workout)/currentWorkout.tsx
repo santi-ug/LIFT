@@ -4,13 +4,39 @@ import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import CustomButton from "../../components/atoms/CustomButton";
 import Exercise from "../../components/organisms/Exercise";
 import { useSelectedExercisesStore } from "../../storage/selectedExerciseStorage";
+import { useWorkoutStore } from "../../storage/workoutStorage"; // Import workout storage
 
 const CurrentWorkout = () => {
 	const { selectedExercises } = useSelectedExercisesStore();
-	const [workoutData, setWorkoutData] = useState({
-		name: "",
-		duration: 0,
-		notes: "",
+	const { workout, setWorkout, addActivity } = useWorkoutStore(); // Access workout storage
+
+	interface Set {
+		id: number;
+		weight: number;
+		reps: number;
+		previous: string;
+		rpe: string;
+		checked: boolean;
+	}
+
+	interface Exercise {
+		id: number;
+		title: string;
+		restTime: string;
+		sets: Set[];
+	}
+
+	interface WorkoutData {
+		name: string;
+		duration: number;
+		notes: string;
+		exercises: Exercise[];
+	}
+
+	const [workoutData, setWorkoutData] = useState<WorkoutData>({
+		name: workout.title || "",
+		duration: workout.duration || 0,
+		notes: workout.notes || "",
 		exercises: [],
 	});
 
@@ -49,7 +75,7 @@ const CurrentWorkout = () => {
 	}, [selectedExercises]);
 
 	// Convert duration to HH:MM:SS format
-	const formatDuration = (durationInSeconds) => {
+	const formatDuration = (durationInSeconds: number) => {
 		const hours = Math.floor(durationInSeconds / 3600);
 		const minutes = Math.floor((durationInSeconds % 3600) / 60);
 		const seconds = durationInSeconds % 60;
@@ -57,23 +83,39 @@ const CurrentWorkout = () => {
 	};
 
 	// Handle workout name change
-	const handleWorkoutNameChange = (value) => {
+	const handleWorkoutNameChange = (value: string) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			name: value,
 		}));
+		setWorkout({ title: value }); // Update storage
 	};
 
 	// Handle workout notes change
-	const handleNotesChange = (value) => {
+	const handleNotesChange = (value: string) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			notes: value,
 		}));
+		setWorkout({ notes: value }); // Update storage
+	};
+
+	// Add a new activity to the workout storage
+	const handleAddActivity = () => {
+		workoutData.exercises.forEach((exercise) => {
+			addActivity({
+				title: exercise.title,
+				sets: exercise.sets,
+			});
+		});
+		router.push({
+			pathname: "/exercises",
+			params: { fromRoutine: "true" },
+		});
 	};
 
 	// Add a new set to an exercise
-	const handleAddSet = (exerciseId) => {
+	const handleAddSet = (exerciseId: number) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			exercises: prevData.exercises.map((exercise) =>
@@ -98,7 +140,12 @@ const CurrentWorkout = () => {
 	};
 
 	// Handle changes to a set
-	const handleSetChange = (exerciseId, setId, field, value) => {
+	const handleSetChange = (
+		exerciseId: number,
+		setId: number,
+		field: string,
+		value: any
+	) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			exercises: prevData.exercises.map((exercise) =>
@@ -115,7 +162,7 @@ const CurrentWorkout = () => {
 	};
 
 	// Toggle set completion
-	const toggleSetComplete = (exerciseId, setId) => {
+	const toggleSetComplete = (exerciseId: number, setId: number) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			exercises: prevData.exercises.map((exercise) =>
@@ -141,36 +188,11 @@ const CurrentWorkout = () => {
 		}));
 	};
 
-	// Delete a specific set
-	const handleDeleteSet = (exerciseId, setId) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			exercises: prevData.exercises.map((exercise) =>
-				exercise.id === exerciseId
-					? {
-							...exercise,
-							sets: exercise.sets.filter((set) => set.id !== setId),
-					  }
-					: exercise
-			),
-		}));
-	};
-
-	// Delete an entire exercise
-	const handleDeleteExercise = (exerciseId) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			exercises: prevData.exercises.filter(
-				(exercise) => exercise.id !== exerciseId
-			),
-		}));
-	};
-
 	return (
 		<View className='flex-1 bg-background px-4'>
 			{/* Editable Workout Name */}
 			<TextInput
-				className='text-white text-2xl font-bold mt-10'
+				className='text-white text-2xl font-bold mt-2'
 				value={workoutData.name}
 				onChangeText={handleWorkoutNameChange}
 				placeholder='Workout Name'
@@ -198,15 +220,16 @@ const CurrentWorkout = () => {
 				renderItem={({ item }) => (
 					<Exercise
 						exercise={item}
-						onAddSet={(exerciseId) => handleAddSet(exerciseId)}
-						onSetChange={(exerciseId, setId, field, value) =>
-							handleSetChange(exerciseId, setId, field, value)
-						}
-						onToggleSetComplete={(exerciseId, setId) =>
+						onAddSet={(exerciseId: any) => handleAddSet(exerciseId)}
+						onSetChange={(
+							exerciseId: any,
+							setId: any,
+							field: any,
+							value: any
+						) => handleSetChange(exerciseId, setId, field, value)}
+						onToggleSetComplete={(exerciseId: any, setId: any) =>
 							toggleSetComplete(exerciseId, setId)
 						}
-						onDeleteSet={handleDeleteSet}
-						onDeleteExercise={() => handleDeleteExercise(item.id)}
 					/>
 				)}
 				keyExtractor={(item) => item.id.toString()}
@@ -214,16 +237,11 @@ const CurrentWorkout = () => {
 			/>
 
 			{/* Footer Buttons */}
-			<View className='mt-4'>
+			<View className='my-4'>
 				<CustomButton
 					title='+ Add Activity'
-					handlePress={() =>
-						router.push({
-							pathname: "/exercises",
-							params: { fromRoutine: "true" },
-						})
-					}
-					containerStyles='bg-[#5F48D950]'
+					handlePress={handleAddActivity}
+					containerStyles='bg-[#5F48D950] mb-2'
 					textStyles='text-[#5F48D9] font-bold'
 				/>
 				<CustomButton

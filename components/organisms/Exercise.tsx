@@ -4,14 +4,54 @@ import CustomButton from "../atoms/CustomButton";
 import { Timer } from "../atoms/icons";
 import SetRow from "../molecules/SetRow";
 
-const Exercise = ({ exercise, onAddSet, onSetChange, onToggleSetComplete }) => {
-	const renderSet = ({ item }) => (
+interface ExerciseProps {
+	exercise: {
+		id: number;
+		title: string;
+		restTime: string;
+		sets: {
+			id: number;
+			weight: number;
+			reps: number;
+			rpe: number;
+			checked: boolean;
+		}[];
+	};
+	onAddSet: (exerciseId: number) => void;
+	onSetChange: (
+		exerciseId: number,
+		setId: number,
+		field: number,
+		value: any
+	) => void;
+	onToggleSetComplete: (exerciseId: number, setId: number) => void;
+}
+
+const Exercise: React.FC<ExerciseProps> = ({
+	exercise,
+	onAddSet,
+	onSetChange,
+	onToggleSetComplete,
+}) => {
+	const renderSet = ({
+		item,
+	}: {
+		item: {
+			id: number;
+			weight: number;
+			reps: number;
+			rpe: number;
+			checked: boolean;
+		};
+	}) => (
 		<SetRow
 			set={item}
-			handleSetChange={(setId, field, value) =>
-				onSetChange(exercise.id, setId, field, value)
+			handleSetChange={(setId: string, field, value) =>
+				onSetChange(exercise.id, parseInt(setId), field, value)
 			}
-			toggleSetComplete={(setId) => onToggleSetComplete(exercise.id, setId)}
+			toggleSetComplete={(setId: string) =>
+				onToggleSetComplete(exercise.id, parseInt(setId))
+			}
 		/>
 	);
 

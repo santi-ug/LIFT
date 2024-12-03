@@ -1,7 +1,25 @@
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
-const SetRow = ({ set, handleSetChange, toggleSetComplete }) => {
+interface Set {
+	id: string;
+	weight: number;
+	reps: number;
+	rpe: string;
+	checked: boolean;
+}
+
+interface SetRowProps {
+	set: Set;
+	handleSetChange: (id: string, field: string, value: string) => void;
+	toggleSetComplete: (id: string) => void;
+}
+
+const SetRow: React.FC<SetRowProps> = ({
+	set,
+	handleSetChange,
+	toggleSetComplete,
+}) => {
 	return (
 		<View
 			key={set.id}

@@ -1,17 +1,26 @@
 import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import CustomButton from "../../components/atoms/CustomButton";
 import {
 	ArrowDownIcon,
 	CancelIcon,
 	ShareIcon,
 } from "../../components/atoms/icons";
+import { finishWorkout } from "../../lib/api_backend";
+import { useWorkoutStore } from "../../storage/workoutStorage"; // Assume you store the workout data here
 
 const WorkoutLayout = () => {
-	const finishWorkout = () => {
-		console.log("Finished workout");
+	const { workout, resetWorkout } = useWorkoutStore(); // Fetch workout data and a reset function
+
+	const finishedWorkout = async () => {
+		try {
+			const res = await finishWorkout(workout);
+			console.log("e", res);
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
 	return (
@@ -44,7 +53,7 @@ const WorkoutLayout = () => {
 								<ShareIcon />
 								<CustomButton
 									title='Finish'
-									handlePress={finishWorkout}
+									handlePress={finishedWorkout} // Calls the finishWorkout function
 									containerStyles='px-6 ml-2 min-h-[35px]' // Override height and padding
 									textStyles='text-white'
 								/>
@@ -76,7 +85,7 @@ const WorkoutLayout = () => {
 								>
 									<ArrowDownIcon />
 								</TouchableOpacity>
-								<Text className='text-white text-base'>Current Workout</Text>
+								<Text className='text-white text-xs'>Current Workout</Text>
 							</View>
 						),
 						headerRight: () => (
@@ -89,9 +98,9 @@ const WorkoutLayout = () => {
 							>
 								<CustomButton
 									title='Finish'
-									handlePress={() => console.log("Finished workout")}
+									handlePress={finishedWorkout} // Calls the finishWorkout function
 									containerStyles='px-6 ml-2 min-h-[35px]' // Override height and padding
-									textStyles='text-white text-base'
+									textStyles='text-white text-xs font-bold'
 								/>
 							</View>
 						),

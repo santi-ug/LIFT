@@ -1,6 +1,10 @@
+import { router, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import mime from "mime";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { useWorkoutStore } from "../storage/workoutStorage"; // Assume you store the workout data here
 import { ApiResponse, UserData } from "../types/Api";
+import { Workout } from "../types/workout";
 
 // 172.20.10.6 - hotspot
 const url = "172.20.10.2";
@@ -286,5 +290,79 @@ export const deleteUser = async () => {
 		}
 	} catch (error) {
 		console.error(error);
+	}
+};
+
+const transformWorkoutData = (data: Workout) => {
+	// Validate inputs for mandatory fields
+	if (!data.title || typeof data.title !== "string") {
+		throw new Error("Invalid title");
+	}
+	if (!data.notes || typeof data.notes !== "string") {
+		throw new Error("Invalid notes");
+	}
+	if (!data.date || isNaN(Date.parse(data.date))) {
+		throw new Error("Invalid date");
+	}
+	if (!data.start_time || isNaN(Date.parse(data.start_time))) {
+		throw new Error("Invalid start time");
+	}
+	if (!data.end_time || isNaN(Date.parse(data.end_time))) {
+		throw new Error("Invalid end time");
+	}
+	if (typeof data.duration !== "number") {
+		throw new Error("Invalid duration");
+	}
+	if (typeof data.total_sets !== "number") {
+		throw new Error("Invalid total sets");
+	}
+
+	// Transform data
+	return {
+		title: data.title,
+		notes: data.notes,
+		date: data.date,
+		start_time: data.start_time,
+		end_time: data.end_time,
+		duration: data.duration,
+		total_sets: data.total_sets,
+	};
+};
+
+export const finishWorkout = async (workoutData: Workout) => {
+	// Usage example
+
+	try {
+		const transformedWorkoutData = transformWorkoutData(workoutData); // Replace '1' with the authenticated user's ID
+		console.log("Transformed Data:", transformedWorkoutData);
+		const token = await SecureStore.getItemAsync("authToken");
+
+		// Example API endpoint and payload
+		const response = await fetch(`http://${url}:5000/api/v1/workouts`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(transformedWorkoutData), // Send workout data to the backend
+		});
+
+		if (response.ok) {
+			Alert.alert("Workout Finished", "Your workout was saved successfully.");
+			router.push("/newworkout"); // Redirect to the new workout page
+		} else {
+			Alert.alert(
+				"Error",
+				"There was an issue saving your workout. Please try again."
+			);
+		}
+
+		return response;
+	} catch (error) {
+		console.error("Error saving workout:", error);
+		Alert.alert(
+			"Error",
+			"Unable to finish the workout. Please try again later."
+		);
 	}
 };
