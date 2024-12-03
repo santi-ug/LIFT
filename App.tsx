@@ -1,11 +1,9 @@
-import { Alert, Image, ScrollView, Text, View } from "react-native";
-import { usePushNotifications } from "./usePushNotifications";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Clipboard from '@react-native-clipboard/clipboard';
-import messaging from '@react-native-firebase/messaging';
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Image, ScrollView, Text, View } from "react-native";
+
 import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // @ts-ignore
 import home from "./assets/home.png";
@@ -93,13 +91,9 @@ export default function App() {
 		<>
 			<Image source={home} className='w-full h-full bg-background ' />
 			<SafeAreaView className='w-full h-full absolute'>
-
 				<ScrollView contentContainerStyle={{ height: "100%" }}>
-
 					<View className='w-full justify-center items-center min-h-[125vh] px-8'>
-						<Text className='text-8xl text-white items-start'>
-							LIFT.
-						</Text>
+						<Text className='text-8xl text-white items-start'>LIFT</Text>
 						<Text className='text-white text-xs text-center'>
 							Track workouts effortlessly, {"\n"} achieve progress with purpose.
 						</Text>
@@ -124,14 +118,11 @@ export default function App() {
 								Login
 							</Link>
 						</View>
-
-						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT  */}
+						{/* TEMPORARY LINK TO GO TO MAIN SCREEN WHEN LOGGED IN -- NEW WORKOUT */}
 						<Link href='/profile' className='text-primary mt-5'>
 							NEW WORKOUT [TEMP]
 						</Link>
-
 					</View>
-
 				</ScrollView>
 				<StatusBar style='light' />
 
