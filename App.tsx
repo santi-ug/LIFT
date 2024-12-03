@@ -1,5 +1,5 @@
-import React from "react";
 import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
 import { Link, router } from "expo-router";
@@ -14,13 +14,9 @@ export default function App() {
 		<>
 			<Image source={home} className='w-full h-full bg-background ' />
 			<SafeAreaView className='w-full h-full absolute'>
-
 				<ScrollView contentContainerStyle={{ height: "100%" }}>
-
 					<View className='w-full justify-center items-center min-h-[125vh] px-8'>
-						<Text className='text-8xl text-white items-start'>
-							LIFT.
-						</Text>
+						<Text className='text-8xl text-white items-start'>LIFT</Text>
 						<Text className='text-white text-xs text-center'>
 							Track workouts effortlessly, {"\n"} achieve progress with purpose.
 						</Text>
@@ -43,12 +39,9 @@ export default function App() {
 							NEW WORKOUT [TEMP]
 						</Link>
 						*/}
-						
 					</View>
-
 				</ScrollView>
 				<StatusBar style='light' />
-				
 			</SafeAreaView>
 		</>
 	);
