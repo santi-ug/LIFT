@@ -14,9 +14,18 @@ import {
 	PasswordIcon,
 } from "../../components/atoms/icons";
 import { loginScheme } from "../../schemes/loginScheme";
+import NoticeModal from "../../components/organisms/NoticeModal";
 
 export default function Login() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
+	const [isNoticeVisible, setNoticeVisible] = useState(false);
+    const [noticeContent, setNoticeContent] = useState({
+        title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+    }); 
+
 	const { 
 		control, 
 		handleSubmit, 
@@ -31,7 +40,14 @@ export default function Login() {
 		if (Object.keys(errors).length > 0) {
 			Object.values(errors).forEach((error) => {
 				if (error && typeof error === "object" && "message" in error) {
-					Alert.alert("Error", error.message as string);
+					setNoticeContent({
+                        title: "Error",
+                        description: error.message as string,
+						confirmButtonColor: "#dc2626",
+						confirmButtonText: "Accept"
+                    });
+
+                    setNoticeVisible(true);
 				}
 			});
 		}
@@ -46,14 +62,35 @@ export default function Login() {
 			});
 
 			if (response.success) {
-				Alert.alert("Success", "Login successful!");
-				router.push("/profile"); 
+				setNoticeContent({
+                    title: "Success",
+                    description: "Login successful!",
+					confirmButtonColor: "#4caf50",
+					confirmButtonText: "Accept"
+				});
+
+                setNoticeVisible(true);
 			} else {
-				Alert.alert("Error", response.message); 
+				const errorMessage = response.message || "Unknown error occurred";
+				setNoticeContent({
+                    title: "Error",
+                    description: errorMessage,
+					confirmButtonColor: "#dc2626",
+					confirmButtonText: "Accept"
+                });
+
+                setNoticeVisible(true);
 			}
 		} catch (error) {
-			Alert.alert("Error", "An error occurred during login.");
-			console.error(error); 
+			setNoticeContent({
+                title: "Error",
+                description: "An error occurred during login.",
+				confirmButtonColor: "#dc2626",
+				confirmButtonText: "Accept"
+			});
+
+            setNoticeVisible(true);
+			console.error(error);
 		}
 	};
 
@@ -64,7 +101,7 @@ export default function Login() {
 					<ScrollView>
 
 						<View className='w-full justify-center min-h-[90vh] px-8 my-6'>
-							<Text className='text-4xl text-white'>
+							<Text className='text-4xl text-white font-bold'>
 								Login to LIFT.
 							</Text>
 
@@ -151,6 +188,22 @@ export default function Login() {
 
 					</ScrollView>
 				</KeyboardAvoidingView>
+
+				<NoticeModal
+					isVisible={isNoticeVisible}
+					onClose={() => setNoticeVisible(false)}
+					title={noticeContent.title}
+					description={noticeContent.description}
+					confirmButtonColor = {noticeContent.confirmButtonColor}
+					confirmButtonText = {noticeContent.confirmButtonText}
+					onConfirm={() => {
+						setNoticeVisible(false);
+						if (noticeContent.title === "Success") {
+							router.push("/profile"); 
+						}
+					}}
+				/>
+
 			</SafeAreaView>
 
 			{/* <Login /> */}

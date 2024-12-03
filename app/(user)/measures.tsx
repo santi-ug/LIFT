@@ -2,9 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { getAllBiometricHistory } from '../../lib/api_backend';
 import { BiometricHistoryData } from '../../types/Api';
+import NoticeModal from '../../components/organisms/NoticeModal';
 
 export default function measures() {
     const [biometricHistory, setBiometricHistory] = useState<BiometricHistoryData[]>([]);
+    const [isNoticeVisible, setNoticeVisible] = useState(false);
+    const [noticeContent, setNoticeContent] = useState({
+        title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+    });
     const [isLoading, setIsLoading] = useState(true);
 
     const loadBiometricHistory = async () => {
@@ -15,7 +23,14 @@ export default function measures() {
 
         } catch (error) {
             console.error('Error fetching biometric history:', error);
-            Alert.alert('Error', 'An error occurred while fetching biometric history.');
+            setNoticeContent({
+                title: "Error",
+                description: 'An error occurred while fetching biometric history.',
+                confirmButtonColor: "#dc2626",
+                confirmButtonText: "Accept"
+            });
+
+            setNoticeVisible(true);
         
         } finally {
             setIsLoading(false);
@@ -29,14 +44,14 @@ export default function measures() {
     return (
         <View className="flex-1 bg-background">
             <ScrollView>
-                <View className="pl-12 pt-6">
-                    <Text className="text-white text-xl font-bold mt-5">Biometric Histories:</Text>
+                <View className="pl-8 pt-6">
+                    <Text className="text-4xl text-white font-bold mt-5">Biometric Histories</Text>
 
                     {isLoading ? (
                         <ActivityIndicator size="large" color="#ffffff" />
                     ) : biometricHistory.length > 0 ? (
                         biometricHistory.map((item, index) => (
-                        <View key={index} className="mt-4 p-3 border-b border-gray-600">
+                        <View key={index} className="mt-4 p-3 mr-8 border border-gray-600">
                             <Text className="text-white text-lg">Date: {item.date}</Text>
                             <Text className="text-gray-400 text-sm">Weight: {item.weight} kg</Text>
                             <Text className="text-gray-400 text-sm">Height: {item.height} cm</Text>
@@ -49,6 +64,18 @@ export default function measures() {
                     )}
                 </View>
             </ScrollView>
+
+            <NoticeModal
+                isVisible={isNoticeVisible}
+                onClose={() => setNoticeVisible(false)}
+                title={noticeContent.title}
+                description={noticeContent.description}
+                confirmButtonColor = {noticeContent.confirmButtonColor}
+                confirmButtonText = {noticeContent.confirmButtonText}
+                onConfirm={() => {
+                    setNoticeVisible(false);
+                }}
+		    />
         </View>
     );
 }

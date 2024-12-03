@@ -12,9 +12,11 @@ import {
     CancelIcon,
 } from "../components/atoms/icons";
 import { deleteUser , logout } from "../lib/api_backend";
+import NoticeModal from "../components/organisms/NoticeModal";
 
 export default function Layout() {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
     const [loading, setLoading] = useState(true); 
     const router = useRouter();
 
@@ -125,7 +127,7 @@ export default function Layout() {
                     {
                         text: 'Delete',
                         icon: <DeleteAccountIcon />,
-                        onPress: deleteAccount,
+                        onPress: () => setDeleteModalVisible(true),
                     },
                     {
                         text: 'Edit',
@@ -133,6 +135,19 @@ export default function Layout() {
                         onPress: updateAccount,
                     },
                 ]}
+            />
+
+            <NoticeModal
+                isVisible={isDeleteModalVisible}
+                onClose={() => setDeleteModalVisible(false)}
+                title = 'Delete Account'
+                description = 'This action is irreversible and will delete all your data. Please enter your password to continue.'
+                confirmButtonColor = '#dc2626'  
+                confirmButtonText = 'Delete Account'
+                onConfirm={() => {
+                    deleteAccount(); 
+                    setDeleteModalVisible(false); 
+                }}
             />
         </>
     );

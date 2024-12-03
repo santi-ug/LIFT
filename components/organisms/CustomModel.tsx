@@ -2,15 +2,15 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 
 type CustomModalProps = {
-    isVisible: boolean; 
-    onClose: () => void; 
-    title: string; 
-    buttons: Array<{
-      text: string; 
-      icon: JSX.Element; 
-      onPress: () => void; 
-    }>;
-  };
+  isVisible: boolean; 
+  onClose: () => void; 
+  title: string; 
+  buttons: Array<{
+    text: string; 
+    icon: JSX.Element; 
+    onPress: () => void; 
+  }>;
+};
 
 export default function CustomModal({ isVisible, onClose, title, buttons }: CustomModalProps) {
   return (
@@ -22,7 +22,7 @@ export default function CustomModal({ isVisible, onClose, title, buttons }: Cust
     >
       <View className="flex-1 p-9 justify-center bg-black-50">
         <View className="bg-white py-4 justify-center items-center rounded-2xl">
-          <Text className="text-xl text-black">{title}</Text>
+          <Text className="text-xl font-bold text-black">{title}</Text>
 
           <View className="flex flex-row justify-between w-auto my-5 mx-2">
             {buttons.map((button, index) => (

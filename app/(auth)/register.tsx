@@ -14,9 +14,18 @@ import {
   PasswordIcon,
   UserIcon,
 } from "../../components/atoms/icons";
+import NoticeModal from "../../components/organisms/NoticeModal";
 
 export default function Register() {
 	const [isSubmittingApple, setIsSubmittingApple] = useState(false);
+	const [isNoticeVisible, setNoticeVisible] = useState(false);
+    const [noticeContent, setNoticeContent] = useState({
+        title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+    }); 
+	
 	const { 
 		control, 
 		handleSubmit, 
@@ -31,7 +40,14 @@ export default function Register() {
 		if (Object.keys(errors).length > 0) {
 			Object.values(errors).forEach((error) => {
 				if (error && typeof error === "object" && "message" in error) {
-					Alert.alert("Error", error.message as string);
+					setNoticeContent({
+                        title: "Error",
+                        description: error.message as string,
+						confirmButtonColor: "#dc2626",
+						confirmButtonText: "Accept"
+                    });
+
+                    setNoticeVisible(true);
 				}
 			});
 		}
@@ -47,15 +63,35 @@ export default function Register() {
 			});
 
 			if (response.success) {
-				Alert.alert("Success", "Registration successful!");
-				router.push("/profile");
+				setNoticeContent({
+                    title: "Success",
+                    description: "Registration successful!",
+					confirmButtonColor: "#4caf50",
+					confirmButtonText: "Accept"
+				});
+
+                setNoticeVisible(true);
 			} else {
 				const errorMessage = response.message || "Unknown error occurred";
-				Alert.alert("Error", errorMessage);
+				setNoticeContent({
+                    title: "Error",
+                    description: errorMessage,
+					confirmButtonColor: "#dc2626",
+					confirmButtonText: "Accept"
+                });
+
+                setNoticeVisible(true);
 			}
 		} catch (error) {
-			Alert.alert("Error", "An error occurred during registration.");
-			console.error(error);
+			setNoticeContent({
+                title: "Error",
+                description: "An error occurred during registration.",
+				confirmButtonColor: "#dc2626",
+				confirmButtonText: "Accept"
+			});
+
+            setNoticeVisible(true);
+			console.error(error); 
 		}
 	};
 
@@ -65,7 +101,7 @@ export default function Register() {
 
 				<View className='w-full justify-center min-h-[90vh] px-8 my-6'>
 					
-					<Text className='text-4xl text-white'>
+					<Text className='text-4xl text-white font-bold'>
 						Sign up with LIFT.
 					</Text>
 
@@ -169,6 +205,22 @@ export default function Register() {
 					</View>
 				</View>
 			</ScrollView>
+
+			<NoticeModal
+				isVisible={isNoticeVisible}
+				onClose={() => setNoticeVisible(false)}
+				title={noticeContent.title}
+				description={noticeContent.description}
+				confirmButtonColor = {noticeContent.confirmButtonColor}
+				confirmButtonText = {noticeContent.confirmButtonText}
+				onConfirm={() => {
+					setNoticeVisible(false);
+					if (noticeContent.title === "Success") {
+						router.push("/profile"); 
+					}
+				}}
+			/>
+
 		</SafeAreaView>
   	);
 }

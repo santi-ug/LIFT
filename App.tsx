@@ -4,17 +4,25 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, router } from "expo-router";
 
 // @ts-ignore
 import home from "./assets/home.png";
 import CustomButton from "./components/atoms/CustomButton";
+import NoticeModal from "./components/organisms/NoticeModal";
 
 export default function App() {
+	const [isModalVisible, setModalVisible] = useState(false);
+	const [modalData, setModalData] = useState({ 
+		title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+	});
+
 	const { expoPushToken, notification } = usePushNotifications();
 	console.log(expoPushToken?.data);
-	console.log(notification?.date)
 
 	const requestUserPermission = async () =>  {
 		const authStatus = await messaging().requestPermission();
@@ -52,8 +60,16 @@ export default function App() {
 		});
 
 		const unsubscribe = messaging().onMessage(async (remoteMessage:any) => {
-			Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-			Alert.alert(JSON.stringify(notification));
+			console.log('A new FCM message arrived!', remoteMessage);
+
+			setModalData({
+				title: remoteMessage.data?.title || remoteMessage.notification?.title || 'Notification',
+				description: remoteMessage.data?.message || remoteMessage.notification?.body,
+				confirmButtonColor: "#4caf50",
+				confirmButtonText: "Accept"
+			});
+
+			setModalVisible(true);
 		});
 	  
 		return unsubscribe;  
@@ -61,8 +77,15 @@ export default function App() {
 
 	const copyToClipboard = () => {
 		if (expoPushToken?.data) {
-			Clipboard.setString(expoPushToken.data); // Copia el token al portapapeles
-			Alert.alert('Token Copied', 'The token has been copied to your clipboard.');
+			Clipboard.setString(expoPushToken.data); 
+			setModalData({
+				title: "Token Copied",
+				description: 'The token has been copied to your clipboard.',
+				confirmButtonColor: "#4caf50",
+				confirmButtonText: "Accept"
+			});
+
+			setModalVisible(true);
 		}
 	};
 
@@ -111,7 +134,19 @@ export default function App() {
 
 				</ScrollView>
 				<StatusBar style='light' />
-				
+
+				<NoticeModal
+					isVisible={isModalVisible}
+					onClose={() => setModalVisible(false)}
+					title={modalData.title}
+					description={modalData.description}
+					confirmButtonColor="#4caf50"
+					confirmButtonText="Accept"
+					onConfirm={() => {
+						setModalVisible(false);
+					}}
+				/>
+							
 			</SafeAreaView>
 		</>
 	);

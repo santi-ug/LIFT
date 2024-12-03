@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Text, View, Alert, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import CustomButton from "../../components/atoms/CustomButton";
 import FormField from "../../components/atoms/FormField";
 import { useForm, Controller } from "react-hook-form";
@@ -9,12 +9,20 @@ import { biometricHistoryScheme } from "../../schemes/biometricHistoryScheme";
 import React, { useState } from "react";
 import { Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { BodyIcon, CalendarIcon, EmailIcon, HeightIcon, PercentIcon, WeightIcon } from "../../components/atoms/icons";
+import { BodyIcon, CalendarIcon, HeightIcon, PercentIcon, WeightIcon } from "../../components/atoms/icons";
 import { registerBiometricHistory } from "../../lib/api_backend";
+import NoticeModal from "../../components/organisms/NoticeModal";
 
 export default function biometricHistory() {
     const [date, setDate] = useState<Date>(new Date());
 	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [isNoticeVisible, setNoticeVisible] = useState(false);
+    const [noticeContent, setNoticeContent] = useState({
+        title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+    });
 
 	const {
 		control,
@@ -28,7 +36,14 @@ export default function biometricHistory() {
 		if (Object.keys(errors).length > 0) {
 			Object.values(errors).forEach((error) => {
 				if (error && typeof error === "object" && "message" in error) {
-					Alert.alert("Error", error.message as string);
+					setNoticeContent({
+                        title: "Error",
+                        description: error.message as string,
+						confirmButtonColor: "#dc2626",
+						confirmButtonText: "Accept"
+                    });
+
+                    setNoticeVisible(true);
 				}
 			});
 		}
@@ -40,15 +55,36 @@ export default function biometricHistory() {
 		try {
 			console.log("data", formData);
 			const response = await registerBiometricHistory(formData)
+			
 			if (response.success) {
-				Alert.alert("Success", "Biometric History saved successfully!");
-                router.push("/profile");
+				setNoticeContent({
+                    title: "Success",
+                    description: "Biometric History saved successfully!",
+					confirmButtonColor: "#4caf50",
+					confirmButtonText: "Accept"
+				});
+
+                setNoticeVisible(true);
 			} else {
 				const errorMessage = response.message || "Unknown error occurred";
-      			Alert.alert("Error", errorMessage); 
+				setNoticeContent({
+                    title: "Error",
+                    description: errorMessage,
+					confirmButtonColor: "#dc2626",
+					confirmButtonText: "Accept"
+                });
+
+                setNoticeVisible(true);
 			}
 		} catch (error) {
-			Alert.alert("Error", "An error occurred while saving the data.");
+			setNoticeContent({
+                title: "Error",
+                description: "An error occurred while saving the data.",
+				confirmButtonColor: "#dc2626",
+				confirmButtonText: "Accept"
+			});
+
+            setNoticeVisible(true);
 			console.error(error);
 		}
 	};
@@ -63,7 +99,6 @@ export default function biometricHistory() {
 		}
 	};
 
-	// Función para validar si el texto ingresado es un número
     const handleNumericInput = (text: string, onChange: any) => {
         // Verificar si el texto es un número válido
         if (text === "") {
@@ -75,7 +110,14 @@ export default function biometricHistory() {
 			} else if (text === "Infinit" || text === "-Infinit" || text === "-"){
 				onChange("");
 			}else{
-				Alert.alert("Error", "Please enter a valid number.");
+				setNoticeContent({
+                    title: "Error",
+                    description: "Please enter a valid number.",
+					confirmButtonColor: "#dc2626",
+					confirmButtonText: "Accept"
+				});
+
+                setNoticeVisible(true);
 			}
 		}
     };
@@ -188,6 +230,22 @@ export default function biometricHistory() {
 					</View>
 				</View>
 			</ScrollView>
+
+			<NoticeModal
+                isVisible={isNoticeVisible}
+                onClose={() => setNoticeVisible(false)}
+                title={noticeContent.title}
+                description={noticeContent.description}
+				confirmButtonColor = {noticeContent.confirmButtonColor}
+                confirmButtonText = {noticeContent.confirmButtonText}
+				onConfirm={() => {
+                    setNoticeVisible(false);
+					if (noticeContent.title === "Success") {
+						router.push("/profile"); 
+					}
+                }}
+            />
+
 		</SafeAreaView>
 	);
 }

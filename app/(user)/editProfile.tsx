@@ -9,15 +9,24 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserData } from "../../types/Api";
 import { router } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
 	EmailIcon,
 	PasswordIcon,
 	UserIcon,
 } from "../../components/atoms/icons";
+import NoticeModal from "../../components/organisms/NoticeModal";
 
 export default function editProfile() {
-	const { userData } = useUserStore(); 
+	const { userData } = useUserStore();
+	const [isNoticeVisible, setNoticeVisible] = useState(false);
+    const [noticeContent, setNoticeContent] = useState({
+        title: "",
+        description: "",
+		confirmButtonText: "",
+		confirmButtonColor: "",
+    }); 
+
 	const { 
 		control, 
 		handleSubmit, 
@@ -30,7 +39,14 @@ export default function editProfile() {
 		if (Object.keys(errors).length > 0) {
 			Object.values(errors).forEach((error) => {
 				if (error && typeof error === "object" && "message" in error) {
-					Alert.alert("Error e", error.message as string);
+					setNoticeContent({
+                        title: "Error",
+                        description: error.message as string,
+						confirmButtonColor: "#dc2626",
+						confirmButtonText: "Accept"
+                    });
+
+                    setNoticeVisible(true);
 				}
 			});
 		}
@@ -47,14 +63,34 @@ export default function editProfile() {
 		try {
 			const response = await update(updatedData); 
 			if (response.success) {
-				Alert.alert("Success", "Profile updated successfully!");
-                router.push("/profile");
+				setNoticeContent({
+                    title: "Success",
+                    description: "Profile updated successfully!",
+					confirmButtonColor: "#4caf50",
+					confirmButtonText: "Accept"
+				});
+
+                setNoticeVisible(true);
 			} else {
 				const errorMessage = response.message || "Unknown error occurred";
-      			Alert.alert("Error", errorMessage); 
+				setNoticeContent({
+                    title: "Error",
+                    description: errorMessage,
+					confirmButtonColor: "#dc2626",
+					confirmButtonText: "Accept"
+                });
+
+                setNoticeVisible(true);
 			}
 		} catch (error) {
-			Alert.alert("Error", "An error occurred while updating the profile.");
+			setNoticeContent({
+                title: "Error",
+                description: "An error occurred while saving the data.",
+				confirmButtonColor: "#dc2626",
+				confirmButtonText: "Accept"
+			});
+
+            setNoticeVisible(true);
 			console.error(error); 
 		} 
 	};
@@ -142,6 +178,21 @@ export default function editProfile() {
 					</View>
 
 				</ScrollView>
+
+				<NoticeModal
+					isVisible={isNoticeVisible}
+					onClose={() => setNoticeVisible(false)}
+					title={noticeContent.title}
+					description={noticeContent.description}
+					confirmButtonColor = {noticeContent.confirmButtonColor}
+					confirmButtonText = {noticeContent.confirmButtonText}
+					onConfirm={() => {
+						setNoticeVisible(false);
+						if (noticeContent.title === "Success") {
+							router.push("/profile"); 
+						}
+					}}
+				/>
 			</SafeAreaView>
 		</>
 	);
