@@ -7,53 +7,69 @@ import SearchInput from '../organisms/SearchInput';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import React from "react";
-import { useSelectedExercisesStore } from '../../storage/selectedExerciseStorage';
 
-export default function ListElement({ selectedEquipments, selectedBodyParts, fromRoutine }: ListElementProps) {
+export default function ListElement({ selectedEquipments, selectedBodyParts }: ListElementProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const { searchText } = useSearchStore(); 
-  const { addExercise } = useSelectedExercisesStore();
 
   const getInfoExercises_ = async (
     limit: number,
     offset: number,
     equipments?: string[],
-    bodyParts?: string[]   
+    bodyParts?: string[]
   ) => {
-    if (equipments && equipments.length > 0 && bodyParts && bodyParts.length > 0) {
-      const exercisesFromEquipments = await Promise.all(
-        equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset))
-      );
-    
-      const exercisesFromBodyParts = await Promise.all(
-        bodyParts.map((bodyPart) => getInfoExercisesbyBodyPart(bodyPart, limit, offset))
-      );
-    
-      return [...exercisesFromEquipments.flat(), ...exercisesFromBodyParts.flat()];
-    
-    } else if (equipments && equipments.length > 0) {
-
-      const exercises = await Promise.all(
-        equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset))
-      );
-      return exercises.flat();
-
-    } else if (bodyParts && bodyParts.length > 0) {
-
-      const exercises = await Promise.all(
-        bodyParts.map((bodyPart) => getInfoExercisesbyBodyPart(bodyPart, limit, offset))
-      );
-      return exercises.flat();
-      
-    } else if (searchText && searchText.length > 0) {
-      return getInfoExercisesbyName(limit, offset, searchText); 
-    } else {
-      return getInfoExercises(limit, offset);
+    if (searchText && searchText.length > 0) {
+      const exercisesByName = await getInfoExercisesbyName(limit, offset, searchText);
+  
+      if (equipments && equipments.length > 0 || bodyParts && bodyParts.length > 0) {
+        const filteredExercises = await getFilteredExercises(limit, offset, equipments, bodyParts);
+        return mergeUniqueExercises(exercisesByName, filteredExercises);
+      }
+  
+      return exercisesByName;
     }
+  
+    if (equipments && equipments.length > 0 || bodyParts && bodyParts.length > 0) {
+      return getFilteredExercises(limit, offset, equipments, bodyParts);
+    }
+  
+    return getInfoExercises(limit, offset);
   };
+  
+  const getFilteredExercises = async (
+    limit: number,
+    offset: number,
+    equipments?: string[],
+    bodyParts?: string[]
+  ) => {
+    const exercisesFromEquipments = equipments && equipments.length > 0
+      ? await Promise.all(equipments.map((equipment) => getInfoExercisesbyEquipment(equipment, limit, offset)))
+      : [];
+    
+    const exercisesFromBodyParts = bodyParts && bodyParts.length > 0
+      ? await Promise.all(bodyParts.map((bodyPart) => getInfoExercisesbyBodyPart(bodyPart, limit, offset)))
+      : [];
+  
+    return [...exercisesFromEquipments.flat(), ...exercisesFromBodyParts.flat()];
+  };
+  
+  const mergeUniqueExercises = (
+    list1: Exercise[], 
+    list2: Exercise[]
+  ) => {
+    const merged = [...list1, ...list2];
+    const unique = new Map(); 
+
+    merged.forEach((exercise) => {
+      unique.set(exercise.id, exercise); 
+    });
+
+    return Array.from(unique.values());
+  };
+  
 
   const fetchExercises = async () => {
     setLoading(true);
@@ -106,29 +122,22 @@ export default function ListElement({ selectedEquipments, selectedBodyParts, fro
       name={item.name}
       gifUrl={item.gifUrl}
       bodyPart={item.bodyPart}
-      onPress={() => {
-        if (fromRoutine) {
-          addExercise(item);
-          router.back(); 
-        } else {
-          router.push({
-            pathname: '/exerciseDetail',
-            params: {
-              name: item.name,
-              gifUrl: item.gifUrl,
-              bodyPart: item.bodyPart,
-              instructions: item.instructions,
-              equipment: item.equipment,
-            },
-          });
+      onPress={() => router.push({
+        pathname: '/exerciseDetail',
+        params: { 
+          name: item.name,
+          gifUrl: item.gifUrl,
+          bodyPart: item.bodyPart,
+          instructions: item.instructions,
+          equipment: item.equipment
         }
-      }}
+      })}
     />
   );
 
   const renderSection = ({ sectionKey, data }: { sectionKey: string, data: Exercise[] }) => (
     <View key={sectionKey}>
-      <Text className='text-base text-white font-medium ml-6 mt-4 mb-2'>{sectionKey}</Text>
+      <Text className='text-base text-white font-imedium ml-6 mt-4 mb-2'>{sectionKey}</Text>
       {data.map((exercise, index) => renderItem({ item: exercise, index }))}
     </View>
   );
@@ -151,6 +160,7 @@ export default function ListElement({ selectedEquipments, selectedBodyParts, fro
     <View className="flex-1 bg-background">
       <SearchInput />
       <FlatList
+        key={searchText}
         data={Object.keys(groupedExercises)}
         renderItem={({ item }) => renderSection({ sectionKey: item, data: groupedExercises[item] })}
         keyExtractor={item => item}

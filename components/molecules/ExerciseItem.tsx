@@ -18,7 +18,7 @@ export default function ExerciseItem({ name, gifUrl, bodyPart, onPress, fromRout
         
         <View className="w-14 h-14 rounded-full overflow-hidden">
           <Image 
-            source={{ uri: gifUrl }} 
+            source={{ uri: gifUrl.trim() }} 
             className="w-full h-full" 
             alt={name}
           />

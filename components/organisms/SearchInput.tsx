@@ -33,6 +33,19 @@ export default function SearchInput() {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchText('');
+    setLocalText('');
+    setNoticeContent({
+      title: "Search Cleared",
+      description: "The search text has been successfully cleared.",
+      confirmButtonColor: "#4caf50", 
+      confirmButtonText: "Accept",
+    });
+
+    setNoticeVisible(true);
+  };
+
   return (
     <View>
       <View className="flex-row justify-evenly items-center h-1/10 bg-background">
@@ -40,7 +53,7 @@ export default function SearchInput() {
           className="h-10 my-3 border-search text-search border-2 px-4 w-9/12 rounded-full bg-background"
           onChangeText={setLocalText}
           value={localText}
-          placeholder="Search"
+          placeholder={searchText || "Search"}
           placeholderTextColor="#A0AEC0" 
         />
         
@@ -54,7 +67,11 @@ export default function SearchInput() {
           <FilterIcon/> 
         </TouchableOpacity>
 
-        <ThreeDotsVerticarIcon/>
+        <TouchableOpacity
+          onPress={handleClearSearch} 
+        >
+          <ThreeDotsVerticarIcon/>
+        </TouchableOpacity>
       </View>
       <Text className='font-semibold text-2xl text-white py-3 pl-3'>Exercises</Text>
     
@@ -67,9 +84,6 @@ export default function SearchInput() {
         confirmButtonText = {noticeContent.confirmButtonText}
         onConfirm={() => {
           setNoticeVisible(false);
-          if (noticeContent.title === "Success") {
-            router.push("/profile"); 
-          }
         }}
 			/>
     
