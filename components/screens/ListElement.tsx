@@ -7,9 +7,11 @@ import SearchInput from '../organisms/SearchInput';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import React from "react";
+import { useSelectedExercisesStore } from '../../storage/selectedExerciseStorage';
 
-export default function ListElement({ selectedEquipments, selectedBodyParts }: ListElementProps) {
+export default function ListElement({ selectedEquipments, selectedBodyParts, fromRoutine }: ListElementProps) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { addExercise } = useSelectedExercisesStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -122,16 +124,23 @@ export default function ListElement({ selectedEquipments, selectedBodyParts }: L
       name={item.name}
       gifUrl={item.gifUrl}
       bodyPart={item.bodyPart}
-      onPress={() => router.push({
-        pathname: '/exerciseDetail',
-        params: { 
-          name: item.name,
-          gifUrl: item.gifUrl,
-          bodyPart: item.bodyPart,
-          instructions: item.instructions,
-          equipment: item.equipment
+      onPress={() => {
+        if (fromRoutine) {
+          addExercise(item);
+          router.back(); 
+        } else {
+          router.push({
+            pathname: '/exerciseDetail',
+            params: {
+              name: item.name,
+              gifUrl: item.gifUrl,
+              bodyPart: item.bodyPart,
+              instructions: item.instructions,
+              equipment: item.equipment,
+            },
+          });
         }
-      })}
+      }}
     />
   );
 

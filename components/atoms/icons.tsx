@@ -1,6 +1,3 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -8,7 +5,9 @@ import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Foundation from "@expo/vector-icons/Foundation";
+import { default as MaterialIcons } from "@expo/vector-icons/MaterialIcons";
 import Octicons from "@expo/vector-icons/Octicons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import React from "react";
 import { View } from "react-native";
 
@@ -140,22 +139,6 @@ export const ArrowDownIcon = () => {
 };
 
 export const SaveIcon = () => <Feather name='save' size={21} color='white' />;
-
-export const WeightIcon = () => (
-	<MaterialIcons name="monitor-weight" size={20} color="white"/>
-);
-
-export const HeightIcon = () => (
-	<MaterialCommunityIcons name="human-male-height" size={20} color="white" />
-);
-
-export const BodyIcon = () => (
-	<Ionicons name="body" size={20} color="white" />
-)
-
-export const PercentIcon = () => (
-	<MaterialCommunityIcons name="percent-outline" size={20} color="white" />
-)
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

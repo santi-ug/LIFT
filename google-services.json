@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "469875862412",
+    "project_id": "lift2-2f71c",
+    "storage_bucket": "lift2-2f71c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469875862412:android:6ab1ef9c5437425385c4a9",
+        "android_client_info": {
+          "package_name": "com.jassym.peream.proyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMrSP0eHKmnZe_ImU05LWyd8nBlmMMfuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
