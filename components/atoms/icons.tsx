@@ -1,15 +1,15 @@
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Entypo from "@expo/vector-icons/Entypo";
-import Feather from "@expo/vector-icons/Feather";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Fontisto from "@expo/vector-icons/Fontisto";
-import Foundation from "@expo/vector-icons/Foundation";
-import { default as MaterialIcons } from "@expo/vector-icons/MaterialIcons";
-import Octicons from "@expo/vector-icons/Octicons";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
+import Foundation from '@expo/vector-icons/Foundation';
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Octicons from "@expo/vector-icons/Octicons";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import Feather from '@expo/vector-icons/Feather';
+import Entypo from '@expo/vector-icons/Entypo';
 import React from "react";
-import { View } from "react-native";
 
 export const LoginIcon: React.FC<{ color: string }> = ({ color }) => (
 	<AntDesign name='login' size={24} color={color} />
@@ -31,23 +31,6 @@ export const PasswordVisibleIcon: React.FC<{ color: string }> = ({ color }) => (
 	<Octicons name='eye' size={18} color={color} />
 );
 
-export const CustomIcon = () => {
-	return (
-		<View
-			style={{
-				width: 48, // Adjust size as needed
-				height: 48,
-				backgroundColor: "#646464", // Inner color
-				borderRadius: 24, // Makes it a circle
-				justifyContent: "center",
-				alignItems: "center",
-			}}
-		>
-			<AntDesign name='checkcircle' size={24} color='#171328' />
-		</View>
-	);
-};
-
 export const PasswordNoVisibleIcon: React.FC<{ color: string }> = ({
 	color,
 }) => <Octicons name='eye-closed' size={18} color={color} />;
@@ -65,80 +48,108 @@ export const NewWorkoutIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 export const TrendLineIcon = () => (
-	<Feather name='trending-up' size={17} color='white' />
+	<Feather name="trending-up" size={17} color="white"/>
 );
 
-export const GearIcon = () => <Octicons name='gear' size={20} color='white' />;
+export const GearIcon = () => (
+	<Octicons name="gear" size={20} color="white" />
+);
 
-export const ShareIcon = () => <Feather name='share' size={20} color='white' />;
+export const ShareIcon = () => (
+	<Feather name="share" size={20} color="white" />
+);
 
 export const ArrowRightIcon = () => (
-	<AntDesign name='arrowright' size={20} color='white' />
+	<AntDesign name="arrowright" size={20} color="white" />
 );
 
 export const CalendarIcon = () => (
-	<AntDesign name='calendar' size={20} color='white' />
+	<AntDesign name="calendar" size={20} color="white" />
 );
 
-export const Timer = () => {
-	return <MaterialIcons name='timer' size={24} color='#5F48D9' />;
-};
-
 export const PeopleIcon = () => (
-	<MaterialIcons name='emoji-people' size={20} color='white' />
+	<MaterialIcons name="emoji-people" size={20} color="white" />
 );
 
 export const FilterIcon = () => (
-	<Ionicons name='filter' size={20} color='#A0AEC0' />
+	<Ionicons name="filter" size={20} color="#A0AEC0" />
 );
 
 export const ThreeDotsVerticarIcon = () => (
-	<Entypo name='dots-three-vertical' size={20} color='#A0AEC0' />
+	<Entypo name="dots-three-vertical" size={20} color="#A0AEC0" />
 );
 
 export const MagnifyingGlassIcon = () => (
-	<Entypo name='magnifying-glass' size={20} color='#A0AEC0' />
+	<Entypo name="magnifying-glass" size={20} color="#A0AEC0" />
 );
 
 export const CameraIcon = () => (
-	<Feather name='camera' size={20} color='#5F48D9' />
+	<Feather name="camera" size={20} color="#5F48D9" />
 );
 
 export const GalleryIcon = () => (
-	<Feather name='image' size={20} color='#5F48D9' />
+	<Feather name="image" size={20} color="#5F48D9" />
 );
 
 export const TrashIcon = () => (
-	<FontAwesome name='trash-o' size={20} color='#5F48D9' />
+	<FontAwesome name="trash-o" size={20} color="#5F48D9" />
 );
 
 export const LogOutIcon = () => (
-	<AntDesign name='logout' size={20} color='#5F48D9' />
+	<AntDesign name="logout" size={20} color="#5F48D9" />
 );
 
 export const DeleteAccountIcon = () => (
-	<AntDesign name='deleteuser' size={20} color='#5F48D9' />
+	<AntDesign name="deleteuser" size={20} color="#5F48D9" />
 );
 
 export const EditIcon = () => (
-	<AntDesign name='edit' size={20} color='#5F48D9' />
+	<AntDesign name="edit" size={20} color="#5F48D9" />
 );
 
-export const AddIcon = () => <Ionicons name='add' size={20} color='white' />;
+export const AddIcon = () => (
+	<Ionicons name="add" size={20} color="white" />
+);
 
 export const ClipboardIcon = () => (
-	<Foundation name='clipboard-notes' size={20} color='#A0AEC0' />
+	<Foundation name="clipboard-notes" size={20} color="#A0AEC0" />
 );
 
-export const CheckIcon = () => <Feather name='check' size={20} color='white' />;
+export const CheckIcon = () => (
+	<Feather name="check" size={20} color="white" />	
+);
 
-export const CancelIcon = () => <Feather name='x' size={20} color='white' />;
+export const CancelIcon = () => (
+	<Feather name="x" size={20} color="white" />
+);
+
+export const SaveIcon = () => (
+	<Feather name="save" size={21} color="white" />
+);
+
+export const WeightIcon = () => (
+	<MaterialIcons name="monitor-weight" size={20} color="white"/>
+);
+
+export const HeightIcon = () => (
+	<MaterialCommunityIcons name="human-male-height" size={20} color="white" />
+);
+
+export const BodyIcon = () => (
+	<Ionicons name="body" size={20} color="white" />
+)
+
+export const PercentIcon = () => (
+	<MaterialCommunityIcons name="percent-outline" size={20} color="white" />
+)
 
 export const ArrowDownIcon = () => {
 	return <AntDesign name='down' size={24} color='white' />;
 };
 
-export const SaveIcon = () => <Feather name='save' size={21} color='white' />;
+export const Timer = () => {
+	return <MaterialIcons name='timer' size={24} color='#5F48D9' />;
+};
 
 // import SvgGoogleIcon from "../../assets/images/google.svg"; // Import your SVG as a component
 

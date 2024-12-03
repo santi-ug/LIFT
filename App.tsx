@@ -1,9 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Image, ScrollView, Text, View } from "react-native";
-
-import { Link, router } from "expo-router";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { usePushNotifications } from "./usePushNotifications";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Clipboard from '@react-native-clipboard/clipboard';
+import messaging from '@react-native-firebase/messaging';
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { Link, router } from "expo-router";
 
 // @ts-ignore
 import home from "./assets/home.png";

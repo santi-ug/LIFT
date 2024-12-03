@@ -6,26 +6,26 @@ import SetRow from "../molecules/SetRow";
 
 interface ExerciseProps {
 	exercise: {
+	  id: number;
+	  title: string;
+	  restTime: string;
+	  sets: {
 		id: number;
-		title: string;
-		restTime: string;
-		sets: {
-			id: number;
-			weight: number;
-			reps: number;
-			rpe: number;
-			checked: boolean;
-		}[];
+		weight: number;
+		reps: number;
+		rpe: string; // Cambiar a string
+		checked: boolean;
+	  }[];
 	};
 	onAddSet: (exerciseId: number) => void;
 	onSetChange: (
-		exerciseId: number,
-		setId: number,
-		field: number,
-		value: any
+	  exerciseId: number,
+	  setId: number,
+	  field: string, // Cambiar field a string
+	  value: any
 	) => void;
 	onToggleSetComplete: (exerciseId: number, setId: number) => void;
-}
+}  
 
 const Exercise: React.FC<ExerciseProps> = ({
 	exercise,
@@ -45,15 +45,19 @@ const Exercise: React.FC<ExerciseProps> = ({
 		};
 	}) => (
 		<SetRow
-			set={item}
-			handleSetChange={(setId: string, field, value) =>
+			set={{
+				...item,
+				id: item.id.toString(),
+				rpe: item.rpe.toString(), // Conversión a string
+			}}
+			handleSetChange={(setId: string, field: string, value) =>
 				onSetChange(exercise.id, parseInt(setId), field, value)
 			}
 			toggleSetComplete={(setId: string) =>
 				onToggleSetComplete(exercise.id, parseInt(setId))
 			}
 		/>
-	);
+	);	
 
 	return (
 		<View className='bg-background-4 mb-6 rounded-lg py-4'>
@@ -86,10 +90,15 @@ const Exercise: React.FC<ExerciseProps> = ({
 
 			{/* Render Sets */}
 			<FlatList
-				data={exercise.sets}
+				data={exercise.sets.map((set) => ({
+					...set,
+					rpe: parseFloat(set.rpe), // Convertir a número
+				}))}
+				
 				renderItem={renderSet}
 				keyExtractor={(item) => item.id.toString()}
 			/>
+
 
 			{/* Add Set Button */}
 			<View className='mt-4'>

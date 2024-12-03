@@ -2,19 +2,19 @@ import mime from 'mime';
 import * as SecureStore from 'expo-secure-store';
 import { router, Stack } from "expo-router";
 import { Alert } from "react-native";
-import { ApiResponse, UserData } from "../types/Api";
+import { ApiResponse, ApiResponseBiometricHistory, BiometricHistoryData, UserData } from "../types/Api";
 import { Workout } from "../types/workout";
 
 // 172.20.10.6 - hotspot
 const url = "virtual-pro-y.win";
-console.log("Hola23", `http://${url}/api/v1/users/me`);
+console.log("Hola23", `https://${url}/api/v1/users/me`);
 
 export const registerUser = async (
 	userData: UserData
 ): Promise<ApiResponse> => {
 	console.log("yo", JSON.stringify(userData));
 	try {
-		const response = await fetch(`http://${url}/api/v1/users/register`, {
+		const response = await fetch(`https://${url}/api/v1/users/register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const registerUser = async (
 
 export const loginUser = async (userData: UserData): Promise<ApiResponse> => {
 	try {
-		const response = await fetch(`http://${url}/api/v1/users/login`, {
+		const response = await fetch(`https://${url}/api/v1/users/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const infoUser = async (): Promise<UserData | undefined> => {
 			throw new Error("No token found, user is not authenticated");
 		}
 
-		const response = await fetch(`http://${url}/api/v1/users/me`, {
+		const response = await fetch(`https://${url}/api/v1/users/me`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ export const updateImage = async (
 
 			console.log("FormData created:", formData);
 
-			const response = await fetch(`http://${url}/api/v1/users/myImage`, {
+			const response = await fetch(`https://${url}/api/v1/users/myImage`, {
 				method: "PUT",
 				body: formData,
 				headers: {
@@ -175,7 +175,7 @@ export const removeImage = async (): Promise<UserData | undefined> => {
 			throw new Error("No token found, user is not authenticated");
 		}
 
-		const response = await fetch(`http://${url}/api/v1/users/myImage`, {
+		const response = await fetch(`https://${url}/api/v1/users/myImage`, {
 			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -206,7 +206,7 @@ export const logout = async () => {
 	try {
 		const token = await SecureStore.getItemAsync("authToken");
 
-		const response = await fetch(`http://${url}/api/v1/users/logout`, {
+		const response = await fetch(`https://${url}/api/v1/users/logout`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -238,7 +238,7 @@ export const update = async (userData: UserData): Promise<ApiResponse> => {
 			throw new Error("No token found, user is not authenticated");
 		}
 
-		const response = await fetch(`http://${url}/api/v1/users/me`, {
+		const response = await fetch(`https://${url}/api/v1/users/me`, {
 			method: "PUT",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -270,7 +270,7 @@ export const deleteUser = async () => {
 	try {
 		const token = await SecureStore.getItemAsync("authToken");
 
-		const response = await fetch(`http://${url}/api/v1/users/me`, {
+		const response = await fetch(`https://${url}/api/v1/users/me`, {
 			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -337,7 +337,7 @@ export const finishWorkout = async (workoutData: Workout) => {
 		const token = await SecureStore.getItemAsync("authToken");
 
 		// Example API endpoint and payload
-		const response = await fetch(`http://${url}/api/v1/workouts`, {
+		const response = await fetch(`https://${url}/api/v1/workouts`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -364,4 +364,74 @@ export const finishWorkout = async (workoutData: Workout) => {
 			"Unable to finish the workout. Please try again later."
 		);
 	}
+};
+
+export const registerBiometricHistory = async (
+	biometricHistoryData: BiometricHistoryData
+): Promise<ApiResponse> => {
+	console.log("yo-biometric", JSON.stringify(biometricHistoryData));
+	try {
+        const token = await SecureStore.getItemAsync("authToken");
+        console.log("token", token);
+
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
+
+		const response = await fetch(`https://${url}/api/v1/biometrichistories`, {
+			method: "POST",
+			headers: {
+                "Authorization": `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+
+			body: JSON.stringify(biometricHistoryData),
+		});
+
+		const data: ApiResponse = await response.json();
+
+		if (data.errors && Array.isArray(data.errors)) {
+			const errorMessages = data.errors.map((error: any) => error.msg).join("\n");
+			console.error("Errors in creating a biometric history:", errorMessages);
+			return { success: false, message: errorMessages };
+		}else{
+            console.log("Successful creation:", data);
+            return data;
+		}
+	} catch (error: any) {
+		console.error("Network error:", error);
+		throw new Error(error.message);
+	}
+};
+
+export const getAllBiometricHistory = async (): Promise<BiometricHistoryData[]> => {
+    try {
+        const token = await SecureStore.getItemAsync("authToken");
+        console.log("token", token);
+
+        if (!token) {
+            console.error("No token found, user is not authenticated");
+            throw new Error("No token found, user is not authenticated");
+        }
+
+        const response = await fetch(`https://${url}/api/v1/biometrichistories`, {
+            method: "GET",
+            headers: {
+				"Authorization": `Bearer ${token}`,
+            },
+        });
+
+        //console.log("data", response.json());
+        const data: ApiResponseBiometricHistory = await response.json();
+
+        if (!response.ok || !data.success || !data.data) {
+            throw new Error(data.message || "Failed to fetch biometric histories");
+        }
+
+        return data.data;
+    } catch (error: any) {
+        console.error("Network error:", error.message);
+        throw new Error(error.message);
+    }
 };
