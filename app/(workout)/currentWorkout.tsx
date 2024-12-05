@@ -1,10 +1,10 @@
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import CustomButton from "../../components/atoms/CustomButton";
 import Exercise from "../../components/organisms/Exercise";
 import { useSelectedExercisesStore } from "../../storage/selectedExerciseStorage";
-import { useWorkoutStore } from "../../storage/workoutStorage"; // Import workout storage
+import { useWorkoutStore } from "../../storage/workoutStorage";
 
 interface WorkoutSet {
 	id: number;
@@ -19,7 +19,6 @@ interface Exercise {
 	title: string;
 	restTime: string;
 	sets: WorkoutSet[];
-	exercises: never[];
 }
 
 interface WorkoutData {
@@ -34,7 +33,7 @@ const CurrentWorkout = () => {
 	const { selectedExercises, clearSelectedExercises } =
 		useSelectedExercisesStore();
 	const { workout, resetWorkout, setWorkout, addActivity, setTimerRef } =
-		useWorkoutStore(); // Access workout storage
+		useWorkoutStore();
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 
 	const [workoutData, setWorkoutData] = useState<WorkoutData>({
@@ -50,21 +49,19 @@ const CurrentWorkout = () => {
 		timerRef.current = setInterval(() => {
 			setWorkoutData((prevData) => {
 				const newDuration = prevData.duration + 1;
-				setWorkout({ duration: newDuration }); // Sync with the store
+				setWorkout({ duration: newDuration });
 				return { ...prevData, duration: newDuration };
 			});
 		}, 1000);
 
-		// Save timer reference in the store
 		setTimerRef(timerRef.current);
 
-		// Cleanup timer on unmount
 		return () => {
 			if (timerRef.current) {
 				clearInterval(timerRef.current);
 				timerRef.current = null;
 			}
-			setTimerRef(null); // Reset timer in the store
+			setTimerRef(null);
 		};
 	}, [setWorkout, setTimerRef]);
 
@@ -77,7 +74,6 @@ const CurrentWorkout = () => {
 				title: activity.title,
 				restTime: "2min 30s",
 				sets: (activity.sets as WorkoutSet[]) || [],
-				exercises: [],
 			})),
 		}));
 	}, [workout.activities]);
@@ -99,7 +95,6 @@ const CurrentWorkout = () => {
 						checked: false,
 					},
 				] as WorkoutSet[],
-				exercises: [],
 			})),
 		}));
 	}, [selectedExercises]);
@@ -113,25 +108,31 @@ const CurrentWorkout = () => {
 	};
 
 	// Handle workout name change
-	const handleWorkoutNameChange = (value: string) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			name: value,
-		}));
-		setWorkout({ title: value }); // Update storage
-	};
+	const handleWorkoutNameChange = useCallback(
+		(value: string) => {
+			setWorkoutData((prevData) => ({
+				...prevData,
+				name: value,
+			}));
+			setWorkout({ title: value });
+		},
+		[setWorkout]
+	);
 
 	// Handle workout notes change
-	const handleNotesChange = (value: string) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			notes: value,
-		}));
-		setWorkout({ notes: value }); // Update storage
-	};
+	const handleNotesChange = useCallback(
+		(value: string) => {
+			setWorkoutData((prevData) => ({
+				...prevData,
+				notes: value,
+			}));
+			setWorkout({ notes: value });
+		},
+		[setWorkout]
+	);
 
 	// Add a new activity to the workout storage
-	const handleAddActivity = () => {
+	const handleAddActivity = useCallback(() => {
 		workoutData.exercises.forEach((exercise) => {
 			addActivity({
 				title: exercise.title,
@@ -142,60 +143,60 @@ const CurrentWorkout = () => {
 			pathname: "/exercises",
 			params: { fromRoutine: "true" },
 		});
-	};
+	}, [addActivity, workoutData.exercises]);
 
 	// Add a new set to an exercise
-	const handleAddSet = (exerciseId: number) => {
-		setWorkoutData((prevData) => {
-			const updatedExercises = prevData.exercises.map((exercise) =>
-				exercise.id === exerciseId
-					? {
-							...exercise,
-							sets: [
-								...exercise.sets,
-								{
-									id: exercise.sets.length + 1,
-									weight: 0,
-									reps: 0,
-									rpe: "RPE",
-									checked: false,
-								},
-							],
-					  }
-					: exercise
-			);
+	const handleAddSet = useCallback(
+		(exerciseId: number) => {
+			setWorkoutData((prevData) => {
+				const updatedExercises = prevData.exercises.map((exercise) =>
+					exercise.id === exerciseId
+						? {
+								...exercise,
+								sets: [
+									...exercise.sets,
+									{
+										id: exercise.sets.length + 1,
+										weight: 0,
+										reps: 0,
+										rpe: "RPE",
+										checked: false,
+									},
+								],
+						  }
+						: exercise
+				);
 
-			// Update total sets in the store
-			setWorkout({ total_sets: workout.total_sets + 1 });
+				setWorkout({ total_sets: workout.total_sets + 1 });
 
-			return { ...prevData, exercises: updatedExercises };
-		});
-	};
+				return { ...prevData, exercises: updatedExercises };
+			});
+		},
+		[setWorkout, workout.total_sets]
+	);
 
 	// Handle changes to a set
-	const handleSetChange = (
-		exerciseId: number,
-		setId: number,
-		field: string,
-		value: any
-	) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			exercises: prevData.exercises.map((exercise) =>
-				exercise.id === exerciseId
-					? {
-							...exercise,
-							sets: exercise.sets.map((set) =>
-								set.id === setId ? { ...set, [field]: value } : set
-							),
-					  }
-					: exercise
-			),
-		}));
-	};
+	const handleSetChange = useCallback(
+		(exerciseId: number, setId: number, field: string, value: any) => {
+			setWorkoutData((prevData) => ({
+				...prevData,
+				exercises: prevData.exercises.map((exercise) =>
+					exercise.id === exerciseId
+						? {
+								...exercise,
+								sets: exercise.sets.map((set) =>
+									set.id === setId ? { ...set, [field]: value } : set
+								),
+						  }
+						: exercise
+				),
+			}));
+		},
+		[]
+	);
 
 	// Toggle set completion
-	const toggleSetComplete = (exerciseId: number, setId: number) => {
+	const toggleSetComplete = useCallback((exerciseId: number, setId: number) => {
 		setWorkoutData((prevData) => ({
 			...prevData,
 			exercises: prevData.exercises.map((exercise) =>
@@ -219,11 +220,23 @@ const CurrentWorkout = () => {
 					: exercise
 			),
 		}));
+	}, []);
+
+	// Cancel workout functionality
+	const handleCancelWorkout = () => {
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+			console.log(timerRef.current);
+
+			timerRef.current = null;
+		}
+		resetWorkout();
+		clearSelectedExercises();
+		router.push("/newworkout");
 	};
 
 	return (
 		<View className='flex-1 bg-background px-4'>
-			{/* Editable Workout Name */}
 			<TextInput
 				className='text-white text-2xl font-bold mt-2'
 				value={workoutData.name}
@@ -231,13 +244,9 @@ const CurrentWorkout = () => {
 				placeholder='Workout Name'
 				placeholderTextColor='#646464'
 			/>
-
-			{/* Real-time Duration Timer */}
 			<Text className='text-primary mt-1'>
 				{formatDuration(workoutData.duration)}
 			</Text>
-
-			{/* Editable Notes Section */}
 			<TextInput
 				className='mt-2 mb-4 rounded-md py-2 text-white'
 				value={workoutData.notes}
@@ -246,8 +255,6 @@ const CurrentWorkout = () => {
 				placeholderTextColor='#646464'
 				multiline
 			/>
-
-			{/* Render Exercises */}
 			<FlatList
 				data={workoutData.exercises}
 				renderItem={({ item }) => (
@@ -268,8 +275,6 @@ const CurrentWorkout = () => {
 				keyExtractor={(item) => item.id.toString()}
 				contentContainerStyle={{ paddingBottom: 100 }}
 			/>
-
-			{/* Footer Buttons */}
 			<View className='my-4'>
 				<CustomButton
 					title='+ Add Activity'
@@ -279,22 +284,7 @@ const CurrentWorkout = () => {
 				/>
 				<CustomButton
 					title='Cancel Workout'
-					handlePress={() => {
-						// Clear the timer
-						if (timerRef.current) {
-							clearInterval(timerRef.current);
-							timerRef.current = null;
-						}
-
-						// Reset workout state in the store
-						resetWorkout();
-
-						// Clear selected exercises
-						clearSelectedExercises();
-
-						// Navigate back to the new workout page
-						router.push("/newworkout");
-					}}
+					handlePress={handleCancelWorkout}
 					containerStyles='bg-[#FF596430]'
 					textStyles='text-[#FF5964] font-bold'
 				/>

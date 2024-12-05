@@ -1,5 +1,5 @@
 import { Tabs, router } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import {
 	ExerciseIcon,
@@ -36,6 +36,7 @@ const TabIcon: React.FC<TabIconProps> = ({
 
 const TabsLayout = () => {
 	const { workout } = useWorkoutStore(); // Access the workout state
+	const [isNavigating, setIsNavigating] = useState(false); // Track navigation state
 
 	// Format duration (HH:MM:SS)
 	const formatDuration = (durationInSeconds: number) => {
@@ -44,6 +45,16 @@ const TabsLayout = () => {
 		const seconds = durationInSeconds % 60;
 		return `${hours > 0 ? `${hours}h ` : ""}${minutes}min ${seconds}s`;
 	};
+
+	const showOngoingWorkout = workout.duration > 0;
+
+	// Handle navigation in useEffect
+	useEffect(() => {
+		if (isNavigating) {
+			router.push("/currentWorkout");
+			setIsNavigating(false); // Reset navigation state
+		}
+	}, [isNavigating]);
 
 	return (
 		<>
@@ -109,17 +120,17 @@ const TabsLayout = () => {
 			</Tabs>
 
 			{/* Ongoing Workout Bar */}
-			{workout.duration > 0 && (
+			{/* {showOngoingWorkout && (
 				<TouchableOpacity
 					className='absolute bottom-16 left-0 right-0 bg-primary p-3 flex-row justify-between items-center'
-					onPress={() => router.push("/currentWorkout")}
+					onPress={() => setIsNavigating(true)} // Trigger navigation state
 				>
 					<Text className='text-white font-bold'>
 						Ongoing Workout - {formatDuration(workout.duration)}
 					</Text>
 					<Text className='text-white underline'>Continue</Text>
 				</TouchableOpacity>
-			)}
+			)} */}
 		</>
 	);
 };

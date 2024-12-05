@@ -11,7 +11,7 @@ import {
 import { Workout } from "../types/workout";
 
 // 172.20.10.6 - hotspot
-const url = "192.168.1.2:5000";
+const url = "172.20.10.2:5000";
 console.log("Hola23", `https://${url}/api/v1/users/me`);
 
 export const registerUser = async (
