@@ -1,11 +1,12 @@
+import { Tabs, router } from "expo-router";
 import React from "react";
-import { Redirect, Tabs } from "expo-router";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import {
 	ExerciseIcon,
 	NewWorkoutIcon,
 	UserIcon,
 } from "../../components/atoms/icons";
+import { useWorkoutStore } from "../../storage/workoutStorage"; // Import workout storage
 
 interface TabIconProps {
 	icon: React.ElementType;
@@ -21,9 +22,7 @@ const TabIcon: React.FC<TabIconProps> = ({
 	focused,
 }) => {
 	return (
-		<View 
-			className='items-center justify-center w-28 pt-3'
-		>
+		<View className='items-center justify-center w-28 pt-3'>
 			<IconComponent color={color} />
 			<Text
 				className={`${focused ? "font-semibold" : "font-normal"} text-xs`}
@@ -36,8 +35,19 @@ const TabIcon: React.FC<TabIconProps> = ({
 };
 
 const TabsLayout = () => {
+	const { workout } = useWorkoutStore(); // Access the workout state
+
+	// Format duration (HH:MM:SS)
+	const formatDuration = (durationInSeconds: number) => {
+		const hours = Math.floor(durationInSeconds / 3600);
+		const minutes = Math.floor((durationInSeconds % 3600) / 60);
+		const seconds = durationInSeconds % 60;
+		return `${hours > 0 ? `${hours}h ` : ""}${minutes}min ${seconds}s`;
+	};
+
 	return (
 		<>
+			{/* Tabs and Homebar */}
 			<Tabs
 				screenOptions={{
 					tabBarShowLabel: false,
@@ -97,6 +107,28 @@ const TabsLayout = () => {
 					}}
 				/>
 			</Tabs>
+
+			{/* Ongoing Workout Bar */}
+			{workout.duration > 0 && (
+				<TouchableOpacity
+					onPress={() => router.push("/currentWorkout")} // Navigate to the workout page
+					style={{
+						backgroundColor: "#5F48D9",
+						padding: 10,
+						alignItems: "center",
+						justifyContent: "center",
+						position: "absolute",
+						bottom: 60, // Position it above the tab bar
+						left: 0,
+						right: 0,
+						zIndex: 1, // Ensure it appears above other components
+					}}
+				>
+					<Text className='text-white font-semibold'>
+						Ongoing Workout - {formatDuration(workout.duration)}
+					</Text>
+				</TouchableOpacity>
+			)}
 		</>
 	);
 };
