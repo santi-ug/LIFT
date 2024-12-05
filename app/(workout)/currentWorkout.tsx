@@ -31,8 +31,10 @@ interface WorkoutData {
 }
 
 const CurrentWorkout = () => {
-	const { selectedExercises } = useSelectedExercisesStore();
-	const { workout, setWorkout, addActivity, setTimerRef } = useWorkoutStore(); // Access workout storage
+	const { selectedExercises, clearSelectedExercises } =
+		useSelectedExercisesStore();
+	const { workout, resetWorkout, setWorkout, addActivity, setTimerRef } =
+		useWorkoutStore(); // Access workout storage
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 
 	const [workoutData, setWorkoutData] = useState<WorkoutData>({
@@ -277,7 +279,22 @@ const CurrentWorkout = () => {
 				/>
 				<CustomButton
 					title='Cancel Workout'
-					handlePress={() => console.log("Cancel Workout Pressed")}
+					handlePress={() => {
+						// Clear the timer
+						if (timerRef.current) {
+							clearInterval(timerRef.current);
+							timerRef.current = null;
+						}
+
+						// Reset workout state in the store
+						resetWorkout();
+
+						// Clear selected exercises
+						clearSelectedExercises();
+
+						// Navigate back to the new workout page
+						router.push("/newworkout");
+					}}
 					containerStyles='bg-[#FF596430]'
 					textStyles='text-[#FF5964] font-bold'
 				/>

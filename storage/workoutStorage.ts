@@ -132,21 +132,23 @@ export const useWorkoutStore = create<WorkoutStore>((set, get) => ({
 
 	// Reset entire workout state to the default
 	resetWorkout: () => {
-		const { timerRef } = get();
+		const timerRef = get().timerRef;
 
-		// Clear timer if it exists
-		if (timerRef && timerRef.current) {
-			clearInterval(timerRef.current);
-			timerRef.current = null;
+		// Clear any running timer
+		if (timerRef) {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+			}
+			set({ timerRef: { current: null } });
 		}
 
 		// Reset workout state
 		set(() => ({
 			workout: {
 				...defaultWorkout,
-				duration: 0,
-				activities: [],
-				total_sets: 0,
+				activities: [], // Explicitly clear activities
+				total_sets: 0, // Reset total sets
+				duration: 0, // Reset duration
 			},
 		}));
 	},

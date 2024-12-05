@@ -111,22 +111,13 @@ const TabsLayout = () => {
 			{/* Ongoing Workout Bar */}
 			{workout.duration > 0 && (
 				<TouchableOpacity
-					onPress={() => router.push("/currentWorkout")} // Navigate to the workout page
-					style={{
-						backgroundColor: "#5F48D9",
-						padding: 10,
-						alignItems: "center",
-						justifyContent: "center",
-						position: "absolute",
-						bottom: 60, // Position it above the tab bar
-						left: 0,
-						right: 0,
-						zIndex: 1, // Ensure it appears above other components
-					}}
+					className='absolute bottom-16 left-0 right-0 bg-primary p-3 flex-row justify-between items-center'
+					onPress={() => router.push("/currentWorkout")}
 				>
-					<Text className='text-white font-semibold'>
+					<Text className='text-white font-bold'>
 						Ongoing Workout - {formatDuration(workout.duration)}
 					</Text>
+					<Text className='text-white underline'>Continue</Text>
 				</TouchableOpacity>
 			)}
 		</>
