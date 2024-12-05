@@ -1,12 +1,17 @@
-import mime from 'mime';
-import * as SecureStore from 'expo-secure-store';
 import { router, Stack } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import mime from "mime";
 import { Alert } from "react-native";
-import { ApiResponse, ApiResponseBiometricHistory, BiometricHistoryData, UserData } from "../types/Api";
+import {
+	ApiResponse,
+	ApiResponseBiometricHistory,
+	BiometricHistoryData,
+	UserData,
+} from "../types/Api";
 import { Workout } from "../types/workout";
 
 // 172.20.10.6 - hotspot
-const url = "virtual-pro-y.win";
+const url = "192.168.1.2:5000";
 console.log("Hola23", `https://${url}/api/v1/users/me`);
 
 export const registerUser = async (
@@ -335,9 +340,10 @@ export const finishWorkout = async (workoutData: Workout) => {
 		const transformedWorkoutData = transformWorkoutData(workoutData); // Replace '1' with the authenticated user's ID
 		console.log("Transformed Data:", transformedWorkoutData);
 		const token = await SecureStore.getItemAsync("authToken");
+		console.log(token);
 
 		// Example API endpoint and payload
-		const response = await fetch(`https://${url}/api/v1/workouts`, {
+		const response = await fetch(`http://${url}/api/v1/workouts`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -371,18 +377,18 @@ export const registerBiometricHistory = async (
 ): Promise<ApiResponse> => {
 	console.log("yo-biometric", JSON.stringify(biometricHistoryData));
 	try {
-        const token = await SecureStore.getItemAsync("authToken");
-        console.log("token", token);
+		const token = await SecureStore.getItemAsync("authToken");
+		console.log("token", token);
 
-        if (!token) {
-            console.error("No token found, user is not authenticated");
-            throw new Error("No token found, user is not authenticated");
-        }
+		if (!token) {
+			console.error("No token found, user is not authenticated");
+			throw new Error("No token found, user is not authenticated");
+		}
 
 		const response = await fetch(`https://${url}/api/v1/biometrichistories`, {
 			method: "POST",
 			headers: {
-                "Authorization": `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
 
@@ -392,12 +398,14 @@ export const registerBiometricHistory = async (
 		const data: ApiResponse = await response.json();
 
 		if (data.errors && Array.isArray(data.errors)) {
-			const errorMessages = data.errors.map((error: any) => error.msg).join("\n");
+			const errorMessages = data.errors
+				.map((error: any) => error.msg)
+				.join("\n");
 			console.error("Errors in creating a biometric history:", errorMessages);
 			return { success: false, message: errorMessages };
-		}else{
-            console.log("Successful creation:", data);
-            return data;
+		} else {
+			console.log("Successful creation:", data);
+			return data;
 		}
 	} catch (error: any) {
 		console.error("Network error:", error);
@@ -405,33 +413,35 @@ export const registerBiometricHistory = async (
 	}
 };
 
-export const getAllBiometricHistory = async (): Promise<BiometricHistoryData[]> => {
-    try {
-        const token = await SecureStore.getItemAsync("authToken");
-        console.log("token", token);
+export const getAllBiometricHistory = async (): Promise<
+	BiometricHistoryData[]
+> => {
+	try {
+		const token = await SecureStore.getItemAsync("authToken");
+		console.log("token", token);
 
-        if (!token) {
-            console.error("No token found, user is not authenticated");
-            throw new Error("No token found, user is not authenticated");
-        }
+		if (!token) {
+			console.error("No token found, user is not authenticated");
+			throw new Error("No token found, user is not authenticated");
+		}
 
-        const response = await fetch(`https://${url}/api/v1/biometrichistories`, {
-            method: "GET",
-            headers: {
-				"Authorization": `Bearer ${token}`,
-            },
-        });
+		const response = await fetch(`https://${url}/api/v1/biometrichistories`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 
-        //console.log("data", response.json());
-        const data: ApiResponseBiometricHistory = await response.json();
+		//console.log("data", response.json());
+		const data: ApiResponseBiometricHistory = await response.json();
 
-        if (!response.ok || !data.success || !data.data) {
-            throw new Error(data.message || "Failed to fetch biometric histories");
-        }
+		if (!response.ok || !data.success || !data.data) {
+			throw new Error(data.message || "Failed to fetch biometric histories");
+		}
 
-        return data.data;
-    } catch (error: any) {
-        console.error("Network error:", error.message);
-        throw new Error(error.message);
-    }
+		return data.data;
+	} catch (error: any) {
+		console.error("Network error:", error.message);
+		throw new Error(error.message);
+	}
 };

@@ -29,6 +29,7 @@
     "expo-status-bar": "~2.0.0",
     "mime": "^4.0.4",
     "nativewind": "2",
+    "proyecto": "file:",
     "react": "18.3.1",
     "react-hook-form": "^7.53.2",
     "react-native": "0.76.3",

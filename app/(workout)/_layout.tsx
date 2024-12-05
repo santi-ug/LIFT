@@ -9,15 +9,23 @@ import {
 	ShareIcon,
 } from "../../components/atoms/icons";
 import { finishWorkout } from "../../lib/api_backend";
+import { useSelectedExercisesStore } from "../../storage/selectedExerciseStorage";
 import { useWorkoutStore } from "../../storage/workoutStorage"; // Assume you store the workout data here
 
 const WorkoutLayout = () => {
 	const { workout, resetWorkout } = useWorkoutStore(); // Fetch workout data and a reset function
+	const { selectedExercises, clearSelectedExercises } =
+		useSelectedExercisesStore(); // Fetch selected exercises
 
 	const finishedWorkout = async () => {
 		try {
 			const res = await finishWorkout(workout);
-			console.log("e", res);
+
+			// Reset the workout state in the store
+			resetWorkout();
+			clearSelectedExercises(); // Clear selected exercises
+
+			console.log(workout.duration);
 		} catch (e) {
 			console.log(e);
 		}

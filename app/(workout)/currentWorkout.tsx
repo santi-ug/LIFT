@@ -1,56 +1,84 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import CustomButton from "../../components/atoms/CustomButton";
 import Exercise from "../../components/organisms/Exercise";
 import { useSelectedExercisesStore } from "../../storage/selectedExerciseStorage";
 import { useWorkoutStore } from "../../storage/workoutStorage"; // Import workout storage
 
+interface WorkoutSet {
+	id: number;
+	weight: number;
+	reps: number;
+	rpe: string;
+	checked: boolean;
+}
+
+interface Exercise {
+	id: number;
+	title: string;
+	restTime: string;
+	sets: WorkoutSet[];
+	exercises: never[];
+}
+
+interface WorkoutData {
+	name: string;
+	duration: number;
+	notes: string;
+	sets: WorkoutSet[];
+	exercises: Exercise[];
+}
+
 const CurrentWorkout = () => {
 	const { selectedExercises } = useSelectedExercisesStore();
-	const { workout, setWorkout, addActivity } = useWorkoutStore(); // Access workout storage
-
-	interface Set {
-		id: number;
-		weight: number;
-		reps: number;
-		previous: string;
-		rpe: string;
-		checked: boolean;
-	}
-
-	interface Exercise {
-		id: number;
-		title: string;
-		restTime: string;
-		sets: Set[];
-	}
-
-	interface WorkoutData {
-		name: string;
-		duration: number;
-		notes: string;
-		exercises: Exercise[];
-	}
+	const { workout, setWorkout, addActivity, setTimerRef } = useWorkoutStore(); // Access workout storage
+	const timerRef = useRef<NodeJS.Timeout | null>(null);
 
 	const [workoutData, setWorkoutData] = useState<WorkoutData>({
 		name: workout.title || "",
 		duration: workout.duration || 0,
 		notes: workout.notes || "",
+		sets: [],
 		exercises: [],
 	});
 
-	// Timer Effect
+	// Start the timer
 	useEffect(() => {
-		const timer = setInterval(() => {
-			setWorkoutData((prevData) => ({
-				...prevData,
-				duration: prevData.duration + 1,
-			}));
+		timerRef.current = setInterval(() => {
+			setWorkoutData((prevData) => {
+				const newDuration = prevData.duration + 1;
+				setWorkout({ duration: newDuration }); // Sync with the store
+				return { ...prevData, duration: newDuration };
+			});
 		}, 1000);
 
-		return () => clearInterval(timer); // Cleanup timer on unmount
-	}, []);
+		// Save timer reference in the store
+		setTimerRef(timerRef.current);
+
+		// Cleanup timer on unmount
+		return () => {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+				timerRef.current = null;
+			}
+			setTimerRef(null); // Reset timer in the store
+		};
+	}, [setWorkout, setTimerRef]);
+
+	// Sync exercises with the store's activities
+	useEffect(() => {
+		setWorkoutData((prevData) => ({
+			...prevData,
+			exercises: workout.activities.map((activity, index) => ({
+				id: index + 1,
+				title: activity.title,
+				restTime: "2min 30s",
+				sets: (activity.sets as WorkoutSet[]) || [],
+				exercises: [],
+			})),
+		}));
+	}, [workout.activities]);
 
 	// Update exercises when selectedExercises changes
 	useEffect(() => {
@@ -65,11 +93,11 @@ const CurrentWorkout = () => {
 						id: 1,
 						weight: 0,
 						reps: 0,
-						previous: "N/A",
 						rpe: "RPE",
 						checked: false,
 					},
-				],
+				] as WorkoutSet[],
+				exercises: [],
 			})),
 		}));
 	}, [selectedExercises]);
@@ -116,9 +144,8 @@ const CurrentWorkout = () => {
 
 	// Add a new set to an exercise
 	const handleAddSet = (exerciseId: number) => {
-		setWorkoutData((prevData) => ({
-			...prevData,
-			exercises: prevData.exercises.map((exercise) =>
+		setWorkoutData((prevData) => {
+			const updatedExercises = prevData.exercises.map((exercise) =>
 				exercise.id === exerciseId
 					? {
 							...exercise,
@@ -128,15 +155,19 @@ const CurrentWorkout = () => {
 									id: exercise.sets.length + 1,
 									weight: 0,
 									reps: 0,
-									previous: "N/A",
 									rpe: "RPE",
 									checked: false,
 								},
 							],
 					  }
 					: exercise
-			),
-		}));
+			);
+
+			// Update total sets in the store
+			setWorkout({ total_sets: workout.total_sets + 1 });
+
+			return { ...prevData, exercises: updatedExercises };
+		});
 	};
 
 	// Handle changes to a set

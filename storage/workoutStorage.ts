@@ -34,12 +34,16 @@ interface Set {
 // Zustand Store Interface
 interface WorkoutStore {
 	workout: Workout;
+	timerRef: { current: NodeJS.Timeout | null }; // Timer reference
 	setWorkout: (data: Partial<Workout>) => void; // Update workout fields
 	addActivity: (activity: Omit<Activity, "id">) => void; // Add new activity
 	deleteActivity: (activityId: number) => void; // Delete activity by ID
 	updateActivity: (activityId: number, updates: Partial<Activity>) => void; // Update activity
 	resetWorkout: () => void; // Reset workout state
 	saveWorkout: () => Promise<void>; // Save workout to backend
+	clearActivities: () => void; // Clear all activities
+	clearWorkoutDetails: () => void; // Clear workout-specific fields
+	setTimerRef: (timer: NodeJS.Timeout | null) => void;
 }
 
 // Default Workout State
@@ -59,6 +63,7 @@ const defaultWorkout: Workout = {
 // Zustand Store Implementation
 export const useWorkoutStore = create<WorkoutStore>((set, get) => ({
 	workout: { ...defaultWorkout },
+	timerRef: { current: null },
 
 	setWorkout: (data) =>
 		set((state) => ({
@@ -66,6 +71,12 @@ export const useWorkoutStore = create<WorkoutStore>((set, get) => ({
 				...state.workout,
 				...data,
 			},
+		})),
+
+	setTimerRef: (timer: any) =>
+		set((state) => ({
+			...state,
+			timerRef: { current: timer },
 		})),
 
 	addActivity: (activity) =>
@@ -76,6 +87,7 @@ export const useWorkoutStore = create<WorkoutStore>((set, get) => ({
 					...state.workout.activities,
 					{ ...activity, id: state.workout.activities.length + 1 },
 				],
+				total_sets: state.workout.total_sets + 1, // Increment total sets for the default set
 			},
 		})),
 
@@ -99,10 +111,45 @@ export const useWorkoutStore = create<WorkoutStore>((set, get) => ({
 			},
 		})),
 
-	resetWorkout: () =>
-		set(() => ({
-			workout: { ...defaultWorkout },
+	// Clear all activities
+	clearActivities: () =>
+		set((state) => ({
+			workout: {
+				...state.workout,
+				activities: [],
+				total_sets: 0, // Reset total sets
+			},
 		})),
+
+	// Clear workout-specific fields (title, notes, duration, etc.)
+	clearWorkoutDetails: () =>
+		set(() => ({
+			workout: {
+				...defaultWorkout, // Reset to default state
+				activities: [], // Explicitly clear activities
+			},
+		})),
+
+	// Reset entire workout state to the default
+	resetWorkout: () => {
+		const { timerRef } = get();
+
+		// Clear timer if it exists
+		if (timerRef && timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+
+		// Reset workout state
+		set(() => ({
+			workout: {
+				...defaultWorkout,
+				duration: 0,
+				activities: [],
+				total_sets: 0,
+			},
+		}));
+	},
 
 	saveWorkout: async () => {
 		const workout = get().workout;

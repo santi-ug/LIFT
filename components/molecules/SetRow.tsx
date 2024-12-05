@@ -33,20 +33,20 @@ const SetRow: React.FC<SetRowProps> = ({
 			{/* Weight Input */}
 			<TextInput
 				className='text-white w-20 text-center rounded-md'
-				placeholder='Weight'
+				placeholder='0'
 				placeholderTextColor='#646464'
 				keyboardType='numeric'
-				value={set.weight.toString()}
+				value={set.weight === 0 ? "" : set.weight.toString()} // Show empty if weight is 0
 				onChangeText={(value) => handleSetChange(set.id, "weight", value)}
 			/>
 
 			{/* Reps Input */}
 			<TextInput
 				className='text-white w-10 text-center rounded-md'
-				placeholder='Reps'
+				placeholder='0'
 				placeholderTextColor='#646464'
 				keyboardType='numeric'
-				value={set.reps.toString()}
+				value={set.reps === 0 ? "" : set.reps.toString()} // Show empty if reps is 0
 				onChangeText={(value) => handleSetChange(set.id, "reps", value)}
 			/>
 
