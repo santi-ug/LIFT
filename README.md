@@ -16,5 +16,8 @@ npm install
 
 **Run server**
 ```
-npm run dev
+npx expo start
 ```
+
+**Scan QR Code on phone**  
+_Make sure to have Expo app installed._
